@@ -43,7 +43,18 @@ Ce journal consigne toutes les modifications de code, exécutions de commandes e
    - Création et exécution réussie d'un script de test d'intégration en mémoire (`test_api.php`) pour l'endpoint `GET /api/accounts`, confirmant un statut HTTP 200 et une structure JSON camelCase parfaitement formatée avec relations.
    - Suppression propre du fichier de test temporaire.
 
+5. **Implémentation de la Tâche 3 (Authentification et Permissions RBAC)** :
+   - **Laravel Sanctum** : Installation de `laravel/sanctum` via Composer, publication des configurations, création et exécution de la migration de la table `personal_access_tokens` sans conflit.
+   - **Modèle User** : Ajout du trait `Laravel\Sanctum\HasApiTokens` pour gérer les tokens d'API.
+   - **Contrôleur AuthController** : Création de l'API Resource `UserResource` et du contrôleur `AuthController` supportant les endpoints d'authentification REST (`/api/auth/login`, `/api/auth/logout`, `/api/auth/me`).
+   - **Middleware CheckRole** : Création d'un middleware robuste `CheckRole` validant le rôle de l'utilisateur par rapport à une liste d'arguments autorisés, et enregistrement global sous l'alias `'role'` dans `bootstrap/app.php`.
+   - **Policies de Sécurité** : Création de 7 Policies (`AccountPolicy`, `ContactPolicy`, `LeadPolicy`, `OpportunityPolicy`, `QuotePolicy`, `InvoicePolicy`, `ProjectPolicy`) gérant les accès fins selon la matrice des rôles (Admin, Commercial, Chef chantier, Finance, etc.) avec bypass automatique pour le rôle `super_admin`.
+   - **Liaison dans les Contrôleurs** : Mise à jour du contrôleur parent `App\Http\Controllers\Controller` pour hériter de `Illuminate\Routing\Controller` pour supporter nativement `$this->authorizeResource()`. Enregistrement automatique des policies dans les constructeurs des 7 contrôleurs RESTful.
+   - **Validation & Tests** : Création et exécution d'un script de test d'intégration en mémoire (`test_auth_permissions.php`) simulant les requêtes HTTP avec Sanctum pour différents rôles. Tous les cas de test (401 non authentifié, 403 non autorisé, 200 OK) ont réussi avec succès.
+   - **Nettoyage & Commit** : Suppression propre du script temporaire de test, mise à jour des documents d'état, et commit Git final : `"Add authentication and role-based permissions"`.
+
 ### Prochaines Étapes
-- Mettre en œuvre le contrôle d'accès basé sur les rôles (RBAC) à l'aide des Policies Laravel pour chaque contrôleur.
-- Développer la suite de tests automatisés (PHPUnit) pour assurer la non-régression sur tous les endpoints d'API.
+- Développer la maquette interactive et les interfaces du Frontend (Vite/React) pour communiquer avec ces API.
+- Effectuer des revues de performance et ajouter de la télémétrie si nécessaire.
+
 

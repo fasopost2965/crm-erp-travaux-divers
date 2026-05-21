@@ -6,9 +6,8 @@ Version du projet : v0.1.0-alpha (MVP Initial)
 ---
 
 ## 1. Résumé de l'état actuel
-L'initialisation de Laravel 11.x et la configuration PostgreSQL sont terminées dans `/code/backend`. Les 23 fichiers de migration ordonnés séquentiellement sont créés et opérationnels.
-L'intégralité des 26 modèles de données requis pour le CRM, les Ventes, et le Suivi de Chantiers (Projets) sont définis avec le trait `SoftDeletes` (sur les entités principales), les attributs `fillable`, les casts de données adéquats et toutes les relations camelCase demandées.
-Le fichier `DatabaseSeeder.php` a été ajusté pour définir les 8 rôles demandés (`super_admin`, `admin`, `directeur`, `commercial`, `chef_chantier`, `technicien`, `finance`, `rh`) et génère un jeu complet de données de démonstration réaliste pour le marché BTP au Maroc.
+L'initialisation de Laravel 11.x, la configuration de la base de données, la création des modèles, ainsi que les Resource Controllers CRUD et les API Resources associés sont complétés.
+Le système d'authentification par jeton Sanctum et le contrôle d'accès basé sur les rôles (RBAC) à l'aide de politiques d'autorisation (Policies) et du middleware `CheckRole` ont été entièrement mis en œuvre, testés avec succès grâce à un script d'intégration en mémoire simulant le cycle de vie des requêtes, et validés.
 
 ---
 
@@ -21,9 +20,10 @@ Le fichier `DatabaseSeeder.php` a été ajusté pour définir les 8 rôles deman
 | **Base de Données & Migrations**| 🟢 Complété | Les 28 migrations séquentielles ont été exécutées et validées sans aucune erreur de clé étrangère. |
 | **Modèles Eloquent (CRM, Ventes, Projets)** | 🟢 Complété | Les 26 modèles (User, Role, Account, Lead, Project, Quote, Invoice, Payment, etc.) sont entièrement configurés, liés en camelCase et validés via Tinker. |
 | **Contrôleurs CRUD & API Resources** | 🟢 Complété | Les 7 contrôleurs RESTful (Account, Contact, Lead, Opportunity, Quote, Invoice, Project) sont entièrement configurés et opérationnels avec validation via FormRequests et sérialisation camelCase via API Resources. |
+| **Authentification & Permissions (RBAC)** | 🟢 Complété | Intégration de Laravel Sanctum, création des endpoints d'authentification, configuration du middleware `CheckRole`, implémentation de 7 Policies de ressources appliquées nativement dans les contrôleurs, et validation via tests d'intégration en mémoire. |
 
 ---
 
 ## 3. Prochaines Actions Immédiates
-1. Définir et implémenter les **Policies d'Autorisation** (Laravel Gates & Policies) pour chaque ressource en fonction des rôles utilisateur.
-2. Mettre en place des tests automatisés robustes (PHPUnit) couvrant tous les scénarios nominaux et d'erreurs pour chaque endpoint.
+1. Développer l'interface utilisateur (Frontend) pour interagir avec l'API RESTful.
+2. Mettre en place des tests automatisés robustes (PHPUnit) supplémentaires ou de l'intégration continue (CI/CD) pour valider d'autres couches applicatives.
