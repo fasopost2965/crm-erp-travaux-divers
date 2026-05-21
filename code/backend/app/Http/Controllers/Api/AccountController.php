@@ -13,6 +13,11 @@ use Illuminate\Http\Response;
 
 class AccountController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Account::class, 'account');
+    }
+
     /**
      * Display a listing of the resource.
      */

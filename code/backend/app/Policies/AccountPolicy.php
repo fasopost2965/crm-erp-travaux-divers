@@ -2,10 +2,10 @@
 
 namespace App\Policies;
 
-use App\Models\Quote;
+use App\Models\Account;
 use App\Models\User;
 
-class QuotePolicy
+class AccountPolicy
 {
     /**
      * Perform pre-authorization checks.
@@ -23,15 +23,15 @@ class QuotePolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasRole('admin') || $user->hasRole('directeur') || $user->hasRole('commercial') || $user->hasRole('finance');
+        return $user->hasRole('admin') || $user->hasRole('directeur') || $user->hasRole('commercial') || $user->hasRole('chef_chantier') || $user->hasRole('finance');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Quote $quote): bool
+    public function view(User $user, Account $account): bool
     {
-        return $user->hasRole('admin') || $user->hasRole('directeur') || $user->hasRole('commercial') || $user->hasRole('finance');
+        return $user->hasRole('admin') || $user->hasRole('directeur') || $user->hasRole('commercial') || $user->hasRole('chef_chantier') || $user->hasRole('finance');
     }
 
     /**
@@ -45,7 +45,7 @@ class QuotePolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Quote $quote): bool
+    public function update(User $user, Account $account): bool
     {
         return $user->hasRole('admin') || $user->hasRole('directeur') || $user->hasRole('commercial');
     }
@@ -53,7 +53,7 @@ class QuotePolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Quote $quote): bool
+    public function delete(User $user, Account $account): bool
     {
         return $user->hasRole('admin') || $user->hasRole('commercial');
     }

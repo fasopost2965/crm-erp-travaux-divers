@@ -13,6 +13,11 @@ use Illuminate\Http\Response;
 
 class QuoteController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Quote::class, 'quote');
+    }
+
     /**
      * Display a listing of the resource.
      */

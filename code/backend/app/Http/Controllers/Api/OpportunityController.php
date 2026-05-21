@@ -13,6 +13,11 @@ use Illuminate\Http\Response;
 
 class OpportunityController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Opportunity::class, 'opportunity');
+    }
+
     /**
      * Display a listing of the resource.
      */

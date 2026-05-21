@@ -4,60 +4,57 @@ namespace App\Policies;
 
 use App\Models\Invoice;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class InvoicePolicy
 {
     /**
-     * L'administrateur a accès complet.
+     * Perform pre-authorization checks.
      */
     public function before(User $user, string $ability): ?bool
     {
-        if ($user->isAdmin()) {
+        if ($user->hasRole('super_admin')) {
             return true;
         }
-
         return null;
     }
 
     /**
-     * Voir la liste des factures.
+     * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return $user->isCommercial();
+        return $user->hasRole('admin') || $user->hasRole('directeur') || $user->hasRole('commercial') || $user->hasRole('finance');
     }
 
     /**
-     * Voir les détails d'une facture.
+     * Determine whether the user can view the model.
      */
     public function view(User $user, Invoice $invoice): bool
     {
-        return $user->isCommercial();
+        return $user->hasRole('admin') || $user->hasRole('directeur') || $user->hasRole('commercial') || $user->hasRole('finance');
     }
 
     /**
-     * Créer une facture.
+     * Determine whether the user can create models.
      */
     public function create(User $user): bool
     {
-        return $user->isCommercial();
+        return $user->hasRole('admin') || $user->hasRole('directeur') || $user->hasRole('commercial') || $user->hasRole('finance');
     }
 
     /**
-     * Modifier une facture.
+     * Determine whether the user can update the model.
      */
     public function update(User $user, Invoice $invoice): bool
     {
-        // Seule une facture au statut Brouillon peut être modifiée par le commercial
-        return $user->isCommercial() && $invoice->status === 'Brouillon';
+        return $user->hasRole('admin') || $user->hasRole('directeur') || $user->hasRole('commercial') || $user->hasRole('finance');
     }
 
     /**
-     * Supprimer une facture.
+     * Determine whether the user can delete the model.
      */
     public function delete(User $user, Invoice $invoice): bool
     {
-        return false; // Seul l'administrateur peut supprimer
+        return $user->hasRole('admin') || $user->hasRole('commercial') || $user->hasRole('finance');
     }
 }

@@ -13,6 +13,11 @@ use Illuminate\Http\Response;
 
 class LeadController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Lead::class, 'lead');
+    }
+
     /**
      * Display a listing of the resource.
      */
