@@ -23,9 +23,10 @@ Le module de pilotage et dashboards par rôle (Tâche 5) a été entièrement im
 | **Authentification & Permissions (RBAC)** | 🟢 Complété | Intégration de Laravel Sanctum, création des endpoints d'authentification, configuration du middleware `CheckRole`, implémentation de 7 Policies de ressources appliquées nativement dans les contrôleurs, et validation via tests d'intégration en mémoire. |
 | **Suivi de Chantier & Opérations Terrain** | 🟢 Complété | Implémentation des 5 contrôleurs de sous-ressources imbriquées de projet (`ProjectTask`, `WorkLog`, `ProjectPhoto`, `ProjectDocument`, `ProjectSignature`), FormRequests, API Resources, Policies dédiées (RBAC), routage API imbriqué et validation par script de test d'intégration en mémoire. |
 | **Pilotage & Dashboards par Rôle** | 🟢 Complété | Implémentation de `DashboardController` et de 4 API Resources camelCase pour les endpoints `/api/dashboard/*` (director, commercial, project-manager, finance) avec protection Sanctum/CheckRole et validation réussie de tous les cas d'accès. |
+| **Maquettes Interactives UI (Stitch)** | 🟢 Complété | Les 11 maquettes interactives Stitch clés (dont Dashboards Directeur/Commercial/PM/Finance, Clients, Devis, Projets, Saisie heures et Facture) sont entièrement générées, validées et cohérentes avec la charte graphique unifiée. |
 
 ---
 
 ## 3. Prochaines Actions Immédiates
-1. Développer la maquette et l'interface utilisateur interactive (Frontend) en s'appuyant sur cette API RESTful complète et ses indicateurs.
+1. Développer l'interface utilisateur interactive (Frontend en Vite/React) en consommant l'API RESTful complète et en se basant sur les 11 maquettes interactives Stitch validées.
 2. Mettre en place des pipelines d'intégration continue (CI/CD) et automatiser la suite complète de tests via PHPUnit.

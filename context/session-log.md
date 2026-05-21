@@ -71,8 +71,14 @@ Ce journal consigne toutes les modifications de code, exécutions de commandes e
    - **Validation & Tests** : Exécution réussie des 7 cas d'usage via le script d'intégration temporaire `test_dashboards.php` avec PHP 8.3.14 (WampServer), montrant des codes d'état parfaits (401, 403, 200) et des données de KPI justes.
    - **Nettoyage & Commit** : Suppression complète du script de test temporaire après validation.
 
+8. **Génération des Maquettes Interactives (Stitch)** :
+   - Définition d'une charte graphique unifiée réutilisable (bleu `#1D4ED8`, police Inter, fond `#F8FAFC`, bords arrondis de 8-12px) et liaison avec le design system Stitch unique (`assets/b98fa025e9ef45cc859bc734fd35741b`).
+   - Validation de l'Écran 1 (Login) déjà présent.
+   - Génération complète des 10 autres écrans clés : Dashboard Directeur (Desktop/Mobile), Liste Clients (Desktop/Mobile), Fiche Client (Desktop), Dashboard Commercial (Desktop), Dashboard Chef Chantier (Desktop), Dashboard Finance (Desktop), Devis (Desktop), Projet/Chantier Detail (Desktop), Saisie des heures (Mobile-first avec image d'illustration dédiée), et Facture Detail (Desktop avec liaisons devis/projet et taxes/TTC).
+   - Consignation de toutes les ressources Stitch générées et de leurs identifiants uniques dans `context/decisions.md`.
+
 ### Prochaines Étapes
-- Développer la maquette interactive et les interfaces du Frontend (Vite/React) pour consommer ces API de pilotage et de suivi de chantier.
+- Développer le Frontend (Vite/React) en consommant ces API de pilotage et en se basant sur les 11 maquettes interactives Stitch validées.
 - Mettre en place des pipelines d'intégration continue (CI/CD) et automatiser la suite complète de tests via PHPUnit.
 
 
