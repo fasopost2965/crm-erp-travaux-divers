@@ -62,9 +62,17 @@ Ce journal consigne toutes les modifications de code, exécutions de commandes e
    - **Validation & Tests** : Création et exécution réussie du script d'intégration en mémoire `test_project_terrain.php` qui a validé la récupération des chantiers (200), la création de tâches par les PMs (201), la saisie de feuilles d'heures par les techniciens (201) et le rejet des suppressions non autorisées (403).
    - **Nettoyage & Commit** : Suppression du script d'intégration temporaire, mise à jour du plan et de l'état, et commit final : `"Complete project and field operations module"`.
 
-### Prochaines Étapes
-- Développer la maquette interactive et les interfaces du Frontend (Vite/React) pour communiquer avec ces API.
-- Réaliser les revues de performance et optimiser les index de requêtes si nécessaire.
+7. **Implémentation de la Tâche 5 (Pilotage et Dashboards par Rôle)** :
+   - **API Resources** : Création de 4 classes d'API Resources (`DirectorDashboardResource`, `CommercialDashboardResource`, `ProjectManagerDashboardResource`, `FinanceDashboardResource`) garantissant un formatage strict en `camelCase` pour l'ensemble des indicateurs de performance.
+   - **Contrôleur DashboardController** : Implémentation du `DashboardController` avec calcul en temps réel d'indicateurs financiers, CRM et de chantier hautement optimisés (CA du mois, taux de conversion des devis, montant du pipeline, heures validées, taux d'encaissement, évolution mensuelle sur 3 mois, etc.) à l'aide de requêtes Eloquent optimisées (`sum`, `count`, `whereIn`, `whereBetween`).
+   - **Routage et Protection RBAC** : Déclaration des routes sécurisées par `auth:sanctum` et sous le middleware `'role'` spécifique à chaque dashboard (accès restreint aux directeurs/admins, commerciaux, chefs de chantier, et financiers).
+   - **Résolution d'un Mismatch de Base de Données (Bug 500 PM)** : Analyse de la trace d'erreur 500 révélant une exception `Column not found: 1054 Unknown column 'work_logs.deleted_at'`. Correction immédiate par la suppression du trait `SoftDeletes` des modèles `WorkLog`, `ProjectPhoto` et `ProjectDocument` dont les migrations ne contenaient pas cette colonne d'historique.
+   - **Résolution du Redirect Auth CLI** : Ajout explicite du header `Accept: application/json` dans le simulateur de requêtes du script de test pour garantir le retour propre de codes HTTP `401 Unauthenticated` pour les accès anonymes au lieu d'une redirection HTML vers la route inexistante `/login`.
+   - **Validation & Tests** : Exécution réussie des 7 cas d'usage via le script d'intégration temporaire `test_dashboards.php` avec PHP 8.3.14 (WampServer), montrant des codes d'état parfaits (401, 403, 200) et des données de KPI justes.
+   - **Nettoyage & Commit** : Suppression complète du script de test temporaire après validation.
 
+### Prochaines Étapes
+- Développer la maquette interactive et les interfaces du Frontend (Vite/React) pour consommer ces API de pilotage et de suivi de chantier.
+- Mettre en place des pipelines d'intégration continue (CI/CD) et automatiser la suite complète de tests via PHPUnit.
 
 

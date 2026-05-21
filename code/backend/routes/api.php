@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\ProjectPhotoController;
 use App\Http\Controllers\Api\ProjectDocumentController;
 use App\Http\Controllers\Api\ProjectSignatureController;
 use App\Http\Controllers\Api\QuoteController;
+use App\Http\Controllers\Api\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -45,4 +46,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('projects.photos', ProjectPhotoController::class)->except(['update']);
     Route::apiResource('projects.documents', ProjectDocumentController::class);
     Route::apiResource('projects.signatures', ProjectSignatureController::class)->only(['index', 'store', 'show']);
+
+    // Pilotage & Dashboards decisionnels par Role
+    Route::prefix('dashboard')->group(function () {
+        Route::get('director', [DashboardController::class, 'director'])->middleware('role:directeur,admin');
+        Route::get('commercial', [DashboardController::class, 'commercial'])->middleware('role:commercial');
+        Route::get('project-manager', [DashboardController::class, 'projectManager'])->middleware('role:chef_chantier');
+        Route::get('finance', [DashboardController::class, 'finance'])->middleware('role:finance');
+    });
 });
