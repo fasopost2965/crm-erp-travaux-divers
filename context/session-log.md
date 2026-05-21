@@ -35,8 +35,15 @@ Ce journal consigne toutes les modifications de code, exécutions de commandes e
    - **Migration réussie** : Exécuté avec succès `php artisan migrate:fresh --seed` sans aucune erreur de clé étrangère.
    - **Validation Eloquent** : Validé les relations (`User -> Role`, `Role -> Users`, `Account -> Contacts`) par des scripts Tinker réussis.
 
+4. **Implémentation de la Tâche 2 (Contrôleurs CRUD de l'API)** :
+   - Création de `InvoiceController.php` dans `app/Http/Controllers/Api/` intégrant le chargement des relations `account` et `quote`, la validation stricte via `StoreInvoiceRequest`/`UpdateInvoiceRequest`, et le formatage camelCase via `InvoiceResource`.
+   - Création de `ProjectController.php` dans `app/Http/Controllers/Api/` intégrant le chargement des relations `account` et `quote`, la validation stricte via `StoreProjectRequest`/`UpdateProjectRequest`, et le formatage camelCase via `ProjectResource`.
+   - Enregistrement complet des routes d'API dans `routes/api.php` pour les 7 entités de base à l'aide de `Route::apiResource()`.
+   - Activation et liaison du fichier `routes/api.php` dans `bootstrap/app.php` de Laravel 11.x via la configuration `withRouting`.
+   - Création et exécution réussie d'un script de test d'intégration en mémoire (`test_api.php`) pour l'endpoint `GET /api/accounts`, confirmant un statut HTTP 200 et une structure JSON camelCase parfaitement formatée avec relations.
+   - Suppression propre du fichier de test temporaire.
+
 ### Prochaines Étapes
-- Démarrer la **Tâche 2** : Création des Resource Controllers de base pour `Account`, `Contact`, `Lead`, `Opportunity`, `Quote`, `Invoice` et `Project`.
-- Configurer les FormRequests de validation de données et les API Resources.
-- Configurer les routes de l'API dans `routes/api.php` et tester les endpoints.
+- Mettre en œuvre le contrôle d'accès basé sur les rôles (RBAC) à l'aide des Policies Laravel pour chaque contrôleur.
+- Développer la suite de tests automatisés (PHPUnit) pour assurer la non-régression sur tous les endpoints d'API.
 

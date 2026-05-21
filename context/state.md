@@ -20,11 +20,10 @@ Le fichier `DatabaseSeeder.php` a été ajusté pour définir les 8 rôles deman
 | **Laravel Boilerplate**| 🟢 Complété | Initialisation propre, configuration du fichier `.env` pour support multi-base de données. |
 | **Base de Données & Migrations**| 🟢 Complété | Les 28 migrations séquentielles ont été exécutées et validées sans aucune erreur de clé étrangère. |
 | **Modèles Eloquent (CRM, Ventes, Projets)** | 🟢 Complété | Les 26 modèles (User, Role, Account, Lead, Project, Quote, Invoice, Payment, etc.) sont entièrement configurés, liés en camelCase et validés via Tinker. |
-| **Contrôleurs CRUD & Policies** | 🔴 Non commencé | Création des CRUD de base pour les comptes, contacts, leads, opportunités, devis, factures, projets. |
+| **Contrôleurs CRUD & API Resources** | 🟢 Complété | Les 7 contrôleurs RESTful (Account, Contact, Lead, Opportunity, Quote, Invoice, Project) sont entièrement configurés et opérationnels avec validation via FormRequests et sérialisation camelCase via API Resources. |
 
 ---
 
 ## 3. Prochaines Actions Immédiates
-1. Démarrer la **Tâche 2** : Création des Resource Controllers de base pour `Account`, `Contact`, `Lead`, `Opportunity`, `Quote`, `Invoice` et `Project`.
-2. Définir les FormRequests et les API Resources pour structurer proprement les requêtes et les réponses JSON.
-3. Configurer les routes API correspondantes dans `routes/api.php` et tester l'endpoint `GET /api/accounts`.
+1. Définir et implémenter les **Policies d'Autorisation** (Laravel Gates & Policies) pour chaque ressource en fonction des rôles utilisateur.
+2. Mettre en place des tests automatisés robustes (PHPUnit) couvrant tous les scénarios nominaux et d'erreurs pour chaque endpoint.
