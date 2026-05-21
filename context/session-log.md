@@ -27,8 +27,16 @@ Ce journal consigne toutes les modifications de code, exécutions de commandes e
    - Ajout et configuration des relations `teamMembers()` et `signatures()` sur le modèle `Project.php`.
    - Ajout des 8 rôles demandés dans `DatabaseSeeder.php` : `super_admin`, `admin`, `directeur`, `commercial`, `chef_chantier`, `technicien`, `finance`, `rh`.
    - Mise à jour des helpers de rôles dans `User.php` pour mapper `isProjectManager()` et `isWorker()` sur les nouveaux rôles correspondants.
+3. **Résolution des Erreurs et Lancement des Migrations** :
+   - **Extension PHP** : Décommenté `pdo_pgsql` et `pgsql` dans `php.ini` pour le support CLI de PostgreSQL.
+   - **Base de données Locale** : Configuré localement MySQL 9.1.0 sur le port 3306 (créé `crm_erp_travaux`) pour contourner l'absence de PostgreSQL physique localement.
+   - **Corrections de Modèles** : Ajouté l'import manquant `use Illuminate\Database\Eloquent\Model;` dans 7 modèles (`Quote`, `Invoice`, `Payment`, `ProjectDocument`, `ProjectPhoto`, `ProjectTask`, `WorkLog`).
+   - **Correction du Seeder** : Corrigé le champ `created_by` en `owner_id` pour la création des `Account` dans le `DatabaseSeeder.php`.
+   - **Migration réussie** : Exécuté avec succès `php artisan migrate:fresh --seed` sans aucune erreur de clé étrangère.
+   - **Validation Eloquent** : Validé les relations (`User -> Role`, `Role -> Users`, `Account -> Contacts`) par des scripts Tinker réussis.
 
 ### Prochaines Étapes
-- Exécuter la migration fraîche et le seed de la base de données PostgreSQL.
-- Implémenter les contrôleurs CRUD `QuoteController` et `ProjectController`.
-- Mettre en place les Policies d'autorisation.
+- Démarrer la **Tâche 2** : Création des Resource Controllers de base pour `Account`, `Contact`, `Lead`, `Opportunity`, `Quote`, `Invoice` et `Project`.
+- Configurer les FormRequests de validation de données et les API Resources.
+- Configurer les routes de l'API dans `routes/api.php` et tester les endpoints.
+

@@ -102,4 +102,12 @@ class Account extends Model
     {
         return $this->morphMany(Document::class, 'documentable');
     }
+
+    /**
+     * Tags associés au compte client.
+     */
+    public function tags()
+    {
+        return $this->morphToMany(Tag::class, 'taggable');
+    }
 }

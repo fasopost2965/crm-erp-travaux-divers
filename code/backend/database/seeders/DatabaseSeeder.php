@@ -127,7 +127,7 @@ class DatabaseSeeder extends Seeder
             'phone' => '+212537700011',
             'address' => 'Avenue Allal Ben Abdellah, Rabat',
             'city' => 'Rabat',
-            'created_by' => $admin->id
+            'owner_id' => $admin->id
         ]);
 
         $account2 = Account::create([
@@ -140,7 +140,7 @@ class DatabaseSeeder extends Seeder
             'phone' => '+212522402030',
             'address' => 'Angle Boulevard Rachidi et Rue d\'Alger, Casablanca',
             'city' => 'Casablanca',
-            'created_by' => $commercial->id
+            'owner_id' => $commercial->id
         ]);
 
         // 4. SEED DES CONTACTS

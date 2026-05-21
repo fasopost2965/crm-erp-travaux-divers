@@ -76,4 +76,12 @@ class Opportunity extends Model
     {
         return $this->morphMany(Document::class, 'documentable');
     }
+
+    /**
+     * Tags associés à l'opportunité.
+     */
+    public function tags()
+    {
+        return $this->morphToMany(Tag::class, 'taggable');
+    }
 }

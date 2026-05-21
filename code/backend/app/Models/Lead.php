@@ -61,4 +61,12 @@ class Lead extends Model
     {
         return $this->morphMany(Document::class, 'documentable');
     }
+
+    /**
+     * Tags associés au Lead.
+     */
+    public function tags()
+    {
+        return $this->morphToMany(Tag::class, 'taggable');
+    }
 }

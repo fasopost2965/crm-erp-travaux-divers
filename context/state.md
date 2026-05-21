@@ -17,14 +17,14 @@ Le fichier `DatabaseSeeder.php` a été ajusté pour définir les 8 rôles deman
 | Module | Statut | Description / Prochaine action |
 |---|---|---|
 | **Gouvernance & Docs** | 🟢 Complété | AGENTS.md, master-brief.md, core-flows.md, antigravity-config.md, code-checklist.md et session-log.md créés dans `/context` ou `/docs`. |
-| **Laravel & PostgreSQL Boilerplate**| 🟢 Complété | Initialisation propre, configuration du fichier `.env` pour PostgreSQL. |
-| **Base de Données & Migrations**| 🟡 En cours (Seeding) | Les 23 migrations séquentielles sont prêtes. Prochaine étape : Exécuter la migration fraîche. |
-| **Modèles Eloquent (CRM, Ventes, Projets)** | 🟢 Complété | Les 26 modèles (User, Role, Account, Lead, Project, Quote, Invoice, Payment, etc.) sont entièrement configurés et liés en camelCase. |
-| **Contrôleurs CRUD & Policies** | 🔴 Non commencé | Création des CRUD de base pour les devis et les chantiers (Phase 2 & Phase 3). |
+| **Laravel Boilerplate**| 🟢 Complété | Initialisation propre, configuration du fichier `.env` pour support multi-base de données. |
+| **Base de Données & Migrations**| 🟢 Complété | Les 28 migrations séquentielles ont été exécutées et validées sans aucune erreur de clé étrangère. |
+| **Modèles Eloquent (CRM, Ventes, Projets)** | 🟢 Complété | Les 26 modèles (User, Role, Account, Lead, Project, Quote, Invoice, Payment, etc.) sont entièrement configurés, liés en camelCase et validés via Tinker. |
+| **Contrôleurs CRUD & Policies** | 🔴 Non commencé | Création des CRUD de base pour les comptes, contacts, leads, opportunités, devis, factures, projets. |
 
 ---
 
 ## 3. Prochaines Actions Immédiates
-1. Exécuter la migration fraîche et le seed de la base de données : `C:\wamp64\bin\php\php8.3.14\php.exe artisan migrate:fresh --seed`.
-2. Valider la bonne insertion des tables, clés étrangères et indexations.
-3. Implémenter les contrôleurs CRUD et la logique de calcul financier de la Phase 2.
+1. Démarrer la **Tâche 2** : Création des Resource Controllers de base pour `Account`, `Contact`, `Lead`, `Opportunity`, `Quote`, `Invoice` et `Project`.
+2. Définir les FormRequests et les API Resources pour structurer proprement les requêtes et les réponses JSON.
+3. Configurer les routes API correspondantes dans `routes/api.php` et tester l'endpoint `GET /api/accounts`.
