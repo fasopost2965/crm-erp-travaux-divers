@@ -6,8 +6,8 @@ Version du projet : v0.1.0-alpha (MVP Initial)
 ---
 
 ## 1. Résumé de l'état actuel
-L'initialisation de Laravel 11.x, la configuration de la base de données, la création des modèles, ainsi que les Resource Controllers CRUD et les API Resources associés sont complétés.
-Le système d'authentification par jeton Sanctum et le contrôle d'accès basé sur les rôles (RBAC) à l'aide de politiques d'autorisation (Policies) et du middleware `CheckRole` ont été entièrement mis en œuvre, testés avec succès grâce à un script d'intégration en mémoire simulant le cycle de vie des requêtes, et validés.
+L'initialisation de Laravel 11.x, la configuration de la base de données, la création des modèles, les Resource Controllers CRUD, l'API d'authentification Sanctum et le contrôle d'accès RBAC sont opérationnels.
+Le noyau métier lié au suivi de chantier et aux opérations sur le terrain (Tâche 4) a été entièrement implémenté et validé via des tests d'intégration simulant le routage des sous-ressources imbriquées de projet (tâches, suivis d'heures, photos, documents, signatures), validant ainsi la couche métier projets / terrain.
 
 ---
 
@@ -21,9 +21,10 @@ Le système d'authentification par jeton Sanctum et le contrôle d'accès basé 
 | **Modèles Eloquent (CRM, Ventes, Projets)** | 🟢 Complété | Les 26 modèles (User, Role, Account, Lead, Project, Quote, Invoice, Payment, etc.) sont entièrement configurés, liés en camelCase et validés via Tinker. |
 | **Contrôleurs CRUD & API Resources** | 🟢 Complété | Les 7 contrôleurs RESTful (Account, Contact, Lead, Opportunity, Quote, Invoice, Project) sont entièrement configurés et opérationnels avec validation via FormRequests et sérialisation camelCase via API Resources. |
 | **Authentification & Permissions (RBAC)** | 🟢 Complété | Intégration de Laravel Sanctum, création des endpoints d'authentification, configuration du middleware `CheckRole`, implémentation de 7 Policies de ressources appliquées nativement dans les contrôleurs, et validation via tests d'intégration en mémoire. |
+| **Suivi de Chantier & Opérations Terrain** | 🟢 Complété | Implémentation des 5 contrôleurs de sous-ressources imbriquées de projet (`ProjectTask`, `WorkLog`, `ProjectPhoto`, `ProjectDocument`, `ProjectSignature`), FormRequests, API Resources, Policies dédiées (RBAC), routage API imbriqué et validation par script de test d'intégration en mémoire. |
 
 ---
 
 ## 3. Prochaines Actions Immédiates
-1. Développer l'interface utilisateur (Frontend) pour interagir avec l'API RESTful.
-2. Mettre en place des tests automatisés robustes (PHPUnit) supplémentaires ou de l'intégration continue (CI/CD) pour valider d'autres couches applicatives.
+1. Développer la maquette et l'interface utilisateur interactive (Frontend) en s'appuyant sur cette API RESTful complète.
+2. Mettre en place des pipelines d'intégration continue (CI/CD) et automatiser la suite complète de tests via PHPUnit.

@@ -53,8 +53,18 @@ Ce journal consigne toutes les modifications de code, exécutions de commandes e
    - **Validation & Tests** : Création et exécution d'un script de test d'intégration en mémoire (`test_auth_permissions.php`) simulant les requêtes HTTP avec Sanctum pour différents rôles. Tous les cas de test (401 non authentifié, 403 non autorisé, 200 OK) ont réussi avec succès.
    - **Nettoyage & Commit** : Suppression propre du script temporaire de test, mise à jour des documents d'état, et commit Git final : `"Add authentication and role-based permissions"`.
 
+6. **Implémentation de la Tâche 4 (Noyau Métier Projets / Terrain)** :
+   - **FormRequests** : Création de 8 FormRequests (`StoreProjectTaskRequest`, `UpdateProjectTaskRequest`, `StoreWorkLogRequest`, `UpdateWorkLogRequest`, `StoreProjectPhotoRequest`, `StoreProjectDocumentRequest`, `UpdateProjectDocumentRequest`, `StoreProjectSignatureRequest`) assurant la validation stricte des entrées pour les chantiers.
+   - **API Resources** : Création de 5 API Resources (`ProjectTaskResource`, `WorkLogResource`, `ProjectPhotoResource`, `ProjectDocumentResource`, `ProjectSignatureResource`) formatant toutes les données sortantes selon la convention `camelCase`.
+   - **Policies (RBAC)** : Création de 5 Policies (`ProjectTaskPolicy`, `WorkLogPolicy`, `ProjectPhotoPolicy`, `ProjectDocumentPolicy`, `ProjectSignaturePolicy`) appliquant les règles fines du terrain (lecture/écriture/suppression restreintes selon le rôle et l'auteur du work-log).
+   - **Contrôleurs RESTful** : Création de 5 Resource Controllers imbriqués (`ProjectTaskController`, `WorkLogController`, `ProjectPhotoController`, `ProjectDocumentController`, `ProjectSignatureController`) pour gérer l'intégralité des relations `Project hasMany ...` avec intégration native de `$this->authorizeResource(...)`.
+   - **Routage API** : Déclaration de routes de ressources imbriquées dans `routes/api.php` sous le middleware `auth:sanctum` pour structurer logiquement les accès aux sous-ressources de projets.
+   - **Validation & Tests** : Création et exécution réussie du script d'intégration en mémoire `test_project_terrain.php` qui a validé la récupération des chantiers (200), la création de tâches par les PMs (201), la saisie de feuilles d'heures par les techniciens (201) et le rejet des suppressions non autorisées (403).
+   - **Nettoyage & Commit** : Suppression du script d'intégration temporaire, mise à jour du plan et de l'état, et commit final : `"Complete project and field operations module"`.
+
 ### Prochaines Étapes
 - Développer la maquette interactive et les interfaces du Frontend (Vite/React) pour communiquer avec ces API.
-- Effectuer des revues de performance et ajouter de la télémétrie si nécessaire.
+- Réaliser les revues de performance et optimiser les index de requêtes si nécessaire.
+
 
 
