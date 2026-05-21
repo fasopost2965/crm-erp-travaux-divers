@@ -6,8 +6,10 @@ Version du projet : v0.1.0-alpha (MVP Initial)
 ---
 
 ## 1. Résumé de l'état actuel
-L'initialisation de Laravel 11.x, la configuration de la base de données, la création des modèles, les Resource Controllers CRUD, l'API d'authentification Sanctum, le contrôle d'accès RBAC et le module projets/terrain sont opérationnels.
-Le module de pilotage et dashboards par rôle (Tâche 5) a été entièrement implémenté et validé. Il fournit des endpoints hautement optimisés retournant les indicateurs clés de performance (KPI) spécifiques pour chaque rôle utilisateur (Directeur, Commercial, Chef de chantier/Project Manager, Finance) sous format sérialisé camelCase et protégés par Sanctum + Middleware de contrôle de rôles.
+- **Backend MVP** : COMPLET ✅ (Laravel 11.x, Auth Sanctum, 28 migrations, 26 modèles, API CRUD, RBAC, et endpoints de Dashboard par rôle)
+- **Maquettes Stitch** : COMPLÈTES ✅ (13 écrans interactifs générés dans le projet `30868049086750529`)
+- **Frontend** : À DÉMARRER 🚀
+- **Prochaine étape** : Tâche 7 - Setup frontend React/Vite et intégration de l'API
 
 ---
 
@@ -23,10 +25,11 @@ Le module de pilotage et dashboards par rôle (Tâche 5) a été entièrement im
 | **Authentification & Permissions (RBAC)** | 🟢 Complété | Intégration de Laravel Sanctum, création des endpoints d'authentification, configuration du middleware `CheckRole`, implémentation de 7 Policies de ressources appliquées nativement dans les contrôleurs, et validation via tests d'intégration en mémoire. |
 | **Suivi de Chantier & Opérations Terrain** | 🟢 Complété | Implémentation des 5 contrôleurs de sous-ressources imbriquées de projet (`ProjectTask`, `WorkLog`, `ProjectPhoto`, `ProjectDocument`, `ProjectSignature`), FormRequests, API Resources, Policies dédiées (RBAC), routage API imbriqué et validation par script de test d'intégration en mémoire. |
 | **Pilotage & Dashboards par Rôle** | 🟢 Complété | Implémentation de `DashboardController` et de 4 API Resources camelCase pour les endpoints `/api/dashboard/*` (director, commercial, project-manager, finance) avec protection Sanctum/CheckRole et validation réussie de tous les cas d'accès. |
-| **Maquettes Interactives UI (Stitch)** | 🟢 Complété | Les 11 maquettes interactives Stitch clés (dont Dashboards Directeur/Commercial/PM/Finance, Clients, Devis, Projets, Saisie heures et Facture) sont entièrement générées, validées et cohérentes avec la charte graphique unifiée. |
+| **Maquettes Interactives UI (Stitch)** | 🟢 Complété | Les 13 maquettes interactives Stitch clés (incluant les versions Desktop/Mobile pour dashboards, clients, devis, projets, saisie des heures et facture) sont entièrement générées, validées et cohérentes avec la charte graphique unifiée. |
+| **Frontend React/Vite** | 🟡 À démarrer | Prochaine phase majeure. Initialisation de Vite + React, configuration de Tailwind CSS et intégration de React Query / Axios. |
 
 ---
 
 ## 3. Prochaines Actions Immédiates
-1. Développer l'interface utilisateur interactive (Frontend en Vite/React) en consommant l'API RESTful complète et en se basant sur les 11 maquettes interactives Stitch validées.
-2. Mettre en place des pipelines d'intégration continue (CI/CD) et automatiser la suite complète de tests via PHPUnit.
+1. **Tâche 7 - Setup frontend React/Vite** : Initialisation de l'application cliente dans `/code/frontend` avec Vite, React et Tailwind CSS.
+2. **Intégration de l'API & Authentification** : Configuration d'Axios, mise en place du context d'authentification et connexion avec les endpoints d'API Laravel.
