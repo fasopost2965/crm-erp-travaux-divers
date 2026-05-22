@@ -58,6 +58,22 @@ class Invoice extends Model
     }
 
     /**
+     * Calculer le montant déjà réglé par rapport aux paiements validés.
+     */
+    public function getAmountPaidAttribute(): float
+    {
+        return (float) $this->payments()->sum('amount');
+    }
+
+    /**
+     * Calculer le montant restant à payer.
+     */
+    public function getAmountRemainingAttribute(): float
+    {
+        return max(0.00, (float) $this->total_ttc - $this->amount_paid);
+    }
+
+    /**
      * Recalcule automatiquement les totaux globaux de la facture.
      */
     public function recalculateTotals(): void

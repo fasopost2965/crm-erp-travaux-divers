@@ -1,0 +1,30 @@
+[
+  {
+    "title": "Travaux de rénovation bureaux Maarif",
+    "valid_until": "2026-07-31",
+    "tva_rate": 20,
+    "items": [
+      {
+        "section": "Démolition",
+        "description": "Dépose de cloisons sèches et faux-plafonds existants y compris évacuation",
+        "unit": "M2",
+        "quantity": 150,
+        "unit_price_ht": 45
+      },
+      {
+        "section": "Revêtements",
+        "description": "Fourniture et pose de carrelage grès cérame 60x60 premier choix",
+        "unit": "M2",
+        "quantity": 120,
+        "unit_price_ht": 220
+      },
+      {
+        "section": "Peinture",
+        "description": "Peinture vinylique satinée 3 couches sur murs et plafonds",
+        "unit": "M2",
+        "quantity": 480,
+        "unit_price_ht": 35
+      }
+    ]
+  }
+]

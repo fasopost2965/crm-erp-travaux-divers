@@ -2,7 +2,7 @@
 
 ---
 
-## ✅ DONE : Tâches 1 à 6 (Backend & Maquettes)
+## ✅ DONE : Tâches 1 à 7 (Backend, Maquettes & Setup Frontend)
 - [x] **Tâche 1 : Base de Données, Migrations & Seeders**
   - [x] Initialisation de Laravel 11.x et configuration PostgreSQL/MySQL.
   - [x] 28 migrations séquentielles exécutées et validées sans erreur de clé étrangère.
@@ -19,38 +19,32 @@
 - [x] **Tâche 6 : Conception & Génération des Maquettes Stitch**
   - [x] Établissement de la charte graphique unifiée (Inter, bleu #1D4ED8, fond #F8FAFC, arrondis 8-12px).
   - [x] 13 maquettes interactives générées avec succès (Desktop/Mobile pour dashboards, clients, devis, projets, saisie d'heures et facturation).
+- [x] **Tâche 7 : Setup Frontend React/Vite & Intégration API**
+  - [x] Initialiser le projet Vite + React dans `/code/frontend` et configurer l'environnement.
+  - [x] Installer et configurer Tailwind CSS v4, Axios, React Query et React Router DOM.
+  - [x] Mettre en place `AuthContext`, `ProtectedRoute` et les intercepteurs API.
+  - [x] Concevoir la page de Login premium et le Dashboard Directeur reliés en temps réel à l'API.
+- [x] **Tâche 8 : Écrans complémentaires, CRM & Navigation**
+  - [x] Composants communs réutilisables (KPICard, DataTable, StatusBadge, PageHeader, LoadingSpinner, EmptyState, DashboardRedirect).
+  - [x] Layout principal réutilisable (sidebar desktop filtrée par RBAC, topbar avec menu utilisateur, bottom navigation mobile).
+  - [x] Tableaux de bord métiers connectés en temps réel (CommercialDashboard, ProjectManagerDashboard, FinanceDashboard, DirectorDashboard refondu).
+  - [x] Module CRM & Fiche 360° (AccountList paginée, AccountDetail avec identifiants fiscaux ICE/RC/Patente/IF et onglets interactifs).
+  - [x] Routage centralisé et protection stricte par rôles RBAC (App.jsx).
+  - [x] Build et validation de production réussis sans aucune erreur.
 
 ---
 
-## 🎯 NOW : Tâche 7 - Setup frontend React/Vite & Intégration API
-- [ ] **Initialisation du projet frontend dans `/code/frontend`**
-  - [ ] Installer Vite + React et configurer l'environnement.
-  - [ ] Installer Tailwind CSS, PostCSS et Autoprefixer.
-  - [ ] Configurer les tokens de design system (couleurs, espacements, typographie).
-- [ ] **Configuration de l'infrastructure de communication API**
-  - [ ] Installer et configurer Axios (baseUrl, interceptors de requêtes/erreurs).
-  - [ ] Mettre en place React Query (`@tanstack/react-query`) pour la gestion du cache et des requêtes.
-- [ ] **Authentification & Session**
-  - [ ] Créer le contexte d'authentification (`AuthContext`).
-  - [ ] Implémenter le stockage sécurisé du token de session.
-  - [ ] Créer le composant de routes protégées (`ProtectedRoute`).
+## 🎯 NOW : Saisie mobile-first terrain avancée & PV de réception
+- [x] **Tâche 9 : Documents de gestion & Modules métiers** (Création/Visualisation Devis, Suivi Projet, Factures, Règlements)
+- [x] **Tâche 10B : Export PDF Professionnel** (Génération PDF Devis/Factures avec Dompdf)
+- [x] **Tâche 10A : Validation automatisée via Cypress** (14/14 tests passés avec succès)
+- [ ] **Tâche 10C : Saisie mobile-first des heures terrain** (Work Logs avancés & Pointage)
+- [ ] **Tâche 10D : PV de réception de chantier** (avec signature électronique)
 
 ---
 
-## 🚀 NEXT : Implémentation des écrans prioritaires
-- [ ] Écran de connexion (Login Screen)
-- [ ] Layout principal (Sidebar Desktop, Bottom Bar Mobile)
-- [ ] Dashboard Directeur (Executive Dashboard - Desktop + Mobile)
-- [ ] Dashboard Commercial (Commercial Dashboard - Desktop)
-- [ ] Liste des Clients & Fiche Client détaillée
-- [ ] Autres Tableaux de bord (Chef Chantier, Finance)
-- [ ] Documents de gestion (Création/Visualisation Devis, Suivi Projet, Factures)
-- [ ] Saisie mobile-first des heures terrain (Work Logs)
-
----
-
-## 🛡️ LATER : Tests et Déploiement
-- [ ] Élaboration d'une couverture de tests unitaires et d'intégration côté frontend.
+## 🛡️ LATER : Tests unitaires et Déploiement
+- [ ] Élaboration d'une couverture de tests unitaires côté frontend.
 - [ ] Automatisation des tests Laravel via PHPUnit.
-- [ ] Configuration de pipelines de CI/CD (GitHub Actions / GitLab CI).
-- [ ] Déploiement en environnement de pré-production (Staging).
+- [ ] Configuration de pipelines de CI/CD.
+- [ ] Déploiement en pré-production (Staging).

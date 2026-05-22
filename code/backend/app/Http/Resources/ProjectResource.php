@@ -33,6 +33,7 @@ class ProjectResource extends JsonResource
             // Loaded relations
             'account' => new AccountResource($this->whenLoaded('account')),
             'quote' => new QuoteResource($this->whenLoaded('quote')),
+            'manager' => new UserResource($this->whenLoaded('manager')),
         ];
     }
 }

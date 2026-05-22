@@ -29,6 +29,12 @@ class StoreInvoiceRequest extends FormRequest
             'status' => 'required|string|max:255',
             'tva_rate' => 'nullable|numeric|min:0',
             'due_date' => 'nullable|date',
+            'items' => 'nullable|array',
+            'items.*.section' => 'nullable|string|max:255',
+            'items.*.description' => 'required|string',
+            'items.*.unit' => 'required|string|max:10',
+            'items.*.quantity' => 'required|numeric|min:0.01',
+            'items.*.unit_price_ht' => 'required|numeric|min:0',
         ];
     }
 }

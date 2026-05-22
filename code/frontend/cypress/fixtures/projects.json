@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Chantier Rénovation Siège Alpha",
+    "description": "Travaux d'aménagement des plateaux de bureaux au 3ème étage",
+    "start_date": "2026-06-01",
+    "end_date": "2026-08-15",
+    "tasks": [
+      {
+        "title": "Achat des fournitures (carrelage, plâtre, câbles)",
+        "description": "Passer commande auprès des fournisseurs agréés et organiser la livraison",
+        "status": "À faire",
+        "priority": "Moyenne"
+      },
+      {
+        "title": "Travaux d'électricité - Tirage des câbles",
+        "description": "Câblage informatique et électrique dans les faux-plafonds",
+        "status": "En cours",
+        "priority": "Haute"
+      }
+    ],
+    "work_log": {
+      "hours": 8,
+      "log_date": "2026-05-22",
+      "notes": "Tirage des lignes d'alimentation électrique et pose des boîtes de dérivation."
+    }
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "title": "Facture de situation N°1 - Rénovation Maarif",
+    "type": "Situation",
+    "situation_percentage": 40,
+    "tva_rate": 20,
+    "items": [
+      {
+        "description": "Travaux préparatoires et démolition terminés à 100%",
+        "unit": "FF",
+        "quantity": 1,
+        "unit_price_ht": 6750
+      },
+      {
+        "description": "Fourniture et pose de carrelage - Avancement de 30%",
+        "unit": "M2",
+        "quantity": 36,
+        "unit_price_ht": 220
+      }
+    ]
+  }
+]

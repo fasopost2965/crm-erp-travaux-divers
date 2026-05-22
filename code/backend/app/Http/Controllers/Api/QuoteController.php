@@ -10,6 +10,7 @@ use App\Models\Quote;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class QuoteController extends Controller
 {
@@ -32,7 +33,23 @@ class QuoteController extends Controller
      */
     public function store(StoreQuoteRequest $request): QuoteResource
     {
-        $quote = Quote::create($request->validated());
+        $validated = $request->validated();
+        $itemsData = $validated['items'] ?? [];
+        unset($validated['items']);
+
+        if (!isset($validated['created_by'])) {
+            $validated['created_by'] = auth()->id();
+        }
+
+        $quote = Quote::create($validated);
+
+        foreach ($itemsData as $itemData) {
+            $quote->items()->create($itemData);
+        }
+
+        $quote->recalculateTotals();
+        $quote->load(['account', 'opportunity', 'items']);
+
         return new QuoteResource($quote);
     }
 
@@ -50,9 +67,23 @@ class QuoteController extends Controller
      */
     public function update(UpdateQuoteRequest $request, Quote $quote): QuoteResource
     {
-        $quote->update($request->validated());
+        $validated = $request->validated();
+        $itemsData = $validated['items'] ?? null;
+        unset($validated['items']);
+
+        $quote->update($validated);
+
+        if ($itemsData !== null) {
+            $quote->items()->delete();
+            foreach ($itemsData as $itemData) {
+                $quote->items()->create($itemData);
+            }
+        }
+
         $quote->recalculateTotals();
-        return new QuoteResource($quote);
+        $quote->load(['account', 'opportunity', 'items']);
+
+        return new QuoteResource($quote->fresh());
     }
 
     /**
@@ -62,5 +93,21 @@ class QuoteController extends Controller
     {
         $quote->delete();
         return response()->json(null, Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * Export the specified quote as PDF.
+     */
+    public function exportPdf(Quote $quote)
+    {
+        $this->authorize('view', $quote);
+        
+        $quote->load(['account', 'creator', 'items']);
+        
+        $pdf = Pdf::loadView('pdf.quote', [
+            'quote' => $quote
+        ]);
+        
+        return $pdf->download('devis-' . $quote->quote_number . '.pdf');
     }
 }

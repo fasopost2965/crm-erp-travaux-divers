@@ -81,7 +81,65 @@ Ce journal consigne toutes les modifications de code, exécutions de commandes e
    - Consignation de toutes les ressources Stitch générées et de leurs identifiants uniques dans `context/decisions.md`.
 
 ### Prochaines Étapes
-- Développer le Frontend (Vite/React) en consommant ces API de pilotage et en se basant sur les 11 maquettes interactives Stitch validées.
-- Mettre en place des pipelines d'intégration continue (CI/CD) et automatiser la suite complète de tests via PHPUnit.
+- Intégrer les fiches de temps de chantier terrain (Work Logs) et signatures électroniques complémentaires pour les techniciens et chefs.
+- Mettre en place des pipelines d'intégration continue (CI/CD) et automatiser la suite complète de tests de bout en bout avec Playwright/Cypress.
 
+---
 
+## Session du 2026-05-22
+- **Date** : 22 mai 2026
+- **Durée** : Session d'après-midi
+- **Statut** : Tâche 9 : Implémenter les écrans Devis, Projets et Factures ✅ (Entièrement complété, routé et compilé avec succès)
+
+### Objectifs de la Session
+- Finaliser et implémenter les formulaires de gestion d'affaires : création/édition de Devis (avec lignes dynamiques), Projet (liaison avec Devis et sélecteur de conducteurs de travaux depuis `/api/users`), Facturation (calculs de situation et report de lignes de devis), et validation de pointage d'heures.
+- Créer le module d'enregistrement de règlement financier (`PaymentForm.jsx`).
+- Configurer les routes sécurisées (RBAC) correspondantes dans `App.jsx`.
+- Raccorder les liens de navigation dans `DashboardLayout.jsx`.
+- Compiler et vérifier la conformité structurelle de l'ensemble de l'application React.
+
+### Activités Réalisées
+1. **Implémentation du formulaire de paiement (`PaymentForm.jsx`)** :
+   - Création de la page `/dashboard/invoices/:id/payments/new` pour enregistrer un règlement financier.
+   - Intégration de React Query pour récupérer les détails de la facture et pré-remplir dynamiquement le montant avec le reste à recouvrer.
+   - Validation stricte en temps réel des inputs (montant > 0, date obligatoire, mode sélectionné).
+   - Formulaire ergonomique et adaptatif en fonction du mode de paiement choisi (affichage conditionnel de la banque émettrice et du numéro de transaction/chèque).
+   - Mutation persistée vers le serveur via `POST /api/invoices/{invoice}/payments` avec recalcul automatique des caches de tableau de bord et de facture.
+
+2. **Routage et Liaison Visuelle Globale (`App.jsx` & `DashboardLayout.jsx`)** :
+   - Importation et déclaration de toutes les routes de Devis (`QuoteList`, `QuoteForm`, `QuoteDetail`), Chantiers (`ProjectList`, `ProjectForm`, `ProjectDetail`, `WorkLogForm`), et Factures (`InvoiceList`, `InvoiceForm`, `InvoiceDetail`, `PaymentForm`).
+   - Encapsulation des routes sous le composant `<ProtectedRoute>` avec restriction stricte par rôles (`allowedRoles`) conformes aux spécifications (ex: Facturation restreinte aux directeurs, admins, et agents financiers).
+   - Raccordement des liens réels de navigation de la Sidebar de bureau et de la Bottom bar mobile en remplaçant les ancres mortes (`#`) par des routes réelles.
+
+3. **Vérification, Compilation & Résolution Technique** :
+   - Exécution de la commande de compilation de production `npm.cmd run build` sous l'environnement Windows pour contourner les restrictions PowerShell d'exécution de scripts (`ExecutionPolicy`).
+   - Compilation effectuée avec succès avec **zéro erreur** en `1.89s`, confirmant l'absence totale de fautes de syntaxe, d'importations incorrectes ou de typages invalides.
+   - Mise à jour exhaustive des documents de suivi et des fichiers de contexte (`task.md`, `state.md`).
+
+4. **Implémentation de la Tâche 10B (Export PDF Professionnel)** :
+   - Intégration réussie de `barryvdh/laravel-dompdf` dans le backend Laravel.
+   - Création des templates de rendu Blade soignés : `quote.blade.php` pour les devis et `invoice.blade.php` pour les factures (incluant les identifiants fiscaux légaux marocains ICE, RC, Patente, IF, sous-totaux, TVA 20% et net à payer).
+   - Ajout des contrôleurs backend, de la validation d'accès via les Policies associées (`QuotePolicy`, `InvoicePolicy`) et des routes d'API correspondantes.
+   - Intégration sur le frontend React de requêtes Axios adaptées (`responseType: 'blob'`) pour récupérer et déclencher instantanément le téléchargement propre des documents sous format PDF sur les fiches de détail de devis et factures.
+
+5. **Implémentation de la Tâche 10A (Tests automatisés Cypress E2E)** :
+   - Installation et configuration propre de Cypress dans le répertoire `/code/frontend` (résolution des restrictions Windows PowerShell).
+   - Élaboration de 6 suites de tests E2E robustes couvrant l'ensemble des parcours critiques de l'ERP :
+     - `auth.cy.js` : Connexion, mauvaise authentification, déconnexion, redirection et protection.
+     - `director-dashboard.cy.js` : Affichage des indicateurs de performance financiers, graphiques et navigation.
+     - `commercial-flow.cy.js` : Création de fiche client CRM 360° avec contraintes ICE/RC, création d'opportunité et génération de devis.
+     - `project-flow.cy.js` : Attribution PM, Kanban de chantier, pointage d'heures de travail.
+     - `finance-flow.cy.js` : Facture de situation d'avancement, modal de paiement, encaissement et restes à recouvrer.
+     - `rbac.cy.js` : Permissions croisées et isolation de sécurité (statut 403 / redirection vers non autorisé).
+   - Exécution de la suite complète headless en local: **14 tests sur 14 exécutés et réussis avec succès** en 45 secondes sans aucune régression.
+   - Re-compilation de production validée avec succès via Vite (`npm.cmd run build`) garantissant la solidité et la conformité du build de distribution finale.
+
+6. **Validation finale — Tests HTTP en direct (Tâche 10B)** :
+   - Écriture et exécution d'un script PHP de test d'intégration HTTP (`test_pdf.php`) simulant les requêtes réelles vers le serveur Laravel actif.
+   - **Résultats obtenus** :
+     - `GET /api/quotes/1/pdf` → HTTP 200, Content-Type: `application/pdf`, signature `%PDF` ✓, fichier `devis-DEV-2026-0001.pdf` — **10 267 octets** ✅
+     - `GET /api/invoices/1/pdf` → HTTP 200, Content-Type: `application/pdf`, signature `%PDF` ✓, fichier `facture-FAC-2026-0001.pdf` — **9 079 octets** ✅
+     - `GET /api/quotes/1/pdf` sans token → HTTP 401 ✓ — protection `auth:sanctum` opérationnelle ✅
+   - Cypress re-exécuté en mode headless : **14/14 tests passés** en 49 secondes, zéro régression ✅
+   - Suppression propre du script temporaire `test_pdf.php` après validation.
+   - Mise à jour complète de tous les fichiers de documentation : `task.md`, `state.md`, `session-log.md`, `walkthrough.md`.

@@ -1,0 +1,24 @@
+[
+  {
+    "name": "BATI MAROC SARL",
+    "ice": "001234567890123",
+    "rc": "87654",
+    "patente": "23456789",
+    "iff": "98765432",
+    "email": "contact@batimaroc.ma",
+    "phone": "+212 522 99 88 77",
+    "address": "45 Boulevard d'Anfa",
+    "city": "Casablanca"
+  },
+  {
+    "name": "SOCIETE DE TRAVAUX SUD",
+    "ice": "009876543210987",
+    "rc": "12345",
+    "patente": "98765432",
+    "iff": "12345678",
+    "email": "travaux.sud@gmail.com",
+    "phone": "+212 528 11 22 33",
+    "address": "Zone Industrielle Ait Melloul",
+    "city": "Agadir"
+  }
+]

@@ -34,6 +34,8 @@ class InvoiceResource extends JsonResource
             // Loaded relations
             'account' => new AccountResource($this->whenLoaded('account')),
             'quote' => new QuoteResource($this->whenLoaded('quote')),
+            'items' => InvoiceItemResource::collection($this->whenLoaded('items')),
+            'payments' => PaymentResource::collection($this->whenLoaded('payments')),
         ];
     }
 }

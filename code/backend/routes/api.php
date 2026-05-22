@@ -37,8 +37,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('leads', LeadController::class);
     Route::apiResource('opportunities', OpportunityController::class);
     Route::apiResource('quotes', QuoteController::class);
+    Route::get('quotes/{quote}/pdf', [QuoteController::class, 'exportPdf']);
     Route::apiResource('invoices', InvoiceController::class);
+    Route::get('invoices/{invoice}/pdf', [InvoiceController::class, 'exportPdf']);
+    Route::post('invoices/{invoice}/payments', [InvoiceController::class, 'storePayment']);
     Route::apiResource('projects', ProjectController::class);
+    Route::get('users', function () {
+        return \App\Http\Resources\UserResource::collection(\App\Models\User::with('role')->get());
+    });
 
     // Nested Field Operations/Project Sub-resources
     Route::apiResource('projects.tasks', ProjectTaskController::class);

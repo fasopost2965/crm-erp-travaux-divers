@@ -1,0 +1,43 @@
+# .gitignore — Atlas Works ERP/CRM
+
+# ─── Environnements & secrets ───────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ─── Backend Laravel ────────────────────────────────────────────────────
+code/backend/vendor/
+code/backend/storage/logs/*.log
+code/backend/storage/framework/cache/
+code/backend/storage/framework/sessions/
+code/backend/storage/framework/views/
+code/backend/bootstrap/cache/
+code/backend/.env
+code/backend/*.lock
+# Keep composer.lock tracked for reproducibility — remove line above if desired
+
+# ─── Frontend Node / Vite ───────────────────────────────────────────────
+code/frontend/node_modules/
+code/frontend/dist/
+code/frontend/dist-ssr/
+code/frontend/*.local
+
+# ─── Cypress ────────────────────────────────────────────────────────────
+code/frontend/cypress/screenshots/
+code/frontend/cypress/videos/
+code/frontend/cypress/downloads/
+
+# ─── Éditeurs & OS ──────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+
+# ─── Logs généraux ──────────────────────────────────────────────────────
+*.log
+npm-debug.log*

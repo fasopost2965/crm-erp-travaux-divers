@@ -23,7 +23,7 @@ class ProjectController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $projects = Project::with(['account', 'quote'])->paginate(10);
+        $projects = Project::with(['account', 'quote', 'manager'])->paginate(10);
         return ProjectResource::collection($projects);
     }
 
@@ -33,6 +33,7 @@ class ProjectController extends Controller
     public function store(StoreProjectRequest $request): ProjectResource
     {
         $project = Project::create($request->validated());
+        $project->load(['account', 'quote', 'manager']);
         return new ProjectResource($project);
     }
 
@@ -41,7 +42,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project): ProjectResource
     {
-        $project->load(['account', 'quote']);
+        $project->load(['account', 'quote', 'manager']);
         return new ProjectResource($project);
     }
 

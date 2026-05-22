@@ -30,6 +30,12 @@ class StoreQuoteRequest extends FormRequest
             'retention_rate' => 'nullable|numeric|min:0',
             'valid_until' => 'nullable|date',
             'created_by' => 'nullable|integer|exists:users,id',
+            'items' => 'nullable|array',
+            'items.*.section' => 'nullable|string|max:255',
+            'items.*.description' => 'required|string',
+            'items.*.unit' => 'required|string|max:10',
+            'items.*.quantity' => 'required|numeric|min:0.01',
+            'items.*.unit_price_ht' => 'required|numeric|min:0',
         ];
     }
 }
