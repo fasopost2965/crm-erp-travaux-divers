@@ -14,10 +14,14 @@ const PaymentForm = () => {
 
   const [amount, setAmount] = useState('');
   const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split('T')[0]);
+  const [dueDate, setDueDate] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('Virement');
   const [reference, setReference] = useState('');
   const [bank, setBank] = useState('');
   const [notes, setNotes] = useState('');
+
+  // Chèque et Effet nécessitent une date d'échéance
+  const requiresDueDate = ['Chèque', 'Effet'].includes(paymentMethod);
 
   // Fetch Invoice details to display info and prefill amount
   const { data: invoice, isLoading: isInvoiceLoading, error: invoiceError } = useQuery({
@@ -77,9 +81,15 @@ const PaymentForm = () => {
       return;
     }
 
+    if (requiresDueDate && !dueDate) {
+      showToast(`La date d'échéance est obligatoire pour un règlement par ${paymentMethod}.`, 'error');
+      return;
+    }
+
     const payload = {
       amount: parsedAmount,
       payment_date: paymentDate,
+      due_date: dueDate || null,
       payment_method: paymentMethod,
       reference: reference.trim() || null,
       bank: bank.trim() || null,
@@ -218,6 +228,27 @@ const PaymentForm = () => {
               />
             </div>
           </div>
+
+          {/* Date d'échéance — obligatoire pour Chèque et Effet */}
+          {requiresDueDate && (
+            <div className="space-y-2 animate-fadeIn">
+              <label className="text-[11px] font-bold text-amber-500 uppercase tracking-wide flex items-center gap-1">
+                Date d'échéance <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="date"
+                required
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+                min={paymentDate}
+                disabled={amountRemaining <= 0}
+                className="block w-full px-4 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-400 cursor-pointer disabled:opacity-50"
+              />
+              <p className="text-[10px] text-amber-500 font-semibold">
+                Date à laquelle le {paymentMethod.toLowerCase()} sera présenté à l'encaissement.
+              </p>
+            </div>
+          )}
 
           {/* Reference & Banque (conditional but simple visual groups) */}
           {['Virement', 'Chèque', 'Effet', 'Carte bancaire'].includes(paymentMethod) && (

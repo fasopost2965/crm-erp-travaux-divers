@@ -26,6 +26,7 @@ class InvoiceResource extends JsonResource
             'totalHt' => (float) $this->total_ht,
             'tvaRate' => (float) $this->tva_rate,
             'totalTtc' => (float) $this->total_ttc,
+            'retentionAmount' => (float) ($this->retention_amount ?? 0),
             'amountPaid' => (float) $this->amount_paid,
             'amountRemaining' => (float) $this->amount_remaining,
             'dueDate' => $this->due_date,

@@ -253,14 +253,31 @@ const InvoiceDetail = () => {
                   <span className="text-slate-800 dark:text-white">{formatCurrency(invoice.totalHt)}</span>
                 </div>
                 <div className="flex justify-between items-center text-slate-500 font-bold">
-                  <span>TVA (20%)</span>
-                  <span>{formatCurrency(invoice.totalHt * 0.20)}</span>
+                  <span>TVA ({invoice.tvaRate ?? 20}%)</span>
+                  <span>{formatCurrency(invoice.totalHt * ((invoice.tvaRate ?? 20) / 100))}</span>
                 </div>
+                {invoice.retentionAmount > 0 && (
+                  <>
+                    <div className="flex justify-between items-center text-slate-500 font-bold">
+                      <span>Total TTC brut</span>
+                      <span>{formatCurrency(invoice.totalHt * (1 + (invoice.tvaRate ?? 20) / 100))}</span>
+                    </div>
+                    <div className="flex justify-between items-center text-amber-600 dark:text-amber-400 font-bold">
+                      <span>Retenue de garantie</span>
+                      <span>- {formatCurrency(invoice.retentionAmount)}</span>
+                    </div>
+                  </>
+                )}
                 <div className="h-px bg-slate-100 dark:bg-slate-850 my-1"></div>
                 <div className="flex justify-between items-center text-slate-850 dark:text-white font-black text-sm">
-                  <span>Total TTC</span>
+                  <span>{invoice.retentionAmount > 0 ? 'Net à décaisser' : 'Total TTC'}</span>
                   <span className="text-blue-600 dark:text-blue-400">{formatCurrency(invoice.totalTtc)}</span>
                 </div>
+                {invoice.retentionAmount > 0 && (
+                  <p className="text-[10px] text-amber-500 font-semibold leading-tight">
+                    La retenue de {formatCurrency(invoice.retentionAmount)} sera libérée à la réception définitive du chantier.
+                  </p>
+                )}
               </div>
             </div>
 
@@ -321,15 +338,25 @@ const InvoiceDetail = () => {
               {payments.length === 0 ? (
                 <p className="text-center text-xs text-slate-400 py-4 font-semibold">Aucun encaissement sur cette facture.</p>
               ) : (
-                payments.map(pay => (
-                  <div key={pay.id} className="p-3.5 rounded-2xl bg-emerald-50/20 border border-emerald-250 flex justify-between items-center text-xs">
-                    <div>
-                      <p className="font-black text-emerald-850 dark:text-emerald-400">{formatCurrency(pay.amount)}</p>
-                      <p className="text-[9px] text-slate-400 font-bold uppercase mt-0.5">{pay.paymentMethod} {pay.reference && `— ref : ${pay.reference}`}</p>
+                payments.map(pay => {
+                  const hasDueDate = pay.dueDate && ['Chèque', 'Effet'].includes(pay.paymentMethod);
+                  const isOverdue = hasDueDate && new Date(pay.dueDate) < new Date();
+                  return (
+                    <div key={pay.id} className="p-3.5 rounded-2xl bg-emerald-50/20 border border-emerald-100 dark:border-emerald-900/30 text-xs space-y-1.5">
+                      <div className="flex justify-between items-center">
+                        <p className="font-black text-emerald-700 dark:text-emerald-400">{formatCurrency(pay.amount)}</p>
+                        <span className="text-[10px] text-slate-400 font-bold">{new Date(pay.paymentDate).toLocaleDateString('fr-FR')}</span>
+                      </div>
+                      <p className="text-[9px] text-slate-400 font-bold uppercase">{pay.paymentMethod}{pay.reference && ` — réf. ${pay.reference}`}{pay.bank && ` | ${pay.bank}`}</p>
+                      {hasDueDate && (
+                        <p className={`text-[9px] font-bold flex items-center gap-1 ${isOverdue ? 'text-red-500' : 'text-amber-500'}`}>
+                          {isOverdue ? '⚠️' : '🗓️'} Échéance : {new Date(pay.dueDate).toLocaleDateString('fr-FR')}
+                          {isOverdue && ' — EN RETARD'}
+                        </p>
+                      )}
                     </div>
-                    <span className="text-[10px] text-slate-400 font-bold">{new Date(pay.paymentDate).toLocaleDateString('fr-FR')}</span>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           </div>

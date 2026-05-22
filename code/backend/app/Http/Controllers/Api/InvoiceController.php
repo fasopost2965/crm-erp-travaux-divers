@@ -90,6 +90,7 @@ class InvoiceController extends Controller
         $validated = $request->validate([
             'amount' => 'required|numeric|min:0.01',
             'payment_date' => 'required|date',
+            'due_date' => 'nullable|date|after_or_equal:payment_date',
             'payment_method' => 'required|string|max:255',
             'reference' => 'nullable|string|max:255',
             'bank' => 'nullable|string|max:255',

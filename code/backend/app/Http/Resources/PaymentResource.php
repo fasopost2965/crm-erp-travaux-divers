@@ -19,6 +19,7 @@ class PaymentResource extends JsonResource
             'invoiceId' => $this->invoice_id,
             'amount' => (float) $this->amount,
             'paymentDate' => $this->payment_date,
+            'dueDate' => $this->due_date,
             'paymentMethod' => $this->payment_method,
             'reference' => $this->reference,
             'bank' => $this->bank,
