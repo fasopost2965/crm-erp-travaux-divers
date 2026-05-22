@@ -1,7 +1,7 @@
 # STATE.md - État d'avancement du projet
 
-Dernière mise à jour : 2026-05-22 — 14h50  
-Version du projet : v0.4.1 (Exports PDF validés par tests HTTP + Cypress 14/14 ✅)
+Dernière mise à jour : 2026-05-22 — 23h00  
+Version du projet : v0.4.2 (Correctifs RBAC terrain + navigation)
 
 ---
 
@@ -38,5 +38,8 @@ Version du projet : v0.4.1 (Exports PDF validés par tests HTTP + Cypress 14/14 
 ---
 
 ## 3. Prochaines Actions Immédiates
-1. **Saisie mobile-first (Tâche 10C)** : Intégrer les fiches de temps de chantier terrain (Work Logs) et pointage sur mobile.
-2. **PV de réception de chantier (Tâche 10D)** : Ajouter le module de clôture de chantier avec signature électronique en ligne pour le client et le chef de projet.
+1. **P2-D + P2-E** : Retenue de garantie affichée en UI + suivi échéances effets de commerce.
+2. **P1-B** : Écrans CRM Leads / Opportunités / Contacts (pipeline commercial complet).
+3. **P1-C** : Upload réel de photos de chantier (multipart/form-data + stockage).
+4. **Tâche 10C** : Pointage mobile-first terrain avec GPS.
+5. **Tâche 10D** : PV de réception chantier avec signature digitale.
