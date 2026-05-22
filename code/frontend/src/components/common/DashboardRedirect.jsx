@@ -28,6 +28,10 @@ const DashboardRedirect = () => {
       return <Navigate to="/dashboard/project-manager" replace />;
     case 'finance':
       return <Navigate to="/dashboard/finance" replace />;
+    case 'technicien':
+      return <Navigate to="/dashboard/projects" replace />;
+    case 'rh':
+      return <Navigate to="/dashboard/rh" replace />;
     default:
       return <Navigate to="/unauthorized" replace />;
   }

@@ -147,7 +147,7 @@ function App() {
               <Route
                 path="projects"
                 element={
-                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'chef_chantier']}>
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'chef_chantier', 'technicien']}>
                     <ProjectList />
                   </ProtectedRoute>
                 }
@@ -163,7 +163,7 @@ function App() {
               <Route
                 path="projects/:id"
                 element={
-                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'chef_chantier']}>
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'chef_chantier', 'technicien']}>
                     <ProjectDetail />
                   </ProtectedRoute>
                 }
@@ -171,8 +171,22 @@ function App() {
               <Route
                 path="projects/:id/work-logs/new"
                 element={
-                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'chef_chantier']}>
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'chef_chantier', 'technicien']}>
                     <WorkLogForm />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Module RH — placeholder */}
+              <Route
+                path="rh"
+                element={
+                  <ProtectedRoute allowedRoles={['rh', 'admin', 'super_admin']}>
+                    <div className="max-w-lg mx-auto mt-16 text-center space-y-4">
+                      <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto text-2xl">🏗️</div>
+                      <h2 className="text-xl font-black text-slate-900">Module RH</h2>
+                      <p className="text-slate-500 text-sm">Ce module est en cours de développement. Il couvrira la gestion du personnel, des contrats et des validations de pointage.</p>
+                    </div>
                   </ProtectedRoute>
                 }
               />
