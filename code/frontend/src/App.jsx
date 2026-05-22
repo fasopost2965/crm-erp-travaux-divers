@@ -24,6 +24,9 @@ import InvoiceList from './pages/InvoiceList';
 import InvoiceDetail from './pages/InvoiceDetail';
 import InvoiceForm from './pages/InvoiceForm';
 import PaymentForm from './pages/PaymentForm';
+import LeadList from './pages/LeadList';
+import OpportunityList from './pages/OpportunityList';
+import ContactList from './pages/ContactList';
 
 // Création du client React Query pour la gestion d'état serveur
 const queryClient = new QueryClient({
@@ -105,6 +108,36 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={['directeur', 'admin', 'commercial']}>
                     <AccountDetail />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Module CRM : Leads */}
+              <Route
+                path="leads"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'super_admin', 'commercial']}>
+                    <LeadList />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Module CRM : Opportunités */}
+              <Route
+                path="opportunities"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'super_admin', 'commercial']}>
+                    <OpportunityList />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Module CRM : Contacts */}
+              <Route
+                path="contacts"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'super_admin', 'commercial']}>
+                    <ContactList />
                   </ProtectedRoute>
                 }
               />
