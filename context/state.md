@@ -1,7 +1,7 @@
 # STATE.md - État d'avancement du projet
 
-Dernière mise à jour : 2026-05-23 — Session complète
-Version du projet : v0.5.0 (Tâches 10C + 10D complètes + Refonte UI light mode ✅)
+Dernière mise à jour : 2026-05-23 — Audit & corrections post-implémentation
+Version du projet : v0.5.1 (Audit qualité : migrations exécutées, WorkLogForm finalisé, code mort nettoyé ✅)
 
 ---
 
@@ -62,7 +62,16 @@ Version du projet : v0.5.0 (Tâches 10C + 10D complètes + Refonte UI light mode
 
 ---
 
-## 4. Prochaines Actions
+## 4. Corrections d'audit appliquées (v0.5.1)
+
+- **Migrations exécutées** : `add_fields_to_work_logs` + `add_fields_to_project_signatures` (colonnes start_time, end_time, location_lat/lng, status, signatory_role, notes)
+- **UpdateWorkLogRequest** : règles de validation ajoutées pour tous les nouveaux champs
+- **WorkLogForm.jsx** : refonte complète mobile-first — GPS auto (`navigator.geolocation`), champs start_time/end_time avec calcul automatique des heures, sélecteur de statut (draft/submitted/validated)
+- **ProjectDetail.jsx** : suppression du code mort (signPvMutation, canvas handlers orphelins) — la signature est gérée exclusivement par `ReceptionPV.jsx`
+
+---
+
+## 5. Prochaines Actions
 
 1. **PHPUnit** : Tests unitaires Laravel (Models, Controllers, Requests, Policies)
 2. **CI/CD** : GitHub Actions — lint, tests, build frontend, deploy staging

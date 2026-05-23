@@ -21,10 +21,15 @@ class UpdateWorkLogRequest extends FormRequest
     {
         return [
             'project_task_id' => 'nullable|integer|exists:project_tasks,id',
-            'user_id' => 'nullable|integer|exists:users,id',
-            'work_date' => 'sometimes|required|date',
-            'hours_worked' => 'sometimes|required|numeric|min:0.1|max:24',
-            'description' => 'nullable|string',
+            'user_id'         => 'nullable|integer|exists:users,id',
+            'work_date'       => 'sometimes|required|date',
+            'start_time'      => 'nullable|date_format:H:i',
+            'end_time'        => 'nullable|date_format:H:i|after:start_time',
+            'hours_worked'    => 'sometimes|required|numeric|min:0.1|max:24',
+            'location_lat'    => 'nullable|numeric|between:-90,90',
+            'location_lng'    => 'nullable|numeric|between:-180,180',
+            'status'          => 'nullable|in:draft,submitted,validated',
+            'description'     => 'nullable|string',
         ];
     }
 }

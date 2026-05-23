@@ -38,10 +38,6 @@ const ProjectDetail = () => {
   const [docType, setDocType] = useState('Plan technique');
   const [uploadedDocFile, setUploadedDocFile] = useState(null);
 
-  const [signName, setSignName] = useState('');
-  const [signRole, setSignRole] = useState('Chef de chantier');
-  const [signNotes, setSignNotes] = useState('');
-
   // Fetch Project
   const { data: project, isLoading, error } = useQuery({
     queryKey: ['projectDetail', id],
@@ -165,20 +161,6 @@ const ProjectDetail = () => {
     onError: (err) => showToast(`Erreur: ${err.message}`, 'error'),
   });
 
-  // Sign PV Mutation
-  const signPvMutation = useMutation({
-    mutationFn: async (payload) => {
-      await api.post(`/api/projects/${id}/signatures`, payload);
-    },
-    onSuccess: () => {
-      showToast('Signature électronique enregistrée sur le PV de réception.');
-      queryClient.invalidateQueries(['projectSignatures', id]);
-      setSignName('');
-      setSignNotes('');
-    },
-    onError: (err) => showToast(`Erreur: ${err.message}`, 'error'),
-  });
-
   if (isLoading) {
     return <LoadingSpinner fullPage message="Chargement du tableau de bord chantier..." />;
   }
@@ -241,21 +223,6 @@ const ProjectDetail = () => {
       title: docTitle,
       type: docType,
       file_path: uploadedDocFile ? `documents/${uploadedDocFile.name}` : `docs/plan_${Date.now()}.pdf`,
-    });
-  };
-
-  const handleSignatureSubmit = (e) => {
-    e.preventDefault();
-    if (!signName.trim()) {
-      showToast('Le nom du signataire est requis.', 'error');
-      return;
-    }
-    signPvMutation.mutate({
-      signatory_name: signName,
-      signatory_role: signRole,
-      signed_at: new Date().toISOString(),
-      notes: signNotes,
-      signature_data: 'data:image/svg+xml;base64,...',
     });
   };
 
