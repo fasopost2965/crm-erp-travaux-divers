@@ -44,7 +44,7 @@ const DirectorDashboard = () => {
     <div className="space-y-6">
       {/* En-tête de la page */}
       <PageHeader
-        title={`Bonjour, ${user?.name || 'Directeur'} 👋`}
+        title={`Bonjour, ${user?.name || 'Directeur'}`}
         breadcrumb={[{ label: "Directeur" }, { label: "Performance Globale" }]}
         actions={
           <div className="inline-flex items-center space-x-2 bg-blue-50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/50 text-blue-700 dark:text-blue-400 py-1.5 px-3 rounded-full text-xs font-semibold">

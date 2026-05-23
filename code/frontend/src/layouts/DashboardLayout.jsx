@@ -127,15 +127,15 @@ const SidebarLink = ({ item, isActive, onClick }) => (
   <Link
     to={item.path}
     onClick={onClick}
-    className={`group flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-semibold transition-all duration-150 ${
+    className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-150 ${
       isActive
         ? 'bg-blue-600 text-white shadow-sm shadow-blue-900/20'
-        : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+        : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
     }`}
   >
     <NavIcon
       paths={item.icon}
-      className={isActive ? 'text-white' : 'text-slate-400 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition-colors'}
+      className={isActive ? 'text-white' : 'text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors'}
     />
     <span className="truncate">{item.label}</span>
   </Link>
