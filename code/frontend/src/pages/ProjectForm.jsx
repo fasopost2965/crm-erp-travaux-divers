@@ -228,8 +228,8 @@ const ProjectForm = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main inputs */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-6">
-              <h3 className="font-bold text-slate-800 dark:text-white text-xs uppercase tracking-wider pb-3 border-b border-slate-100 dark:border-slate-850">
+            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6">
+              <h3 className="font-bold text-slate-800 text-xs uppercase tracking-wider pb-3 border-b border-slate-100">
                 Informations du Projet
               </h3>
 
@@ -242,7 +242,7 @@ const ProjectForm = () => {
                     placeholder="Ex: Chantier Plomberie et Climatisation Anfa"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-semibold"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-semibold"
                   />
                 </div>
 
@@ -253,7 +253,7 @@ const ProjectForm = () => {
                     rows="6"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                   />
                 </div>
 
@@ -265,7 +265,7 @@ const ProjectForm = () => {
                       placeholder="Ex: Angle Boulevard Anfa et Rue Ali"
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
-                      className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                      className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                     />
                   </div>
 
@@ -276,7 +276,7 @@ const ProjectForm = () => {
                       placeholder="Casablanca"
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
-                      className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                      className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                     />
                   </div>
                 </div>
@@ -284,8 +284,8 @@ const ProjectForm = () => {
             </div>
 
             {/* Relations */}
-            <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-6">
-              <h3 className="font-bold text-slate-800 dark:text-white text-xs uppercase tracking-wider pb-3 border-b border-slate-100 dark:border-slate-850">
+            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6">
+              <h3 className="font-bold text-slate-800 text-xs uppercase tracking-wider pb-3 border-b border-slate-100">
                 Liaisons Administratives & Relations
               </h3>
 
@@ -336,8 +336,8 @@ const ProjectForm = () => {
 
           {/* Sidebar parameters & dates */}
           <div className="space-y-6">
-            <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-6">
-              <h3 className="font-bold text-slate-850 dark:text-white text-xs uppercase tracking-wider pb-3 border-b border-slate-100 dark:border-slate-850">
+            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6">
+              <h3 className="font-bold text-slate-850 text-xs uppercase tracking-wider pb-3 border-b border-slate-100">
                 Planification & Statut
               </h3>
 
@@ -347,7 +347,7 @@ const ProjectForm = () => {
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-700 dark:text-slate-350 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer font-bold"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer font-bold"
                   >
                     <option value="À commencer">À commencer</option>
                     <option value="En cours">En cours</option>
@@ -365,7 +365,7 @@ const ProjectForm = () => {
                       min="0"
                       value={budget}
                       onChange={(e) => setBudget(e.target.value)}
-                      className="block w-full pl-4 pr-12 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white text-xs font-black focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                      className="block w-full pl-4 pr-12 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs font-black focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                     />
                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-extrabold text-[10px]">DH</span>
                   </div>
@@ -378,7 +378,7 @@ const ProjectForm = () => {
                     required
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer font-bold"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer font-bold"
                   />
                 </div>
 
@@ -389,7 +389,7 @@ const ProjectForm = () => {
                     required
                     value={endDatePlanned}
                     onChange={(e) => setEndDatePlanned(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-850 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer font-bold"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-850 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer font-bold"
                   />
                 </div>
 
@@ -400,16 +400,16 @@ const ProjectForm = () => {
                       type="date"
                       value={endDateActual}
                       onChange={(e) => setEndDateActual(e.target.value)}
-                      className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-850 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer font-bold"
+                      className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-850 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer font-bold"
                     />
                   </div>
                 )}
               </div>
 
               {budget > 0 && (
-                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/20 border border-slate-100 dark:border-slate-850 text-center">
+                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-center">
                   <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mb-1">Budget du Chantier</span>
-                  <span className="text-xl font-black text-slate-850 dark:text-white">{formatCurrency(parseFloat(budget))}</span>
+                  <span className="text-xl font-black text-slate-850">{formatCurrency(parseFloat(budget))}</span>
                 </div>
               )}
 

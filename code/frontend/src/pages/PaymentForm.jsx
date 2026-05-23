@@ -95,7 +95,7 @@ const PaymentForm = () => {
 
   if (invoiceError) {
     return (
-      <div className="p-6 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-3xl text-red-700 dark:text-red-400 font-medium">
+      <div className="p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700 font-medium">
         ⚠️ Impossible de charger la facture pour ce règlement : {invoiceError.message}.
       </div>
     );
@@ -121,37 +121,37 @@ const PaymentForm = () => {
       />
 
       {/* Recapitulatif Facture */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
-        <div className="grid grid-cols-2 gap-4 p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/20 border border-slate-100 dark:border-slate-850 text-xs">
+      <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+        <div className="grid grid-cols-2 gap-4 p-5 rounded-2xl bg-slate-50 border border-slate-100 text-xs">
           <div className="space-y-1">
             <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest block">Facture</span>
-            <span className="text-sm font-black text-slate-850 dark:text-white block">{invoice.invoiceNumber}</span>
+            <span className="text-sm font-black text-slate-850 block">{invoice.invoiceNumber}</span>
             <span className="text-[10px] text-slate-500 font-semibold block">{invoice.title}</span>
           </div>
           <div className="space-y-1 text-right">
             <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest block">Client</span>
-            <span className="text-sm font-black text-slate-850 dark:text-white block truncate">{invoice.account?.name || 'Client'}</span>
+            <span className="text-sm font-black text-slate-850 block truncate">{invoice.account?.name || 'Client'}</span>
             <span className="text-[10px] text-slate-400 font-semibold block">Situation : {invoice.situationPercentage}%</span>
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-4 text-center border-b border-slate-100 dark:border-slate-850 pb-6 text-xs">
+        <div className="grid grid-cols-3 gap-4 text-center border-b border-slate-100 pb-6 text-xs">
           <div className="space-y-1">
             <span className="text-[10px] text-slate-400 font-bold uppercase">Total TTC</span>
-            <p className="text-sm font-black text-slate-800 dark:text-white">{formatCurrency(invoice.totalTtc)}</p>
+            <p className="text-sm font-black text-slate-800">{formatCurrency(invoice.totalTtc)}</p>
           </div>
           <div className="space-y-1">
             <span className="text-[10px] text-emerald-500 font-bold uppercase">Déjà réglé</span>
-            <p className="text-sm font-black text-emerald-600 dark:text-emerald-400">{formatCurrency(invoice.amountPaid)}</p>
+            <p className="text-sm font-black text-emerald-600">{formatCurrency(invoice.amountPaid)}</p>
           </div>
           <div className="space-y-1">
             <span className="text-[10px] text-rose-500 font-bold uppercase">Reste à payer</span>
-            <p className="text-sm font-black text-rose-600 dark:text-rose-450">{formatCurrency(amountRemaining)}</p>
+            <p className="text-sm font-black text-rose-600">{formatCurrency(amountRemaining)}</p>
           </div>
         </div>
 
         {amountRemaining <= 0 ? (
-          <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-150 text-emerald-700 dark:text-emerald-400 text-xs font-bold text-center">
+          <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-150 text-emerald-700 text-xs font-bold text-center">
             🎉 Cette facture a déjà été intégralement réglée.
           </div>
         ) : null}
@@ -171,7 +171,7 @@ const PaymentForm = () => {
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 disabled={amountRemaining <= 0}
-                className="block w-full pl-4 pr-16 py-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-900 dark:text-white font-extrabold text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                className="block w-full pl-4 pr-16 py-3 rounded-xl bg-slate-50 border border-slate-100 text-slate-900 font-extrabold text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
                 placeholder="0.00"
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-extrabold text-xs">DH TTC</span>
@@ -193,7 +193,7 @@ const PaymentForm = () => {
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value)}
                 disabled={amountRemaining <= 0}
-                className="block w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-700 dark:text-slate-350 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer font-bold disabled:opacity-50"
+                className="block w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer font-bold disabled:opacity-50"
               >
                 <option value="Virement">Virement bancaire</option>
                 <option value="Chèque">Chèque</option>
@@ -214,7 +214,7 @@ const PaymentForm = () => {
                 value={paymentDate}
                 onChange={(e) => setPaymentDate(e.target.value)}
                 disabled={amountRemaining <= 0}
-                className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer disabled:opacity-50"
+                className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer disabled:opacity-50"
               />
             </div>
           </div>
@@ -233,7 +233,7 @@ const PaymentForm = () => {
                   onChange={(e) => setReference(e.target.value)}
                   disabled={amountRemaining <= 0}
                   placeholder={paymentMethod === 'Chèque' ? 'Ex: CHQ-8472910' : 'Ex: VIR-948172635'}
-                  className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                  className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
                 />
               </div>
 
@@ -248,7 +248,7 @@ const PaymentForm = () => {
                   onChange={(e) => setBank(e.target.value)}
                   disabled={amountRemaining <= 0}
                   placeholder="Ex: Attijariwafa Bank, BCP, BMCE..."
-                  className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                  className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
                 />
               </div>
             </div>
@@ -265,7 +265,7 @@ const PaymentForm = () => {
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               disabled={amountRemaining <= 0}
-              className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+              className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
             />
           </div>
 
@@ -273,7 +273,7 @@ const PaymentForm = () => {
             <button
               type="button"
               onClick={() => navigate(`/dashboard/invoices/${invoiceId}`)}
-              className="w-1/3 py-3 px-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-350 font-bold tracking-wide transition-colors cursor-pointer"
+              className="w-1/3 py-3 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold tracking-wide transition-colors cursor-pointer"
             >
               Retour
             </button>

@@ -27,7 +27,7 @@ const AccountDetail = () => {
 
   if (error) {
     return (
-      <div className="p-6 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-3xl text-red-700 dark:text-red-400 font-medium">
+      <div className="p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700 font-medium">
         ⚠️ Erreur lors de la récupération de la fiche client : {error.message}.
       </div>
     );
@@ -55,7 +55,7 @@ const AccountDetail = () => {
         actions={
           <button 
             onClick={() => navigate('/dashboard/accounts')}
-            className="py-2.5 px-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-700 dark:text-slate-350 font-bold text-xs cursor-pointer transition-all flex items-center space-x-2"
+            className="py-2.5 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs cursor-pointer transition-all flex items-center space-x-2"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -66,19 +66,19 @@ const AccountDetail = () => {
       />
 
       {/* 360 Client Header Summary Card */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+      <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
         <div className="flex items-start space-x-4">
-          <div className="w-16 h-16 rounded-2xl bg-blue-600/10 text-blue-600 dark:text-blue-450 flex items-center justify-center font-black text-2xl shadow-inner shrink-0">
+          <div className="w-16 h-16 rounded-2xl bg-blue-600/10 text-blue-600 flex items-center justify-center font-black text-2xl shadow-inner shrink-0">
             {acc.name?.charAt(0)}
           </div>
           <div className="space-y-1">
-            <h2 className="text-lg font-black text-slate-850 dark:text-white leading-none">
+            <h2 className="text-lg font-black text-slate-850 leading-none">
               {acc.name}
             </h2>
-            <p className="text-xs font-semibold text-slate-400 dark:text-slate-550 flex items-center">
+            <p className="text-xs font-semibold text-slate-400 flex items-center">
               📍 {acc.address ? `${acc.address}, ${acc.city}` : acc.city}
             </p>
-            <div className="flex flex-wrap gap-3 pt-1 text-[11px] font-bold text-slate-500 dark:text-slate-400">
+            <div className="flex flex-wrap gap-3 pt-1 text-[11px] font-bold text-slate-500">
               {acc.email && (
                 <a href={`mailto:${acc.email}`} className="hover:text-blue-500 flex items-center space-x-1">
                   <span>✉️</span> <span className="underline">{acc.email}</span>
@@ -94,65 +94,65 @@ const AccountDetail = () => {
         </div>
 
         {/* Legal Moroccan Identity Identifiers Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 px-6 py-4 rounded-2xl bg-slate-50/50 dark:bg-slate-950/20 border border-slate-100/50 dark:border-slate-850">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 px-6 py-4 rounded-2xl bg-slate-50/50 border border-slate-100/50">
           <div>
             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">ICE</p>
-            <p className="text-xs font-black text-slate-800 dark:text-white mt-0.5">{acc.ice || 'Non spécifié'}</p>
+            <p className="text-xs font-black text-slate-800 mt-0.5">{acc.ice || 'Non spécifié'}</p>
           </div>
           <div>
             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">RC</p>
-            <p className="text-xs font-black text-slate-800 dark:text-white mt-0.5">{acc.rc || 'Non spécifié'}</p>
+            <p className="text-xs font-black text-slate-800 mt-0.5">{acc.rc || 'Non spécifié'}</p>
           </div>
           <div>
             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Patente</p>
-            <p className="text-xs font-black text-slate-800 dark:text-white mt-0.5">{acc.patente || 'Non spécifié'}</p>
+            <p className="text-xs font-black text-slate-800 mt-0.5">{acc.patente || 'Non spécifié'}</p>
           </div>
           <div>
             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">IF</p>
-            <p className="text-xs font-black text-slate-800 dark:text-white mt-0.5">{acc.iff || 'Non spécifié'}</p>
+            <p className="text-xs font-black text-slate-800 mt-0.5">{acc.iff || 'Non spécifié'}</p>
           </div>
         </div>
       </div>
 
       {/* Tabs navigation panel */}
-      <div className="flex border-b border-slate-200 dark:border-slate-800 space-x-6 text-sm font-bold">
+      <div className="flex border-b border-slate-200 space-x-6 text-sm font-bold">
         <button
           onClick={() => setActiveTab('overview')}
           className={`pb-3 relative transition-all cursor-pointer ${
             activeTab === 'overview' 
-              ? 'text-blue-650 dark:text-blue-500' 
-              : 'text-slate-450 dark:text-slate-500 hover:text-slate-700'
+              ? 'text-blue-650' 
+              : 'text-slate-450 hover:text-slate-700'
           }`}
         >
           Aperçu
           {activeTab === 'overview' && (
-            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-500 rounded-full"></span>
+            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full"></span>
           )}
         </button>
         <button
           onClick={() => setActiveTab('contacts')}
           className={`pb-3 relative transition-all cursor-pointer ${
             activeTab === 'contacts' 
-              ? 'text-blue-650 dark:text-blue-500' 
-              : 'text-slate-450 dark:text-slate-500 hover:text-slate-700'
+              ? 'text-blue-650' 
+              : 'text-slate-450 hover:text-slate-700'
           }`}
         >
           Contacts ({acc.contacts?.length || 0})
           {activeTab === 'contacts' && (
-            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-500 rounded-full"></span>
+            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full"></span>
           )}
         </button>
         <button
           onClick={() => setActiveTab('opportunities')}
           className={`pb-3 relative transition-all cursor-pointer ${
             activeTab === 'opportunities' 
-              ? 'text-blue-650 dark:text-blue-500' 
-              : 'text-slate-450 dark:text-slate-500 hover:text-slate-700'
+              ? 'text-blue-650' 
+              : 'text-slate-450 hover:text-slate-700'
           }`}
         >
           Opportunités ({acc.opportunities?.length || 0})
           {activeTab === 'opportunities' && (
-            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-500 rounded-full"></span>
+            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full"></span>
           )}
         </button>
       </div>
@@ -165,53 +165,53 @@ const AccountDetail = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
             {/* Legal Information Summary Grid */}
-            <div className="lg:col-span-2 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
-              <h3 className="text-sm font-bold text-slate-800 dark:text-white mb-6">
+            <div className="lg:col-span-2 bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
+              <h3 className="text-sm font-bold text-slate-800 mb-6">
                 Fiche d'identité Fiscale & Légale (Maroc)
               </h3>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
                 <div>
                   <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Nom Légal de l'Entreprise</span>
-                  <span className="text-slate-800 dark:text-white font-extrabold block mt-0.5">{acc.name}</span>
+                  <span className="text-slate-800 font-extrabold block mt-0.5">{acc.name}</span>
                 </div>
                 <div>
                   <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Siège Social / Adresse</span>
-                  <span className="text-slate-800 dark:text-white font-bold block mt-0.5">
+                  <span className="text-slate-800 font-bold block mt-0.5">
                     {acc.address ? `${acc.address}, ${acc.city}` : `${acc.city}, Maroc`}
                   </span>
                 </div>
-                <div className="border-t border-slate-50 dark:border-slate-850 pt-4">
+                <div className="border-t border-slate-50 pt-4">
                   <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Identifiant Commun de l'Entreprise (ICE)</span>
-                  <span className="text-slate-800 dark:text-white font-bold block mt-0.5">{acc.ice || 'Non renseigné'}</span>
+                  <span className="text-slate-800 font-bold block mt-0.5">{acc.ice || 'Non renseigné'}</span>
                 </div>
-                <div className="border-t border-slate-50 dark:border-slate-850 pt-4">
+                <div className="border-t border-slate-50 pt-4">
                   <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Registre du Commerce (RC)</span>
-                  <span className="text-slate-800 dark:text-white font-bold block mt-0.5">
+                  <span className="text-slate-800 font-bold block mt-0.5">
                     {acc.rc ? `N° ${acc.rc} (${acc.city})` : 'Non renseigné'}
                   </span>
                 </div>
-                <div className="border-t border-slate-50 dark:border-slate-850 pt-4">
+                <div className="border-t border-slate-50 pt-4">
                   <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Identifiant Fiscal (IF)</span>
-                  <span className="text-slate-800 dark:text-white font-bold block mt-0.5">{acc.iff || 'Non renseigné'}</span>
+                  <span className="text-slate-800 font-bold block mt-0.5">{acc.iff || 'Non renseigné'}</span>
                 </div>
-                <div className="border-t border-slate-50 dark:border-slate-850 pt-4">
+                <div className="border-t border-slate-50 pt-4">
                   <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Taxe Professionnelle (Patente)</span>
-                  <span className="text-slate-800 dark:text-white font-bold block mt-0.5">{acc.patente || 'Non renseigné'}</span>
+                  <span className="text-slate-800 font-bold block mt-0.5">{acc.patente || 'Non renseigné'}</span>
                 </div>
               </div>
             </div>
 
             {/* Sidebar Overview - Timeline of account history */}
-            <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
-              <h3 className="text-sm font-bold text-slate-800 dark:text-white mb-6">
+            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
+              <h3 className="text-sm font-bold text-slate-800 mb-6">
                 Activité récente du compte
               </h3>
               
-              <div className="relative border-l border-slate-100 dark:border-slate-800 ml-3 space-y-6 py-2">
+              <div className="relative border-l border-slate-100 ml-3 space-y-6 py-2">
                 <div className="relative pl-6 group">
-                  <div className="absolute left-0 top-1.5 -translate-x-1/2 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-slate-900 bg-blue-600"></div>
-                  <h4 className="text-xs font-bold text-slate-800 dark:text-white">Création du Compte CRM</h4>
+                  <div className="absolute left-0 top-1.5 -translate-x-1/2 w-3.5 h-3.5 rounded-full border-2 border-white bg-blue-600"></div>
+                  <h4 className="text-xs font-bold text-slate-800">Création du Compte CRM</h4>
                   <p className="text-[10px] text-slate-400 font-semibold mt-0.5">
                     {acc.createdAt ? new Date(acc.createdAt).toLocaleDateString('fr-FR', { 
                       year: 'numeric', 
@@ -221,8 +221,8 @@ const AccountDetail = () => {
                   </p>
                 </div>
                 <div className="relative pl-6 group">
-                  <div className="absolute left-0 top-1.5 -translate-x-1/2 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-slate-900 bg-slate-400"></div>
-                  <h4 className="text-xs font-bold text-slate-800 dark:text-white">Dernière mise à jour</h4>
+                  <div className="absolute left-0 top-1.5 -translate-x-1/2 w-3.5 h-3.5 rounded-full border-2 border-white bg-slate-400"></div>
+                  <h4 className="text-xs font-bold text-slate-800">Dernière mise à jour</h4>
                   <p className="text-[10px] text-slate-400 font-semibold mt-0.5">
                     {acc.updatedAt ? new Date(acc.updatedAt).toLocaleDateString('fr-FR', { 
                       year: 'numeric', 
@@ -239,27 +239,27 @@ const AccountDetail = () => {
 
         {/* Tab 2: CONTACTS LIST */}
         {activeTab === 'contacts' && (
-          <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
-            <h3 className="text-sm font-bold text-slate-800 dark:text-white mb-6">
+          <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
+            <h3 className="text-sm font-bold text-slate-800 mb-6">
               Interlocuteurs & Contacts Associés
             </h3>
 
             {!acc.contacts || acc.contacts.length === 0 ? (
-              <div className="text-center py-12 text-slate-400 dark:text-slate-500 font-medium text-sm">
+              <div className="text-center py-12 text-slate-400 font-medium text-sm">
                 Aucun contact associé à ce compte pour le moment.
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {acc.contacts.map((contact) => (
-                  <div key={contact.id} className="p-4 border border-slate-100 dark:border-slate-850 rounded-2xl flex flex-col justify-between hover:border-slate-200 dark:hover:border-slate-850 transition-all duration-300">
+                  <div key={contact.id} className="p-4 border border-slate-100 rounded-2xl flex flex-col justify-between hover:border-slate-200 transition-all duration-300">
                     <div className="space-y-1">
-                      <span className="text-[9px] font-bold text-blue-600 bg-blue-50 dark:bg-blue-950/20 px-2 py-0.5 rounded-md uppercase tracking-wider">
+                      <span className="text-[9px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md uppercase tracking-wider">
                         {contact.position || 'Interlocuteur'}
                       </span>
-                      <h4 className="text-sm font-extrabold text-slate-800 dark:text-white pt-1">
+                      <h4 className="text-sm font-extrabold text-slate-800 pt-1">
                         {contact.firstName} {contact.lastName}
                       </h4>
-                      <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 pt-1 space-y-1">
+                      <div className="text-xs font-semibold text-slate-500 pt-1 space-y-1">
                         {contact.email && (
                           <p className="flex items-center space-x-1.5">
                             <span>✉️</span> <a href={`mailto:${contact.email}`} className="underline hover:text-blue-500">{contact.email}</a>
@@ -281,21 +281,21 @@ const AccountDetail = () => {
 
         {/* Tab 3: OPPORTUNITIES LIST */}
         {activeTab === 'opportunities' && (
-          <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
-            <h3 className="text-sm font-bold text-slate-800 dark:text-white mb-6">
+          <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
+            <h3 className="text-sm font-bold text-slate-800 mb-6">
               Pipeline des Opportunités Associées
             </h3>
 
             {!acc.opportunities || acc.opportunities.length === 0 ? (
-              <div className="text-center py-12 text-slate-400 dark:text-slate-500 font-medium text-sm">
+              <div className="text-center py-12 text-slate-400 font-medium text-sm">
                 Aucune opportunité commerciale rattachée à ce client.
               </div>
             ) : (
-              <div className="divide-y divide-slate-100 dark:divide-slate-800">
+              <div className="divide-y divide-slate-100">
                 {acc.opportunities.map((opp) => (
                   <div key={opp.id} className="py-4 first:pt-0 last:pb-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div className="space-y-1">
-                      <h4 className="text-sm font-bold text-slate-800 dark:text-white">
+                      <h4 className="text-sm font-bold text-slate-800">
                         {opp.title}
                       </h4>
                       <div className="flex items-center space-x-2 text-[11px] font-semibold text-slate-400">
@@ -306,7 +306,7 @@ const AccountDetail = () => {
                     </div>
 
                     <div className="flex items-center space-x-4 self-start sm:self-auto">
-                      <span className="text-sm font-black text-slate-850 dark:text-slate-200">
+                      <span className="text-sm font-black text-slate-850">
                         {formatCurrency(opp.estimatedBudget || 0)}
                       </span>
                       <StatusBadge status={opp.status} />

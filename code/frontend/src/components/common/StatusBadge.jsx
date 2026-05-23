@@ -14,9 +14,8 @@ const StatusBadge = ({ status }) => {
       case 'accepté':
       case 'terminé':
       case 'validé':
-        return 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20';
+        return 'bg-emerald-50 text-emerald-700 border border-emerald-200';
 
-      // En cours / Actif
       case 'en cours':
       case 'émise':
       case 'contacté':
@@ -25,30 +24,27 @@ const StatusBadge = ({ status }) => {
       case 'proposition':
       case 'négociation':
       case 'envoyé':
-        return 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20';
+        return 'bg-blue-50 text-blue-700 border border-blue-200';
 
-      // En attente / Attention modérée
       case 'à commencer':
       case 'à faire':
       case 'partiellement payée':
       case 'nouveau':
       case 'soumis':
       case 'planifié':
-        return 'bg-amber-500/10 text-amber-650 dark:text-amber-400 border border-amber-500/20';
+        return 'bg-amber-50 text-amber-700 border border-amber-200';
 
-      // Négatif / Bloqué / En retard
       case 'en retard':
       case 'bloqué':
       case 'suspendu':
       case 'refusé':
       case 'perdu':
       case 'rejeté':
-        return 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20';
+        return 'bg-rose-50 text-rose-700 border border-rose-200';
 
-      // Neutre / Brouillon
       case 'brouillon':
       default:
-        return 'bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/20';
+        return 'bg-slate-100 text-slate-600 border border-slate-200';
     }
   };
 

@@ -51,7 +51,7 @@ const QuoteList = () => {
 
   if (error) {
     return (
-      <div className="p-6 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-3xl text-red-700 dark:text-red-400 font-medium">
+      <div className="p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700 font-medium">
         ⚠️ Erreur lors du chargement des devis : {error.message}.
       </div>
     );
@@ -95,7 +95,7 @@ const QuoteList = () => {
       header: 'Numéro',
       accessor: 'quoteNumber',
       cell: (row) => (
-        <span className="font-extrabold text-blue-600 dark:text-blue-400 text-xs">
+        <span className="font-extrabold text-blue-600 text-xs">
           {row.quoteNumber}
         </span>
       ),
@@ -105,7 +105,7 @@ const QuoteList = () => {
       accessor: 'title',
       cell: (row) => (
         <div className="min-w-0">
-          <p className="font-bold text-slate-800 dark:text-white truncate">{row.title}</p>
+          <p className="font-bold text-slate-800 truncate">{row.title}</p>
           <p className="text-[10px] text-slate-400 font-semibold">{row.account?.name || 'Client inconnu'}</p>
         </div>
       ),
@@ -123,7 +123,7 @@ const QuoteList = () => {
       header: 'Montant TTC',
       accessor: 'totalTtc',
       cell: (row) => (
-        <span className="text-xs font-black text-slate-800 dark:text-white">
+        <span className="text-xs font-black text-slate-800">
           {formatCurrency(row.totalTtc)}
         </span>
       ),
@@ -140,21 +140,21 @@ const QuoteList = () => {
         <div className="flex items-center space-x-2">
           <button
             onClick={(e) => { e.stopPropagation(); navigate(`/dashboard/quotes/${row.id}`); }}
-            className="p-1.5 rounded-lg border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-500 dark:text-slate-400 cursor-pointer transition-colors"
+            className="p-1.5 rounded-lg border border-slate-100 hover:bg-slate-50 text-slate-500 cursor-pointer transition-colors"
             title="Voir"
           >
             👁️
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); navigate(`/dashboard/quotes/${row.id}/edit`); }}
-            className="p-1.5 rounded-lg border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-500 dark:text-slate-400 cursor-pointer transition-colors"
+            className="p-1.5 rounded-lg border border-slate-100 hover:bg-slate-50 text-slate-500 cursor-pointer transition-colors"
             title="Éditer"
           >
             ✏️
           </button>
           <button
             onClick={(e) => handleExportPdf(row, e)}
-            className="p-1.5 rounded-lg border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-500 dark:text-slate-400 cursor-pointer transition-colors"
+            className="p-1.5 rounded-lg border border-slate-100 hover:bg-slate-50 text-slate-500 cursor-pointer transition-colors"
             title="Exporter PDF"
           >
             📁
@@ -190,7 +190,7 @@ const QuoteList = () => {
       />
 
       {/* Filter panel */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-5 shadow-sm flex flex-col md:flex-row md:items-center gap-4">
+      <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm flex flex-col md:flex-row md:items-center gap-4">
         <div className="flex-1 relative">
           <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
             <svg className="h-4.5 w-4.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -202,7 +202,7 @@ const QuoteList = () => {
             placeholder="Rechercher par numéro, client ou titre..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="block w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white placeholder-slate-400 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            className="block w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-400 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
           />
         </div>
 
@@ -210,7 +210,7 @@ const QuoteList = () => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-700 dark:text-slate-350 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all cursor-pointer"
+            className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all cursor-pointer"
           >
             <option value="">Tous les Statuts</option>
             <option value="Brouillon">Brouillon</option>

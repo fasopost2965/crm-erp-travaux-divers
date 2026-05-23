@@ -54,7 +54,7 @@ const InvoiceDetail = () => {
 
   if (error) {
     return (
-      <div className="p-6 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-3xl text-red-700 dark:text-red-400 font-medium">
+      <div className="p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700 font-medium">
         ⚠️ Impossible d'ouvrir la facture : {error.message}.
       </div>
     );
@@ -105,20 +105,20 @@ const InvoiceDetail = () => {
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => navigate(`/dashboard/invoices/${invoice.id}/edit`)}
-              className="py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-350 font-bold text-xs tracking-wide transition-colors cursor-pointer"
+              className="py-2 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs tracking-wide transition-colors cursor-pointer"
             >
               ✏️ Éditer
             </button>
             <button
               onClick={handleExportPdf}
-              className="py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-350 font-bold text-xs tracking-wide transition-colors cursor-pointer"
+              className="py-2 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs tracking-wide transition-colors cursor-pointer"
             >
               📁 PDF
             </button>
             {invoice.status === 'Brouillon' && (
               <button
                 onClick={() => setIsSendOpen(true)}
-                className="py-2 px-4 rounded-xl bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 font-bold text-xs tracking-wide transition-all cursor-pointer"
+                className="py-2 px-4 rounded-xl bg-blue-50 text-blue-600 font-bold text-xs tracking-wide transition-all cursor-pointer"
               >
                 ✉️ Envoyer Facture
               </button>
@@ -138,13 +138,13 @@ const InvoiceDetail = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Invoice PDF layout representation */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-8 relative overflow-hidden">
+          <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-sm space-y-8 relative overflow-hidden">
             {/* Header branding */}
-            <div className="flex flex-col sm:flex-row justify-between items-start gap-4 pb-6 border-b border-slate-100 dark:border-slate-850">
+            <div className="flex flex-col sm:flex-row justify-between items-start gap-4 pb-6 border-b border-slate-100">
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
                   <span className="text-2xl font-black tracking-tighter text-blue-600">ATLAS WORKS</span>
-                  <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 bg-slate-100 dark:bg-slate-800 py-0.5 px-2 rounded">Facturation</span>
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 bg-slate-100 py-0.5 px-2 rounded">Facturation</span>
                 </div>
                 <p className="text-[10px] text-slate-400 font-semibold leading-relaxed">
                   Atlas Works S.A.R.L. — Travaux Divers & Rénovation<br />
@@ -152,8 +152,8 @@ const InvoiceDetail = () => {
                 </p>
               </div>
               <div className="text-right sm:text-right space-y-1">
-                <h2 className="text-xl font-black text-slate-800 dark:text-white uppercase tracking-tight">FACTURE</h2>
-                <p className="text-xs font-bold text-blue-600 dark:text-blue-400">{invoice.invoiceNumber}</p>
+                <h2 className="text-xl font-black text-slate-800 uppercase tracking-tight">FACTURE</h2>
+                <p className="text-xs font-bold text-blue-600">{invoice.invoiceNumber}</p>
                 <p className="text-[10px] text-slate-400 font-semibold">
                   Date d'émission : {invoice.createdAt ? new Date(invoice.createdAt).toLocaleDateString('fr-FR') : '-'}
                 </p>
@@ -165,18 +165,18 @@ const InvoiceDetail = () => {
 
             {/* Entities details */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs leading-relaxed">
-              <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/20 border border-slate-100 dark:border-slate-850 space-y-2">
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
                 <h3 className="font-extrabold text-[10px] text-slate-400 uppercase tracking-widest">Émetteur</h3>
-                <p className="font-bold text-slate-800 dark:text-white">Atlas Works SARL</p>
+                <p className="font-bold text-slate-800">Atlas Works SARL</p>
                 <p className="text-slate-500">
                   12 Rue des Hôpitaux, Maarif<br />
                   Casablanca, Maroc
                 </p>
                 <p className="text-slate-400">billing@atlasworks.ma | +212 522 34 56 78</p>
               </div>
-              <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/20 border border-slate-100 dark:border-slate-850 space-y-2">
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
                 <h3 className="font-extrabold text-[10px] text-slate-400 uppercase tracking-widest">Facturé à (Client)</h3>
-                <p className="font-bold text-slate-800 dark:text-white">{invoice.account?.name || 'Société Client'}</p>
+                <p className="font-bold text-slate-800">{invoice.account?.name || 'Société Client'}</p>
                 {invoice.account?.address && (
                   <p className="text-slate-500">
                     {invoice.account.address}<br />
@@ -192,18 +192,18 @@ const InvoiceDetail = () => {
             {/* Invoice Line Items */}
             <div className="space-y-4">
               <div className="flex justify-between items-end">
-                <h3 className="font-extrabold text-xs text-slate-800 dark:text-white tracking-tight">
+                <h3 className="font-extrabold text-xs text-slate-800 tracking-tight">
                   Prestations facturées — {invoice.title}
                 </h3>
                 {invoice.situationPercentage > 0 && (
-                  <span className="text-[10px] font-black uppercase text-blue-600 bg-blue-50 dark:bg-blue-950 px-2 py-0.5 rounded">
+                  <span className="text-[10px] font-black uppercase text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
                     Facturation de situation : {invoice.situationPercentage}%
                   </span>
                 )}
               </div>
-              <div className="overflow-x-auto border border-slate-100 dark:border-slate-850 rounded-2xl">
-                <table className="min-w-full divide-y divide-slate-100 dark:divide-slate-850 text-left text-xs">
-                  <thead className="bg-slate-50 dark:bg-slate-950/40 text-slate-500 font-bold uppercase text-[9px] tracking-wider">
+              <div className="overflow-x-auto border border-slate-100 rounded-2xl">
+                <table className="min-w-full divide-y divide-slate-100 text-left text-xs">
+                  <thead className="bg-slate-50 text-slate-500 font-bold uppercase text-[9px] tracking-wider">
                     <tr>
                       <th scope="col" className="px-4 py-3">Description Prestation</th>
                       <th scope="col" className="px-4 py-3 text-center w-16">U</th>
@@ -212,7 +212,7 @@ const InvoiceDetail = () => {
                       <th scope="col" className="px-4 py-3 text-right w-32">Total HT</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-slate-850 bg-white dark:bg-slate-900 font-semibold text-slate-700 dark:text-slate-350">
+                  <tbody className="divide-y divide-slate-100 bg-white font-semibold text-slate-700">
                     {items.length === 0 ? (
                       <tr>
                         <td colSpan="5" className="px-4 py-8 text-center text-slate-400">
@@ -221,8 +221,8 @@ const InvoiceDetail = () => {
                       </tr>
                     ) : (
                       items.map((item, index) => (
-                        <tr key={item.id || index} className="hover:bg-slate-50/50 dark:hover:bg-slate-850/20 transition-colors">
-                          <td className="px-4 py-3.5 max-w-xs text-slate-800 dark:text-slate-200">
+                        <tr key={item.id || index} className="hover:bg-slate-50/50 transition-colors">
+                          <td className="px-4 py-3.5 max-w-xs text-slate-800">
                             {item.description}
                           </td>
                           <td className="px-4 py-3.5 text-center text-slate-400 uppercase text-[10px]">
@@ -234,7 +234,7 @@ const InvoiceDetail = () => {
                           <td className="px-4 py-3.5 text-right">
                             {formatCurrency(item.unitPriceHt)}
                           </td>
-                          <td className="px-4 py-3.5 text-right font-extrabold text-slate-900 dark:text-white">
+                          <td className="px-4 py-3.5 text-right font-extrabold text-slate-900">
                             {formatCurrency(item.quantity * item.unitPriceHt)}
                           </td>
                         </tr>
@@ -250,23 +250,23 @@ const InvoiceDetail = () => {
               <div className="w-full sm:w-80 space-y-2.5 text-xs">
                 <div className="flex justify-between items-center text-slate-500 font-bold">
                   <span>Montant HT</span>
-                  <span className="text-slate-800 dark:text-white">{formatCurrency(invoice.totalHt)}</span>
+                  <span className="text-slate-800">{formatCurrency(invoice.totalHt)}</span>
                 </div>
                 <div className="flex justify-between items-center text-slate-500 font-bold">
                   <span>TVA (20%)</span>
                   <span>{formatCurrency(invoice.totalHt * 0.20)}</span>
                 </div>
-                <div className="h-px bg-slate-100 dark:bg-slate-850 my-1"></div>
-                <div className="flex justify-between items-center text-slate-850 dark:text-white font-black text-sm">
+                <div className="h-px bg-slate-100 my-1"></div>
+                <div className="flex justify-between items-center text-slate-850 font-black text-sm">
                   <span>Total TTC</span>
-                  <span className="text-blue-600 dark:text-blue-400">{formatCurrency(invoice.totalTtc)}</span>
+                  <span className="text-blue-600">{formatCurrency(invoice.totalTtc)}</span>
                 </div>
               </div>
             </div>
 
             {/* Legal */}
-            <div className="pt-6 border-t border-slate-100 dark:border-slate-850 text-[10px] text-slate-400 font-medium leading-relaxed">
-              <p className="font-bold text-slate-600 dark:text-slate-350">Informations & Coordonnées Bancaires :</p>
+            <div className="pt-6 border-t border-slate-100 text-[10px] text-slate-400 font-medium leading-relaxed">
+              <p className="font-bold text-slate-600">Informations & Coordonnées Bancaires :</p>
               <p className="mt-1">
                 Virement en faveur de : <strong>Atlas Works S.A.R.L.</strong><br />
                 Banque : Attijariwafa Bank - Agence Maarif Casablanca<br />
@@ -278,31 +278,31 @@ const InvoiceDetail = () => {
 
         {/* Payments Ledger Sidebar */}
         <div className="space-y-6">
-          <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-5">
-            <h3 className="font-bold text-slate-850 dark:text-white text-xs uppercase tracking-wider">État de Trésorerie</h3>
+          <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-5">
+            <h3 className="font-bold text-slate-850 text-xs uppercase tracking-wider">État de Trésorerie</h3>
             
             <div className="flex items-center space-x-3">
               <StatusBadge status={invoice.status} />
             </div>
 
-            <div className="pt-4 border-t border-slate-100 dark:border-slate-850 space-y-3.5 text-xs font-semibold">
+            <div className="pt-4 border-t border-slate-100 space-y-3.5 text-xs font-semibold">
               <div className="flex justify-between items-center">
                 <span className="text-slate-400">Total TTC</span>
-                <span className="text-slate-800 dark:text-white font-black">{formatCurrency(invoice.totalTtc)}</span>
+                <span className="text-slate-800 font-black">{formatCurrency(invoice.totalTtc)}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-emerald-550 dark:text-emerald-400 font-bold">Total Réglé</span>
-                <span className="text-emerald-650 dark:text-emerald-400 font-black">{formatCurrency(amountPaid)}</span>
+                <span className="text-emerald-550 font-bold">Total Réglé</span>
+                <span className="text-emerald-650 font-black">{formatCurrency(amountPaid)}</span>
               </div>
-              <div className="h-px bg-slate-100 dark:bg-slate-850 my-1"></div>
+              <div className="h-px bg-slate-100 my-1"></div>
               <div className="flex justify-between items-center">
-                <span className="text-rose-550 dark:text-rose-450 font-bold">Reste à Recouvrer</span>
-                <span className="text-rose-650 dark:text-rose-400 font-black text-sm">{formatCurrency(amountRemaining)}</span>
+                <span className="text-rose-550 font-bold">Reste à Recouvrer</span>
+                <span className="text-rose-650 font-black text-sm">{formatCurrency(amountRemaining)}</span>
               </div>
             </div>
 
             {amountPaid > 0 && (
-              <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+              <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                 <div
                   className="bg-emerald-500 h-full rounded-full transition-all duration-500"
                   style={{ width: `${Math.min(100, Math.round((amountPaid / invoice.totalTtc) * 100))}%` }}
@@ -312,8 +312,8 @@ const InvoiceDetail = () => {
           </div>
 
           {/* Payments History Register */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-4">
-            <h3 className="font-bold text-slate-850 dark:text-white text-xs uppercase tracking-wider pb-2 border-b border-slate-100 dark:border-slate-850">
+          <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-4">
+            <h3 className="font-bold text-slate-850 text-xs uppercase tracking-wider pb-2 border-b border-slate-100">
               Historique des encaissements ({payments.length})
             </h3>
             
@@ -324,7 +324,7 @@ const InvoiceDetail = () => {
                 payments.map(pay => (
                   <div key={pay.id} className="p-3.5 rounded-2xl bg-emerald-50/20 border border-emerald-250 flex justify-between items-center text-xs">
                     <div>
-                      <p className="font-black text-emerald-850 dark:text-emerald-400">{formatCurrency(pay.amount)}</p>
+                      <p className="font-black text-emerald-850">{formatCurrency(pay.amount)}</p>
                       <p className="text-[9px] text-slate-400 font-bold uppercase mt-0.5">{pay.paymentMethod} {pay.reference && `— ref : ${pay.reference}`}</p>
                     </div>
                     <span className="text-[10px] text-slate-400 font-bold">{new Date(pay.paymentDate).toLocaleDateString('fr-FR')}</span>

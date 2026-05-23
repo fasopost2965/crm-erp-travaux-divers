@@ -212,8 +212,8 @@ const QuoteForm = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Form Fields */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-6">
-              <h3 className="font-bold text-slate-800 dark:text-white text-xs uppercase tracking-wider pb-3 border-b border-slate-100 dark:border-slate-850">
+            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6">
+              <h3 className="font-bold text-slate-800 text-xs uppercase tracking-wider pb-3 border-b border-slate-100">
                 Informations Générales
               </h3>
 
@@ -225,7 +225,7 @@ const QuoteForm = () => {
                     required
                     value={quoteNumber}
                     onChange={(e) => setQuoteNumber(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                   />
                 </div>
 
@@ -237,7 +237,7 @@ const QuoteForm = () => {
                     placeholder="Ex: Rénovation verrière et peinture"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                   />
                 </div>
 
@@ -278,15 +278,15 @@ const QuoteForm = () => {
             </div>
 
             {/* Prestation items dynamic table */}
-            <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-6">
-              <div className="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-850">
-                <h3 className="font-bold text-slate-800 dark:text-white text-xs uppercase tracking-wider">
+            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6">
+              <div className="flex justify-between items-center pb-3 border-b border-slate-100">
+                <h3 className="font-bold text-slate-800 text-xs uppercase tracking-wider">
                   Lignes de prestation
                 </h3>
                 <button
                   type="button"
                   onClick={handleAddItemRow}
-                  className="py-1.5 px-3 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-bold text-xs tracking-wide transition-all cursor-pointer flex items-center space-x-1"
+                  className="py-1.5 px-3 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold text-xs tracking-wide transition-all cursor-pointer flex items-center space-x-1"
                 >
                   <span>+ Ajouter une ligne</span>
                 </button>
@@ -294,7 +294,7 @@ const QuoteForm = () => {
 
               <div className="space-y-4">
                 {items.map((item, idx) => (
-                  <div key={idx} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/20 border border-slate-100 dark:border-slate-850 flex flex-col sm:flex-row gap-3 items-end">
+                  <div key={idx} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col sm:flex-row gap-3 items-end">
                     <div className="w-full sm:w-1/4 space-y-1">
                       <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Section</label>
                       <input
@@ -302,7 +302,7 @@ const QuoteForm = () => {
                         placeholder="Ex: Maçonnerie"
                         value={item.section}
                         onChange={(e) => handleItemChange(idx, 'section', e.target.value)}
-                        className="block w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 text-slate-800 dark:text-white text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all font-semibold"
+                        className="block w-full px-3 py-2 rounded-xl bg-white border border-slate-150 text-slate-800 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all font-semibold"
                       />
                     </div>
 
@@ -314,7 +314,7 @@ const QuoteForm = () => {
                         placeholder="Ex: Fourniture et pose de dalle carrelage 60x60"
                         value={item.description}
                         onChange={(e) => handleItemChange(idx, 'description', e.target.value)}
-                        className="block w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 text-slate-800 dark:text-white text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all font-semibold"
+                        className="block w-full px-3 py-2 rounded-xl bg-white border border-slate-150 text-slate-800 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all font-semibold"
                       />
                     </div>
 
@@ -326,7 +326,7 @@ const QuoteForm = () => {
                         placeholder="U"
                         value={item.unit}
                         onChange={(e) => handleItemChange(idx, 'unit', e.target.value)}
-                        className="block w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 text-slate-800 dark:text-white text-xs text-center focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all font-semibold"
+                        className="block w-full px-3 py-2 rounded-xl bg-white border border-slate-150 text-slate-800 text-xs text-center focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all font-semibold"
                       />
                     </div>
 
@@ -339,7 +339,7 @@ const QuoteForm = () => {
                         min="0.01"
                         value={item.quantity}
                         onChange={(e) => handleItemChange(idx, 'quantity', parseFloat(e.target.value) || 0)}
-                        className="block w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 text-slate-800 dark:text-white text-xs text-right focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all font-semibold"
+                        className="block w-full px-3 py-2 rounded-xl bg-white border border-slate-150 text-slate-800 text-xs text-right focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all font-semibold"
                       />
                     </div>
 
@@ -351,7 +351,7 @@ const QuoteForm = () => {
                         min="0"
                         value={item.unitPriceHt}
                         onChange={(e) => handleItemChange(idx, 'unitPriceHt', parseFloat(e.target.value) || 0)}
-                        className="block w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 text-slate-800 dark:text-white text-xs text-right focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all font-semibold"
+                        className="block w-full px-3 py-2 rounded-xl bg-white border border-slate-150 text-slate-800 text-xs text-right focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all font-semibold"
                       />
                     </div>
 
@@ -371,8 +371,8 @@ const QuoteForm = () => {
 
           {/* Sidebar calculations & settings */}
           <div className="space-y-6">
-            <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-6">
-              <h3 className="font-bold text-slate-850 dark:text-white text-xs uppercase tracking-wider pb-3 border-b border-slate-100 dark:border-slate-850">
+            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6">
+              <h3 className="font-bold text-slate-850 text-xs uppercase tracking-wider pb-3 border-b border-slate-100">
                 Paramètres & Totaux
               </h3>
 
@@ -382,7 +382,7 @@ const QuoteForm = () => {
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-700 dark:text-slate-350 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer"
                   >
                     <option value="Brouillon">Brouillon</option>
                     <option value="Envoyé">Envoyé</option>
@@ -397,7 +397,7 @@ const QuoteForm = () => {
                     type="date"
                     value={validUntil}
                     onChange={(e) => setValidUntil(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer"
                   />
                 </div>
 
@@ -409,7 +409,7 @@ const QuoteForm = () => {
                     placeholder="0"
                     value={marginEstimated}
                     onChange={(e) => setMarginEstimated(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                   />
                 </div>
 
@@ -422,25 +422,25 @@ const QuoteForm = () => {
                     placeholder="0"
                     value={retentionRate}
                     onChange={(e) => setRetentionRate(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                   />
                 </div>
               </div>
 
               {/* Instant invoice total card */}
-              <div className="p-5 rounded-2xl bg-blue-50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/50 space-y-3.5 text-xs font-semibold text-slate-655 dark:text-slate-350">
+              <div className="p-5 rounded-2xl bg-blue-50 border border-blue-100 space-y-3.5 text-xs font-semibold text-slate-655">
                 <div className="flex justify-between items-center">
                   <span>Sous-total HT</span>
-                  <span className="text-slate-850 dark:text-white font-extrabold">{formatCurrency(totalHt)}</span>
+                  <span className="text-slate-850 font-extrabold">{formatCurrency(totalHt)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span>TVA (20%)</span>
                   <span>{formatCurrency(taxAmount)}</span>
                 </div>
-                <div className="h-px bg-slate-200 dark:bg-slate-800/80 my-1"></div>
-                <div className="flex justify-between items-center text-sm font-black text-slate-800 dark:text-white">
+                <div className="h-px bg-slate-200 my-1"></div>
+                <div className="flex justify-between items-center text-sm font-black text-slate-800">
                   <span>Total TTC</span>
-                  <span className="text-blue-650 dark:text-blue-400">{formatCurrency(totalTtc)}</span>
+                  <span className="text-blue-650">{formatCurrency(totalTtc)}</span>
                 </div>
               </div>
 

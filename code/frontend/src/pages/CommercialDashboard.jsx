@@ -22,7 +22,7 @@ const CommercialDashboard = () => {
 
   if (error) {
     return (
-      <div className="p-6 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-3xl text-red-700 dark:text-red-400 font-medium">
+      <div className="p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700 font-medium">
         ⚠️ Erreur lors de la récupération des données : {error.message}. Veuillez vérifier votre connexion.
       </div>
     );
@@ -90,8 +90,8 @@ const CommercialDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Left/Middle Column - Upcoming Meetings list */}
-        <div className="lg:col-span-2 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
-          <h2 className="text-base font-bold text-slate-800 dark:text-white mb-6 flex items-center space-x-2">
+        <div className="lg:col-span-2 bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
+          <h2 className="text-base font-bold text-slate-800 mb-6 flex items-center space-x-2">
             <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
@@ -99,17 +99,17 @@ const CommercialDashboard = () => {
           </h2>
 
           {!stats.upcomingMeetings || stats.upcomingMeetings.length === 0 ? (
-            <div className="text-center py-12 text-slate-400 dark:text-slate-500 font-medium text-sm">
+            <div className="text-center py-12 text-slate-400 font-medium text-sm">
               Aucun rendez-vous planifié.
             </div>
           ) : (
-            <div className="relative border-l border-slate-100 dark:border-slate-800 ml-4 space-y-8 py-2">
+            <div className="relative border-l border-slate-100 ml-4 space-y-8 py-2">
               {stats.upcomingMeetings.map((meeting) => (
                 <div key={meeting.id} className="relative pl-8 group">
                   {/* Timeline bullet dot */}
-                  <div className="absolute left-0 top-1.5 -translate-x-1/2 w-4 h-4 rounded-full border-4 border-white dark:border-slate-900 bg-blue-600 group-hover:scale-125 transition-transform"></div>
+                  <div className="absolute left-0 top-1.5 -translate-x-1/2 w-4 h-4 rounded-full border-4 border-white bg-blue-600 group-hover:scale-125 transition-transform"></div>
                   
-                  <div className="bg-slate-50/50 dark:bg-slate-950/10 backdrop-blur-sm border border-slate-100 dark:border-slate-850 p-5 rounded-2xl flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0 hover:border-slate-200 dark:hover:border-slate-800 transition-all duration-300">
+                  <div className="bg-slate-50/50 backdrop-blur-sm border border-slate-100 p-5 rounded-2xl flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0 hover:border-slate-200 transition-all duration-300">
                     <div className="space-y-1">
                       <div className="flex items-center space-x-2">
                         <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">
@@ -117,18 +117,18 @@ const CommercialDashboard = () => {
                         </span>
                         <StatusBadge status={meeting.status} />
                       </div>
-                      <h4 className="text-sm font-bold text-slate-800 dark:text-white">
+                      <h4 className="text-sm font-bold text-slate-800">
                         {meeting.subject}
                       </h4>
                       {meeting.description && (
-                        <p className="text-xs text-slate-400 dark:text-slate-500 font-medium leading-relaxed max-w-lg">
+                        <p className="text-xs text-slate-400 font-medium leading-relaxed max-w-lg">
                           {meeting.description}
                         </p>
                       )}
                     </div>
 
                     <div className="text-left md:text-right shrink-0">
-                      <p className="text-xs font-bold text-slate-700 dark:text-slate-350">
+                      <p className="text-xs font-bold text-slate-700">
                         {new Date(meeting.dueDate).toLocaleDateString('fr-FR', {
                           weekday: 'long', 
                           year: 'numeric', 
@@ -153,8 +153,8 @@ const CommercialDashboard = () => {
         {/* Right Column - Actions & Pipeline Stats */}
         <div className="space-y-6">
           {/* Quick Actions Card */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
-            <h3 className="text-sm font-bold text-slate-800 dark:text-white mb-4">
+          <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
+            <h3 className="text-sm font-bold text-slate-800 mb-4">
               Actions Rapides
             </h3>
             <div className="flex flex-col space-y-3">
@@ -164,7 +164,7 @@ const CommercialDashboard = () => {
                 </svg>
                 <span>Nouveau Client / Compte</span>
               </button>
-              <button className="w-full py-3 px-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-700 dark:text-slate-300 font-bold text-xs tracking-wide transition-all cursor-pointer flex items-center justify-center space-x-2">
+              <button className="w-full py-3 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs tracking-wide transition-all cursor-pointer flex items-center justify-center space-x-2">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>

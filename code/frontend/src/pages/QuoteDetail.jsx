@@ -57,7 +57,7 @@ const QuoteDetail = () => {
 
   if (error) {
     return (
-      <div className="p-6 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-3xl text-red-700 dark:text-red-400 font-medium">
+      <div className="p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700 font-medium">
         ⚠️ Erreur de chargement de la fiche devis : {error.message}.
       </div>
     );
@@ -110,20 +110,20 @@ const QuoteDetail = () => {
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => navigate(`/dashboard/quotes/${quote.id}/edit`)}
-              className="py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 font-bold text-xs tracking-wide transition-all cursor-pointer"
+              className="py-2 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs tracking-wide transition-all cursor-pointer"
             >
               ✏️ Éditer
             </button>
             <button
               onClick={handleExportPdf}
-              className="py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 font-bold text-xs tracking-wide transition-all cursor-pointer"
+              className="py-2 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs tracking-wide transition-all cursor-pointer"
             >
               📁 PDF
             </button>
             {quote.status === 'Brouillon' && (
               <button
                 onClick={() => setIsSendOpen(true)}
-                className="py-2 px-4 rounded-xl bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 font-bold text-xs tracking-wide transition-all cursor-pointer"
+                className="py-2 px-4 rounded-xl bg-blue-50 text-blue-600 font-bold text-xs tracking-wide transition-all cursor-pointer"
               >
                 ✉️ Envoyer
               </button>
@@ -159,13 +159,13 @@ const QuoteDetail = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Document Pane */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-8 relative overflow-hidden">
+          <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-sm space-y-8 relative overflow-hidden">
             {/* Header branding */}
-            <div className="flex flex-col sm:flex-row justify-between items-start gap-4 pb-6 border-b border-slate-100 dark:border-slate-850">
+            <div className="flex flex-col sm:flex-row justify-between items-start gap-4 pb-6 border-b border-slate-100">
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
                   <span className="text-2xl font-black tracking-tighter text-blue-600">ATLAS WORKS</span>
-                  <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 bg-slate-100 dark:bg-slate-800 py-0.5 px-2 rounded">Divers Pro</span>
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 bg-slate-100 py-0.5 px-2 rounded">Divers Pro</span>
                 </div>
                 <p className="text-[10px] text-slate-400 font-semibold leading-relaxed">
                   Atlas Works S.A.R.L. — Travaux Divers & Rénovation<br />
@@ -173,8 +173,8 @@ const QuoteDetail = () => {
                 </p>
               </div>
               <div className="text-right sm:text-right space-y-1">
-                <h2 className="text-xl font-black text-slate-800 dark:text-white uppercase tracking-tight">DEVIS</h2>
-                <p className="text-xs font-bold text-blue-600 dark:text-blue-400">{quote.quoteNumber}</p>
+                <h2 className="text-xl font-black text-slate-800 uppercase tracking-tight">DEVIS</h2>
+                <p className="text-xs font-bold text-blue-600">{quote.quoteNumber}</p>
                 <p className="text-[10px] text-slate-400 font-semibold">
                   Date d'émission : {quote.createdAt ? new Date(quote.createdAt).toLocaleDateString('fr-FR') : '-'}
                 </p>
@@ -186,18 +186,18 @@ const QuoteDetail = () => {
 
             {/* Client and Partner details */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs leading-relaxed">
-              <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/20 border border-slate-100 dark:border-slate-850 space-y-2">
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
                 <h3 className="font-extrabold text-[10px] text-slate-400 uppercase tracking-widest">Émetteur</h3>
-                <p className="font-bold text-slate-800 dark:text-white">Atlas Works SARL</p>
+                <p className="font-bold text-slate-800">Atlas Works SARL</p>
                 <p className="text-slate-500">
                   12 Rue des Hôpitaux, Maarif<br />
                   Casablanca, Maroc
                 </p>
                 <p className="text-slate-400">contact@atlasworks.ma | +212 522 34 56 78</p>
               </div>
-              <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/20 border border-slate-100 dark:border-slate-850 space-y-2">
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
                 <h3 className="font-extrabold text-[10px] text-slate-400 uppercase tracking-widest">Destinataire</h3>
-                <p className="font-bold text-slate-800 dark:text-white">{quote.account?.name || 'Société Client'}</p>
+                <p className="font-bold text-slate-800">{quote.account?.name || 'Société Client'}</p>
                 {quote.account?.address && (
                   <p className="text-slate-500">
                     {quote.account.address}<br />
@@ -212,12 +212,12 @@ const QuoteDetail = () => {
 
             {/* Prestation lines table */}
             <div className="space-y-4">
-              <h3 className="font-extrabold text-xs text-slate-800 dark:text-white tracking-tight">
+              <h3 className="font-extrabold text-xs text-slate-800 tracking-tight">
                 Détail des prestations - {quote.title}
               </h3>
-              <div className="overflow-x-auto border border-slate-100 dark:border-slate-850 rounded-2xl">
-                <table className="min-w-full divide-y divide-slate-100 dark:divide-slate-850 text-left text-xs">
-                  <thead className="bg-slate-50 dark:bg-slate-950/40 text-slate-500 font-bold uppercase text-[9px] tracking-wider">
+              <div className="overflow-x-auto border border-slate-100 rounded-2xl">
+                <table className="min-w-full divide-y divide-slate-100 text-left text-xs">
+                  <thead className="bg-slate-50 text-slate-500 font-bold uppercase text-[9px] tracking-wider">
                     <tr>
                       <th scope="col" className="px-4 py-3">Description / Section</th>
                       <th scope="col" className="px-4 py-3 text-center w-16">U</th>
@@ -226,7 +226,7 @@ const QuoteDetail = () => {
                       <th scope="col" className="px-4 py-3 text-right w-32">Total HT</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-slate-850 bg-white dark:bg-slate-900 font-semibold text-slate-700 dark:text-slate-350">
+                  <tbody className="divide-y divide-slate-100 bg-white font-semibold text-slate-700">
                     {items.length === 0 ? (
                       <tr>
                         <td colSpan="5" className="px-4 py-8 text-center text-slate-400 font-medium">
@@ -235,14 +235,14 @@ const QuoteDetail = () => {
                       </tr>
                     ) : (
                       items.map((item, index) => (
-                        <tr key={item.id || index} className="hover:bg-slate-50/50 dark:hover:bg-slate-850/20 transition-colors">
+                        <tr key={item.id || index} className="hover:bg-slate-50/50 transition-colors">
                           <td className="px-4 py-3.5 max-w-xs">
                             {item.section && (
                               <span className="block text-[9px] font-black uppercase text-blue-500 tracking-wider mb-0.5">
                                 [{item.section}]
                               </span>
                             )}
-                            <span className="text-slate-800 dark:text-slate-200">{item.description}</span>
+                            <span className="text-slate-800">{item.description}</span>
                           </td>
                           <td className="px-4 py-3.5 text-center text-slate-400 uppercase text-[10px]">
                             {item.unit || 'U'}
@@ -253,7 +253,7 @@ const QuoteDetail = () => {
                           <td className="px-4 py-3.5 text-right">
                             {formatCurrency(item.unitPriceHt)}
                           </td>
-                          <td className="px-4 py-3.5 text-right font-extrabold text-slate-900 dark:text-white">
+                          <td className="px-4 py-3.5 text-right font-extrabold text-slate-900">
                             {formatCurrency(item.totalPriceHt || (item.quantity * item.unitPriceHt))}
                           </td>
                         </tr>
@@ -269,23 +269,23 @@ const QuoteDetail = () => {
               <div className="w-full sm:w-80 space-y-2.5 text-xs">
                 <div className="flex justify-between items-center text-slate-500 font-bold">
                   <span>Total HT</span>
-                  <span className="text-slate-800 dark:text-white">{formatCurrency(quote.totalHt)}</span>
+                  <span className="text-slate-800">{formatCurrency(quote.totalHt)}</span>
                 </div>
                 <div className="flex justify-between items-center text-slate-500 font-bold">
                   <span>TVA (20%)</span>
                   <span>{formatCurrency(taxAmount)}</span>
                 </div>
-                <div className="h-px bg-slate-100 dark:bg-slate-850 my-1"></div>
-                <div className="flex justify-between items-center text-slate-850 dark:text-white font-black text-sm">
+                <div className="h-px bg-slate-100 my-1"></div>
+                <div className="flex justify-between items-center text-slate-850 font-black text-sm">
                   <span>Total TTC</span>
-                  <span className="text-blue-600 dark:text-blue-400">{formatCurrency(quote.totalTtc)}</span>
+                  <span className="text-blue-600">{formatCurrency(quote.totalTtc)}</span>
                 </div>
               </div>
             </div>
 
             {/* Notes & legal terms */}
-            <div className="pt-6 border-t border-slate-100 dark:border-slate-850 text-[10px] text-slate-400 font-medium leading-relaxed space-y-2">
-              <p className="font-bold text-slate-600 dark:text-slate-300">Conditions & Modalités de Paiement :</p>
+            <div className="pt-6 border-t border-slate-100 text-[10px] text-slate-400 font-medium leading-relaxed space-y-2">
+              <p className="font-bold text-slate-600">Conditions & Modalités de Paiement :</p>
               <ul className="list-disc pl-4 space-y-1">
                 <li>Validité de l'offre : 30 jours à compter de la date d'émission.</li>
                 <li>Modalités de règlement : 30% d'acompte à la signature de la commande, le solde selon avancement sur situations mensuelles de travaux.</li>
@@ -298,8 +298,8 @@ const QuoteDetail = () => {
         {/* Sidebar Status & Timeline */}
         <div className="space-y-6">
           {/* Status info card */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-4">
-            <h3 className="font-bold text-slate-850 dark:text-white text-xs uppercase tracking-wider">État du Devis</h3>
+          <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-4">
+            <h3 className="font-bold text-slate-850 text-xs uppercase tracking-wider">État du Devis</h3>
             <div className="flex items-center space-x-3">
               <StatusBadge status={quote.status} />
               <span className="text-xs text-slate-400 font-semibold">
@@ -307,43 +307,43 @@ const QuoteDetail = () => {
               </span>
             </div>
             {quote.marginEstimated > 0 && (
-              <div className="pt-4 border-t border-slate-100 dark:border-slate-850 space-y-2 text-xs">
+              <div className="pt-4 border-t border-slate-100 space-y-2 text-xs">
                 <div className="flex justify-between items-center text-slate-400 font-bold">
                   <span>Marge estimée (HT)</span>
-                  <span className="text-slate-800 dark:text-white font-extrabold">{formatCurrency(quote.marginEstimated)}</span>
+                  <span className="text-slate-800 font-extrabold">{formatCurrency(quote.marginEstimated)}</span>
                 </div>
                 <div className="flex justify-between items-center text-slate-400 font-bold">
                   <span>Taux de rétention</span>
-                  <span className="text-slate-800 dark:text-white font-extrabold">{quote.retentionRate || 0}%</span>
+                  <span className="text-slate-800 font-extrabold">{quote.retentionRate || 0}%</span>
                 </div>
               </div>
             )}
           </div>
 
           {/* Activity Timeline */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-6">
-            <h3 className="font-bold text-slate-850 dark:text-white text-xs uppercase tracking-wider">Historique d'activité</h3>
-            <div className="space-y-6 relative before:absolute before:inset-y-0 before:left-3 before:w-0.5 before:bg-slate-100 dark:before:bg-slate-800">
+          <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6">
+            <h3 className="font-bold text-slate-850 text-xs uppercase tracking-wider">Historique d'activité</h3>
+            <div className="space-y-6 relative before:absolute before:inset-y-0 before:left-3 before:w-0.5 before:bg-slate-100">
               {/* Brouillon state */}
               <div className="flex items-start space-x-3 relative">
-                <div className="w-6 h-6 rounded-full bg-blue-500 border-4 border-white dark:border-slate-900 z-10 shrink-0 flex items-center justify-center text-[10px] text-white">✓</div>
+                <div className="w-6 h-6 rounded-full bg-blue-500 border-4 border-white z-10 shrink-0 flex items-center justify-center text-[10px] text-white">✓</div>
                 <div className="text-xs">
-                  <p className="font-bold text-slate-850 dark:text-white">Création du devis</p>
+                  <p className="font-bold text-slate-850">Création du devis</p>
                   <p className="text-[10px] text-slate-400">Le devis a été initialisé au format Brouillon.</p>
                 </div>
               </div>
 
               {/* Envoyé state */}
               <div className="flex items-start space-x-3 relative">
-                <div className={`w-6 h-6 rounded-full border-4 border-white dark:border-slate-900 z-10 shrink-0 flex items-center justify-center text-[10px] ${
+                <div className={`w-6 h-6 rounded-full border-4 border-white z-10 shrink-0 flex items-center justify-center text-[10px] ${
                   ['Envoyé', 'Accepté', 'Refusé'].includes(quote.status)
                     ? 'bg-blue-500 text-white'
-                    : 'bg-slate-200 dark:bg-slate-800 text-slate-400'
+                    : 'bg-slate-200 text-slate-400'
                 }`}>
                   {['Envoyé', 'Accepté', 'Refusé'].includes(quote.status) ? '✓' : '•'}
                 </div>
                 <div className="text-xs">
-                  <p className={`font-bold ${['Envoyé', 'Accepté', 'Refusé'].includes(quote.status) ? 'text-slate-850 dark:text-white' : 'text-slate-400'}`}>
+                  <p className={`font-bold ${['Envoyé', 'Accepté', 'Refusé'].includes(quote.status) ? 'text-slate-850' : 'text-slate-400'}`}>
                     Envoyé au client
                   </p>
                   <p className="text-[10px] text-slate-400">Le devis a été partagé avec le client pour négociation.</p>
@@ -352,17 +352,17 @@ const QuoteDetail = () => {
 
               {/* Accepté / Refusé state */}
               <div className="flex items-start space-x-3 relative">
-                <div className={`w-6 h-6 rounded-full border-4 border-white dark:border-slate-900 z-10 shrink-0 flex items-center justify-center text-[10px] ${
+                <div className={`w-6 h-6 rounded-full border-4 border-white z-10 shrink-0 flex items-center justify-center text-[10px] ${
                   quote.status === 'Accepté'
                     ? 'bg-emerald-500 text-white'
                     : quote.status === 'Refusé'
                     ? 'bg-rose-500 text-white'
-                    : 'bg-slate-200 dark:bg-slate-800 text-slate-400'
+                    : 'bg-slate-200 text-slate-400'
                 }`}>
                   {quote.status === 'Accepté' ? '✓' : quote.status === 'Refusé' ? '✗' : '•'}
                 </div>
                 <div className="text-xs">
-                  <p className={`font-bold ${['Accepté', 'Refusé'].includes(quote.status) ? 'text-slate-850 dark:text-white' : 'text-slate-400'}`}>
+                  <p className={`font-bold ${['Accepté', 'Refusé'].includes(quote.status) ? 'text-slate-850' : 'text-slate-400'}`}>
                     {quote.status === 'Refusé' ? 'Devis Refusé' : 'Devis Accepté / Gagné'}
                   </p>
                   <p className="text-[10px] text-slate-400">La décision commerciale finale du client a été enregistrée.</p>

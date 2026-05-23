@@ -81,7 +81,7 @@ const WorkLogForm = () => {
 
   if (projectError) {
     return (
-      <div className="p-6 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-3xl text-red-700 dark:text-red-400 font-medium">
+      <div className="p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700 font-medium">
         ⚠️ Impossible d'ouvrir la saisie d'heures pour ce chantier : {projectError.message}.
       </div>
     );
@@ -98,10 +98,10 @@ const WorkLogForm = () => {
         ]}
       />
 
-      <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
-        <div className="p-4 rounded-2xl bg-blue-50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/50 space-y-1">
+      <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+        <div className="p-4 rounded-2xl bg-blue-50 border border-blue-100 space-y-1">
           <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest block">Chantier</span>
-          <span className="text-sm font-black text-slate-850 dark:text-white block">{project.title}</span>
+          <span className="text-sm font-black text-slate-850 block">{project.title}</span>
           <span className="text-[10px] text-slate-400 font-semibold block">📍 {project.address}, {project.city}</span>
         </div>
 
@@ -113,7 +113,7 @@ const WorkLogForm = () => {
             <select
               value={taskId}
               onChange={(e) => setTaskId(e.target.value)}
-              className="block w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-700 dark:text-slate-350 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer font-bold"
+              className="block w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer font-bold"
             >
               <option value="">Sélectionner une tâche en cours...</option>
               {tasks.map(t => (
@@ -134,7 +134,7 @@ const WorkLogForm = () => {
                 required
                 value={workDate}
                 onChange={(e) => setWorkDate(e.target.value)}
-                className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
               />
             </div>
 
@@ -151,7 +151,7 @@ const WorkLogForm = () => {
                   required
                   value={hours}
                   onChange={(e) => setHours(e.target.value)}
-                  className="block w-full pl-4 pr-12 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white font-extrabold focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="block w-full pl-4 pr-12 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 font-extrabold focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-extrabold text-[10px]">HRS</span>
               </div>
@@ -168,7 +168,7 @@ const WorkLogForm = () => {
               required
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -176,7 +176,7 @@ const WorkLogForm = () => {
             <button
               type="button"
               onClick={() => navigate(`/dashboard/projects/${projectId}`)}
-              className="w-1/3 py-3 px-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-350 font-bold tracking-wide transition-colors cursor-pointer"
+              className="w-1/3 py-3 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold tracking-wide transition-colors cursor-pointer"
             >
               Retour
             </button>

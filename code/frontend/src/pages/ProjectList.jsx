@@ -20,7 +20,6 @@ const ProjectList = () => {
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
-  // Fetch Projects List
   const { data: responseData, isLoading, error } = useQuery({
     queryKey: ['projectsList', page],
     queryFn: async () => {
@@ -30,7 +29,6 @@ const ProjectList = () => {
     keepPreviousData: true,
   });
 
-  // Delete Project Mutation
   const deleteMutation = useMutation({
     mutationFn: async (id) => {
       await api.delete(`/api/projects/${id}`);
@@ -45,14 +43,12 @@ const ProjectList = () => {
     },
   });
 
-  if (isLoading) {
-    return <LoadingSpinner fullPage message="Chargement du registre des projets..." />;
-  }
+  if (isLoading) return <LoadingSpinner fullPage message="Chargement des projets..." />;
 
   if (error) {
     return (
-      <div className="p-6 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-3xl text-red-700 dark:text-red-400 font-medium">
-        ⚠️ Erreur lors du chargement des chantiers : {error.message}.
+      <div className="p-6 bg-red-50 border border-red-200 rounded-2xl text-red-700 font-medium text-sm">
+        ⚠️ Erreur lors du chargement des chantiers : {error.message}
       </div>
     );
   }
@@ -60,7 +56,6 @@ const ProjectList = () => {
   const rawProjects = responseData?.data || [];
   const meta = responseData?.meta || { current_page: 1, last_page: 1, per_page: 10, total: rawProjects.length };
 
-  // Filter projects reactively
   const filteredProjects = rawProjects.filter((project) => {
     const matchesSearch =
       project.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -70,11 +65,9 @@ const ProjectList = () => {
     return matchesSearch && matchesStatus;
   });
 
-  const formatCurrency = (val) => {
-    return new Intl.NumberFormat('fr-MA', { style: 'currency', currency: 'MAD', maximumFractionDigits: 0 })
-      .format(val || 0)
-      .replace('MAD', 'DH');
-  };
+  const formatCurrency = (val) =>
+    new Intl.NumberFormat('fr-MA', { style: 'currency', currency: 'MAD', maximumFractionDigits: 0 })
+      .format(val || 0).replace('MAD', 'DH');
 
   const handleDeleteClick = (project, e) => {
     e.stopPropagation();
@@ -84,22 +77,20 @@ const ProjectList = () => {
 
   const columns = [
     {
-      header: 'Numéro / ID',
+      header: 'ID',
       accessor: 'id',
       cell: (row) => (
-        <span className="font-extrabold text-blue-600 dark:text-blue-400 text-xs">
-          #{row.id}
-        </span>
+        <span className="font-bold text-blue-600 text-xs">#{row.id}</span>
       ),
     },
     {
-      header: 'Titre & Localisation',
+      header: 'Projet',
       accessor: 'title',
       cell: (row) => (
-        <div className="min-w-0">
-          <p className="font-bold text-slate-800 dark:text-white truncate">{row.title}</p>
-          <p className="text-[10px] text-slate-400 font-semibold">
-            📍 {row.city || 'Non spécifié'} {row.address && `— ${row.address}`}
+        <div>
+          <p className="font-semibold text-slate-900 text-sm">{row.title}</p>
+          <p className="text-xs text-slate-400 mt-0.5">
+            📍 {row.city || 'Non spécifié'}{row.address ? ` — ${row.address}` : ''}
           </p>
         </div>
       ),
@@ -108,30 +99,30 @@ const ProjectList = () => {
       header: 'Client',
       accessor: 'account.name',
       cell: (row) => (
-        <span className="text-xs text-slate-655 dark:text-slate-350 font-bold">
-          {row.account?.name || 'Client inconnu'}
+        <span className="text-sm text-slate-700 font-medium">
+          {row.account?.name || <span className="text-slate-400">—</span>}
         </span>
       ),
     },
     {
-      header: 'Conducteur / Chef',
+      header: 'Chef de chantier',
       accessor: 'manager.name',
       cell: (row) => (
-        <span className="text-xs text-slate-600 dark:text-slate-400 font-bold flex items-center space-x-1.5">
-          <span className="w-5 h-5 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-[10px] uppercase font-black text-slate-500">
-            {row.manager?.name ? row.manager.name.charAt(0) : 'C'}
-          </span>
-          <span>{row.manager?.name || 'Non assigné'}</span>
-        </span>
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600">
+            {row.manager?.name ? row.manager.name.charAt(0) : '?'}
+          </div>
+          <span className="text-sm text-slate-700">{row.manager?.name || <span className="text-slate-400">Non assigné</span>}</span>
+        </div>
       ),
     },
     {
       header: 'Dates',
       accessor: 'startDate',
       cell: (row) => (
-        <div className="text-[10px] text-slate-500 font-bold space-y-0.5">
-          <p>Début : {row.startDate ? new Date(row.startDate).toLocaleDateString('fr-FR') : '-'}</p>
-          <p className="text-rose-500">Fin planifiée : {row.endDatePlanned ? new Date(row.endDatePlanned).toLocaleDateString('fr-FR') : '-'}</p>
+        <div className="text-xs text-slate-500 space-y-0.5">
+          <p>Début : {row.startDate ? new Date(row.startDate).toLocaleDateString('fr-FR') : '—'}</p>
+          <p className="text-rose-500">Fin : {row.endDatePlanned ? new Date(row.endDatePlanned).toLocaleDateString('fr-FR') : '—'}</p>
         </div>
       ),
     },
@@ -139,9 +130,7 @@ const ProjectList = () => {
       header: 'Budget HT',
       accessor: 'budget',
       cell: (row) => (
-        <span className="text-xs font-black text-slate-800 dark:text-white">
-          {formatCurrency(row.budget)}
-        </span>
+        <span className="text-sm font-bold text-slate-800">{formatCurrency(row.budget)}</span>
       ),
     },
     {
@@ -153,24 +142,24 @@ const ProjectList = () => {
       header: 'Actions',
       accessor: 'actions',
       cell: (row) => (
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-1.5">
           <button
             onClick={(e) => { e.stopPropagation(); navigate(`/dashboard/projects/${row.id}`); }}
-            className="p-1.5 rounded-lg border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-500 dark:text-slate-400 cursor-pointer transition-colors"
-            title="Voir fiche projet"
+            className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-500 transition-colors"
+            title="Voir"
           >
             👁️
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); navigate(`/dashboard/projects/${row.id}/edit`); }}
-            className="p-1.5 rounded-lg border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-500 dark:text-slate-400 cursor-pointer transition-colors"
+            className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-500 transition-colors"
             title="Éditer"
           >
             ✏️
           </button>
           <button
             onClick={(e) => handleDeleteClick(row, e)}
-            className="p-1.5 rounded-lg border border-red-100 hover:bg-red-50 text-red-500 cursor-pointer transition-colors"
+            className="p-1.5 rounded-lg border border-red-100 hover:bg-red-50 text-red-500 transition-colors"
             title="Supprimer"
           >
             🗑️
@@ -181,71 +170,65 @@ const ProjectList = () => {
   ];
 
   return (
-    <div className="space-y-6 font-sans">
+    <div className="space-y-6">
       <PageHeader
-        title="Gestion des Projets & Chantiers"
+        title="Chantiers & Projets"
         breadcrumb={[{ label: 'Chantiers' }, { label: 'Registre' }]}
         actions={
           <button
             onClick={() => navigate('/dashboard/projects/new')}
-            className="py-2.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 transition-all cursor-pointer flex items-center space-x-2"
+            className="flex items-center gap-2 py-2.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-sm transition-colors"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            <span>Créer un Projet</span>
+            Nouveau projet
           </button>
         }
       />
 
-      {/* Filter bar */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-5 shadow-sm flex flex-col md:flex-row md:items-center gap-4">
+      <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col md:flex-row md:items-center gap-3">
         <div className="flex-1 relative">
-          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-            <svg className="h-4.5 w-4.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </div>
+          <svg className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
           <input
             type="text"
             placeholder="Rechercher par titre, client ou ville..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="block w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white placeholder-slate-400 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            className="block w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
           />
         </div>
 
-        <div className="w-full md:w-52">
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-700 dark:text-slate-350 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all cursor-pointer"
-          >
-            <option value="">Tous les Statuts</option>
-            <option value="Planifié">Planifié</option>
-            <option value="En cours">En cours</option>
-            <option value="Suspendu">Suspendu</option>
-            <option value="Terminé">Terminé</option>
-          </select>
-        </div>
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="w-full md:w-48 px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+        >
+          <option value="">Tous les statuts</option>
+          <option value="Planifié">Planifié</option>
+          <option value="En cours">En cours</option>
+          <option value="Suspendu">Suspendu</option>
+          <option value="Terminé">Terminé</option>
+        </select>
 
         {(search || statusFilter) && (
           <button
             onClick={() => { setSearch(''); setStatusFilter(''); }}
-            className="text-xs font-bold text-slate-500 hover:text-blue-500 cursor-pointer py-2.5 transition-colors"
+            className="text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors whitespace-nowrap"
           >
             Réinitialiser
           </button>
         )}
       </div>
 
-      {/* Main Table view */}
       <DataTable
         columns={columns}
         data={filteredProjects}
         onRowClick={(project) => navigate(`/dashboard/projects/${project.id}`)}
-        emptyTitle="Aucun projet de chantier trouvé"
-        emptyDescription="Aucun chantier n'a été planifié sous ce nom ou filtre actuellement."
+        emptyTitle="Aucun projet trouvé"
+        emptyDescription="Aucun chantier ne correspond à ce filtre. Créez un nouveau projet pour commencer."
         paginationMeta={{
           currentPage: meta.current_page || 1,
           lastPage: meta.last_page || 1,
@@ -255,11 +238,10 @@ const ProjectList = () => {
         onPageChange={(p) => setPage(p)}
       />
 
-      {/* Delete Dialog */}
       <ConfirmDialog
         isOpen={isDeleteOpen}
-        title="Supprimer le projet de chantier ?"
-        message={`Êtes-vous sûr de vouloir supprimer définitivement le chantier ${deleteTarget?.title} ? Cette action supprimera également les heures pointées, tâches associées et pièces jointes.`}
+        title="Supprimer le projet ?"
+        message={`Êtes-vous sûr de vouloir supprimer définitivement le chantier "${deleteTarget?.title}" ? Cette action supprimera également les heures pointées et tâches associées.`}
         confirmText="Supprimer"
         cancelText="Annuler"
         type="danger"

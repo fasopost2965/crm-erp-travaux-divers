@@ -29,7 +29,7 @@ const AccountList = () => {
 
   if (error) {
     return (
-      <div className="p-6 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-3xl text-red-700 dark:text-red-400 font-medium">
+      <div className="p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700 font-medium">
         ⚠️ Erreur lors du chargement des clients : {error.message}.
       </div>
     );
@@ -56,11 +56,11 @@ const AccountList = () => {
       accessor: 'name',
       cell: (row) => (
         <div className="flex items-center space-x-3">
-          <div className="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 flex items-center justify-center font-extrabold text-sm shadow-inner shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-extrabold text-sm shadow-inner shrink-0">
             {row.name.charAt(0)}
           </div>
           <div className="min-w-0">
-            <p className="font-bold text-slate-850 dark:text-white truncate">{row.name}</p>
+            <p className="font-bold text-slate-850 truncate">{row.name}</p>
             <p className="text-[10px] text-slate-400 font-semibold">{row.email || 'Pas d\'email renseigné'}</p>
           </div>
         </div>
@@ -70,7 +70,7 @@ const AccountList = () => {
       header: 'Localisation',
       accessor: 'city',
       cell: (row) => (
-        <span className="inline-flex items-center text-xs font-semibold text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-100 dark:border-slate-850">
+        <span className="inline-flex items-center text-xs font-semibold text-slate-600 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-100">
           📍 {row.city}
         </span>
       )
@@ -79,7 +79,7 @@ const AccountList = () => {
       header: 'Contacts',
       accessor: 'contacts',
       cell: (row) => (
-        <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+        <span className="text-xs font-bold text-slate-700">
           👥 {row.contacts?.length || 0} contact(s)
         </span>
       )
@@ -88,7 +88,7 @@ const AccountList = () => {
       header: 'Opportunités',
       accessor: 'opportunities',
       cell: (row) => (
-        <span className="text-xs font-bold text-blue-650 dark:text-blue-400">
+        <span className="text-xs font-bold text-blue-650">
           💼 {row.opportunities?.length || 0} opportunité(s)
         </span>
       )
@@ -130,7 +130,7 @@ const AccountList = () => {
       />
 
       {/* Filter Bar Card */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-5 shadow-sm flex flex-col md:flex-row md:items-center gap-4">
+      <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm flex flex-col md:flex-row md:items-center gap-4">
         
         {/* Full-text search */}
         <div className="flex-1 relative">
@@ -144,7 +144,7 @@ const AccountList = () => {
             placeholder="Rechercher par nom de société ou email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="block w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white placeholder-slate-450 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            className="block w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-450 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
           />
         </div>
 
@@ -153,7 +153,7 @@ const AccountList = () => {
           <select
             value={cityFilter}
             onChange={(e) => setCityFilter(e.target.value)}
-            className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-700 dark:text-slate-350 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all cursor-pointer"
+            className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all cursor-pointer"
           >
             <option value="">Toutes les Villes</option>
             {cities.map((city, idx) => (
@@ -166,7 +166,7 @@ const AccountList = () => {
         {(search || cityFilter) && (
           <button 
             onClick={() => { setSearch(''); setCityFilter(''); }}
-            className="text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-blue-500 cursor-pointer self-start md:self-auto py-2.5 transition-colors"
+            className="text-xs font-bold text-slate-500 hover:text-blue-500 cursor-pointer self-start md:self-auto py-2.5 transition-colors"
           >
             Réinitialiser
           </button>
