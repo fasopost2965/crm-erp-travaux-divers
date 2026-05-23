@@ -7,6 +7,7 @@ use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Resources\ProjectResource;
 use App\Models\Project;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -62,5 +63,27 @@ class ProjectController extends Controller
     {
         $project->delete();
         return response()->json(null, Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * Export the PV de Réception as a PDF.
+     */
+    public function exportPV(Project $project)
+    {
+        $this->authorize('view', $project);
+        $project->load(['account', 'manager', 'tasks', 'workLogs.user', 'signatures.signer']);
+
+        $totalHours = $project->workLogs->sum('hours_worked');
+        $tasksCompleted = $project->tasks->where('status', 'Terminé')->count();
+        $tasksTotal = $project->tasks->count();
+
+        $pdf = Pdf::loadView('pdf.pv-reception', [
+            'project' => $project,
+            'totalHours' => $totalHours,
+            'tasksCompleted' => $tasksCompleted,
+            'tasksTotal' => $tasksTotal,
+        ]);
+
+        return $pdf->download('pv-reception-' . $project->id . '.pdf');
     }
 }

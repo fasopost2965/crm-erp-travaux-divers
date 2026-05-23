@@ -14,7 +14,12 @@ class WorkLog extends Model
         'project_task_id',
         'user_id',
         'work_date',
+        'start_time',
+        'end_time',
         'hours_worked',
+        'location_lat',
+        'location_lng',
+        'status',
         'description'
     ];
 
