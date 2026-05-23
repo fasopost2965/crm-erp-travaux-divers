@@ -1,42 +1,69 @@
 # STATE.md - État d'avancement du projet
 
-Dernière mise à jour : 2026-05-22 — 14h50  
-Version du projet : v0.4.1 (Exports PDF validés par tests HTTP + Cypress 14/14 ✅)
+Dernière mise à jour : 2026-05-23 — Session complète
+Version du projet : v0.5.0 (Tâches 10C + 10D complètes + Refonte UI light mode ✅)
 
 ---
 
 ## 1. Résumé de l'état actuel
-- **Backend MVP** : COMPLET ✅ (Laravel 11.x, Auth Sanctum, 28 migrations, 26 modèles, API CRUD, RBAC, endpoints de Dashboard par rôle et Export PDF Dompdf)
-- **Maquettes Stitch** : COMPLÈTES ✅ (13 écrans interactifs générés dans le projet `30868049086750529`)
-- **Frontend & CRM** : COMPLET ✅ (Vite + React, Tailwind CSS v4, AuthContext, ProtectedRoute, Dashboards métiers, clients CRM 360°, Devis, Projets avec Kanban, Factures de situation & Règlements)
-- **Exports PDF (Tâche 10B)** : COMPLET ✅ (Génération PDF professionnelle pour Devis et Factures avec taxes, ICE/RC/IF/Patente, et mentions légales marocaines, téléchargeables à la volée sur le frontend)
-- **Tests Cypress E2E (Tâche 10A)** : COMPLET ✅ (14/14 tests d'intégration passés sur l'ensemble des parcours métiers : Auth, Dashboard Directeur, CRM Commercial, Suivi de Chantier Chef, Facturation & Règlements Finance, et Permissions RBAC)
-- **Prochaine étape** : Tâche 10C - Saisie mobile-first terrain avancée (Work Logs) et Tâche 10D - PV de réception de chantier avec signatures électroniques.
+
+- **Backend MVP** : COMPLET ✅ (Laravel 11.x, Auth Sanctum, 30 migrations, 26 modèles, API CRUD, RBAC, dashboards par rôle, PDF Dompdf, PV de réception)
+- **Maquettes Stitch** : COMPLÈTES ✅ (13 écrans interactifs)
+- **Frontend & CRM** : COMPLET ✅ (Vite + React, Tailwind CSS v4 light mode, AuthContext, RBAC, tous les écrans métiers)
+- **Exports PDF (Tâche 10B)** : COMPLET ✅ (Devis, Factures, PV de réception)
+- **Tests Cypress E2E (Tâche 10A)** : COMPLET ✅ (14/14 tests)
+- **Work Logs mobile-first (Tâche 10C)** : COMPLET ✅ (GPS, modes dual, quick-hours, statuts, liste dédiée)
+- **PV de réception (Tâche 10D)** : COMPLET ✅ (canvas signatures réel, double signataire, PDF officiel)
+- **Refonte UI** : COMPLET ✅ (light mode forcé, couleur primaire #1D4ED8, tous dark: supprimés)
+- **Prochaine étape** : Tests PHPUnit backend et/ou CI/CD pipeline
 
 ---
 
 ## 2. Statut des Modules
 
-| Module | Statut | Description / Prochaine action |
+| Module | Statut | Description |
 |---|---|---|
-| **Gouvernance & Docs** | 🟢 Complété | AGENTS.md, master-brief.md, core-flows.md, antigravity-config.md, code-checklist.md et session-log.md créés dans `/context` ou `/docs`. |
-| **Laravel Boilerplate**| 🟢 Complété | Initialisation propre, configuration du fichier `.env` pour support multi-base de données. |
-| **Base de Données & Migrations**| 🟢 Complété | Les 28 migrations séquentielles ont été exécutées et validées sans aucune erreur de clé étrangère. |
-| **Modèles Eloquent (CRM, Ventes, Projets)** | 🟢 Complété | Les 26 modèles (User, Role, Account, Lead, Project, Quote, Invoice, Payment, etc.) sont entièrement configurés, liés en camelCase et validés via Tinker. |
-| **Contrôleurs CRUD & API Resources** | 🟢 Complété | Les 7 contrôleurs RESTful (Account, Contact, Lead, Opportunity, Quote, Invoice, Project) sont entièrement configurés et opérationnels avec validation via FormRequests et sérialisation camelCase via API Resources. |
-| **Authentification & Permissions (RBAC)** | 🟢 Complété | Intégration de Laravel Sanctum, configuration du middleware `CheckRole`, et 7 Policies de ressources appliquées nativement. |
-| **Suivi de Chantier & Opérations Terrain** | 🟢 Complété | Implémentation des 5 contrôleurs de sous-ressources de chantier, Policies (RBAC) et routage API imbriqué. |
-| **Pilotage & Dashboards par Rôle** | 🟢 Complété | Implémentation de `DashboardController` et de 4 API Resources camelCase pour les endpoints `/api/dashboard/*` (director, commercial, project-manager, finance) avec protection Sanctum/CheckRole. |
-| **Maquettes Interactives UI (Stitch)** | 🟢 Complété | Les 13 maquettes interactives Stitch clés (versions Desktop/Mobile) sont entièrement générées et cohérentes. |
-| **Frontend React/Vite (Structure & Auth)** | 🟢 Complété | Initialisation de Vite + React, intégration de Tailwind CSS v4, Axios, React Query, AuthContext, ProtectedRoute, Login premium et Dashboard Directeur opérationnels. |
-| **Navigation & Layout Global** | 🟢 Complété | Sidebar desktop filtrée par RBAC, Topbar avec menu utilisateur, Bottom navigation mobile ergonomique. |
-| **Écrans complémentaires & CRM (Tâche 8)** | 🟢 Complété | Dashboards métiers (Commercial, Chef de Chantier, Finance), Annuaire client CRM paginé, Fiches d'identité clients 360° avec identifiants fiscaux marocains (ICE, RC, Patente, IF). |
-| **Devis, Projets, Factures & Paiements (Tâche 9)** | 🟢 Complété | Écrans QuoteList/Detail/Form avec lignes dynamiques, ProjectList/Detail/Form avec onglets 360° (Kanban, Heures, Photos), et InvoiceList/Detail/Form avec Situation d'avancement et gestion des Paiements. |
-| **Exports PDF Professionnels (Tâche 10B)** | 🟢 Complété | Intégration de `barryvdh/laravel-dompdf`, templates Blade haut de gamme pour Devis et Factures (avec ICE, RC, RIB), et boutons de téléchargement direct sur les fiches de détail frontend. |
-| **Tests Cypress E2E (Tâche 10A)** | 🟢 Complété | Suite de 6 fichiers specs couvrant 14 cas de tests fonctionnels et de sécurité de bout en bout. 100% de succès. |
+| **Gouvernance & Docs** | 🟢 Complété | Tous les fichiers context/ à jour |
+| **Laravel Boilerplate** | 🟢 Complété | Laravel 11.x, .env configuré |
+| **Base de Données & Migrations** | 🟢 Complété | 30 migrations exécutées (28 initiales + 2 ajouts 10C/10D) |
+| **Modèles Eloquent** | 🟢 Complété | 26 modèles, relations camelCase, SoftDeletes |
+| **Contrôleurs CRUD & API Resources** | 🟢 Complété | 7 contrôleurs RESTful + sous-ressources projet |
+| **Authentification & RBAC** | 🟢 Complété | Sanctum, CheckRole middleware, 7 Policies |
+| **Suivi de Chantier & Opérations Terrain** | 🟢 Complété | 5 contrôleurs imbriqués, Work Logs avancés |
+| **Pilotage & Dashboards par Rôle** | 🟢 Complété | 4 dashboards API (directeur, commercial, chef, finance) |
+| **Maquettes Interactives UI** | 🟢 Complété | 13 maquettes Stitch générées |
+| **Frontend React/Vite** | 🟢 Complété | Vite + React, Tailwind CSS v4, AuthContext, RBAC |
+| **Navigation & Layout Global** | 🟢 Complété | Sidebar RBAC, Topbar, Bottom nav mobile |
+| **Écrans complémentaires & CRM** | 🟢 Complété | Dashboards métiers, CRM 360°, AccountList/Detail |
+| **Devis, Projets, Factures & Paiements** | 🟢 Complété | Tous les écrans CRUD avec onglets 360° |
+| **Exports PDF Professionnels (10B)** | 🟢 Complété | Devis, Factures (Dompdf + templates Blade) |
+| **Tests Cypress E2E (10A)** | 🟢 Complété | 14/14 tests — Auth, RBAC, CRM, Projets, Finance |
+| **Work Logs Mobile-first (10C)** | 🟢 Complété | GPS auto, quick-hours 1/2/4/8/10h, mode entrée/sortie, liste + filtres |
+| **PV de Réception (10D)** | 🟢 Complété | SignaturePad canvas (mouse+touch), double signature, PDF officiel |
+| **Refonte UI Light Mode** | 🟢 Complété | dark: supprimés, @variant dark override, primaire #1D4ED8 |
 
 ---
 
-## 3. Prochaines Actions Immédiates
-1. **Saisie mobile-first (Tâche 10C)** : Intégrer les fiches de temps de chantier terrain (Work Logs) et pointage sur mobile.
-2. **PV de réception de chantier (Tâche 10D)** : Ajouter le module de clôture de chantier avec signature électronique en ligne pour le client et le chef de projet.
+## 3. Architecture technique actuelle
+
+### Backend
+- **Framework** : Laravel 11.x (PHP 8.2+)
+- **Auth** : Sanctum token-based + RBAC middleware `CheckRole`
+- **PDF** : `barryvdh/laravel-dompdf` — Devis, Factures, PV de réception
+- **DB** : MySQL/PostgreSQL, 30 migrations séquentielles
+- **Routes** : `/api/projects/{id}/pv-pdf` (nouveau), toutes les sous-ressources imbriquées
+
+### Frontend
+- **Stack** : Vite + React 18, Tailwind CSS v4, React Query, Axios, React Router DOM
+- **Design system** : Light mode forcé (`@variant dark (&:is(.dark *))`), fond `#F8FAFC`, bleu `#1D4ED8`
+- **Composants** : DataTable, KPICard, StatusBadge, SignaturePad, PageHeader, ConfirmDialog, etc.
+- **Pages 10C** : WorkLogForm (GPS + dual mode + quick-hours) + WorkLogList (filtres + statuts)
+- **Pages 10D** : ReceptionPV (SignaturePad × 2 + PDF download) + template Blade PV
+
+---
+
+## 4. Prochaines Actions
+
+1. **PHPUnit** : Tests unitaires Laravel (Models, Controllers, Requests, Policies)
+2. **CI/CD** : GitHub Actions — lint, tests, build frontend, deploy staging
+3. **Staging** : Déploiement sur serveur de pré-production (VPS ou Railway/Render)
