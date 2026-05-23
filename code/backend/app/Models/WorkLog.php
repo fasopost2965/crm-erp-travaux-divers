@@ -15,7 +15,9 @@ class WorkLog extends Model
         'user_id',
         'work_date',
         'hours_worked',
-        'description'
+        'description',
+        'latitude',
+        'longitude',
     ];
 
     /**

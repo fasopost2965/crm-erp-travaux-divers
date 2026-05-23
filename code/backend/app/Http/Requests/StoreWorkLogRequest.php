@@ -25,6 +25,8 @@ class StoreWorkLogRequest extends FormRequest
             'work_date' => 'required|date',
             'hours_worked' => 'required|numeric|min:0.1|max:24',
             'description' => 'nullable|string',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
         ];
     }
 }

@@ -22,6 +22,8 @@ class WorkLogResource extends JsonResource
             'workDate' => $this->work_date,
             'hoursWorked' => (float) $this->hours_worked,
             'description' => $this->description,
+            'latitude' => $this->latitude !== null ? (float) $this->latitude : null,
+            'longitude' => $this->longitude !== null ? (float) $this->longitude : null,
             'createdAt' => $this->created_at?->toIso8601String(),
             'updatedAt' => $this->updated_at?->toIso8601String(),
             // Loaded relations

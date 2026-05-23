@@ -38,10 +38,6 @@ const ProjectDetail = () => {
   const [docType, setDocType] = useState('Plan technique');
   const [uploadedDocFile, setUploadedDocFile] = useState(null);
 
-  const [signName, setSignName] = useState('');
-  const [signRole, setSignRole] = useState('Chef de chantier');
-  const [signNotes, setSignNotes] = useState('');
-
   // Fetch Project
   const { data: project, isLoading, error } = useQuery({
     queryKey: ['projectDetail', id],
@@ -137,10 +133,16 @@ const ProjectDetail = () => {
     onError: (err) => showToast(`Erreur: ${err.message}`, 'error'),
   });
 
-  // Upload Photo Mutation
+  // Upload Photo Mutation — multipart/form-data réel
   const uploadPhotoMutation = useMutation({
-    mutationFn: async (payload) => {
-      await api.post(`/api/projects/${id}/photos`, payload);
+    mutationFn: async ({ file, title, stage }) => {
+      const form = new FormData();
+      form.append('photo', file);
+      form.append('title', title);
+      form.append('stage', stage);
+      await api.post(`/api/projects/${id}/photos`, form, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
     },
     onSuccess: () => {
       showToast('Photo de chantier ajoutée avec succès.');
@@ -148,7 +150,7 @@ const ProjectDetail = () => {
       setPhotoTitle('');
       setUploadedPhotoFile(null);
     },
-    onError: (err) => showToast(`Erreur: ${err.message}`, 'error'),
+    onError: (err) => showToast(`Erreur: ${err.response?.data?.message || err.message}`, 'error'),
   });
 
   // Upload Document Mutation
@@ -161,20 +163,6 @@ const ProjectDetail = () => {
       queryClient.invalidateQueries(['projectDocuments', id]);
       setDocTitle('');
       setUploadedDocFile(null);
-    },
-    onError: (err) => showToast(`Erreur: ${err.message}`, 'error'),
-  });
-
-  // Sign PV Mutation
-  const signPvMutation = useMutation({
-    mutationFn: async (payload) => {
-      await api.post(`/api/projects/${id}/signatures`, payload);
-    },
-    onSuccess: () => {
-      showToast('Signature électronique enregistrée sur le PV de réception.');
-      queryClient.invalidateQueries(['projectSignatures', id]);
-      setSignName('');
-      setSignNotes('');
     },
     onError: (err) => showToast(`Erreur: ${err.message}`, 'error'),
   });
@@ -224,11 +212,11 @@ const ProjectDetail = () => {
       showToast('Le titre de la photo est requis.', 'error');
       return;
     }
-    uploadPhotoMutation.mutate({
-      title: photoTitle,
-      stage: photoStage,
-      file_path: uploadedPhotoFile ? `uploads/${uploadedPhotoFile.name}` : `photos/chantier_${Date.now()}.jpg`,
-    });
+    if (!uploadedPhotoFile) {
+      showToast('Veuillez sélectionner une photo à téléverser.', 'error');
+      return;
+    }
+    uploadPhotoMutation.mutate({ file: uploadedPhotoFile, title: photoTitle, stage: photoStage });
   };
 
   const handleDocUploadSubmit = (e) => {
@@ -241,21 +229,6 @@ const ProjectDetail = () => {
       title: docTitle,
       type: docType,
       file_path: uploadedDocFile ? `documents/${uploadedDocFile.name}` : `docs/plan_${Date.now()}.pdf`,
-    });
-  };
-
-  const handleSignatureSubmit = (e) => {
-    e.preventDefault();
-    if (!signName.trim()) {
-      showToast('Le nom du signataire est requis.', 'error');
-      return;
-    }
-    signPvMutation.mutate({
-      signatory_name: signName,
-      signatory_role: signRole,
-      signed_at: new Date().toISOString(),
-      notes: signNotes,
-      signature_data: 'data:image/svg+xml;base64,...',
     });
   };
 
@@ -603,7 +576,16 @@ const ProjectDetail = () => {
                   <p className="col-span-2 text-center text-xs text-slate-400 py-8 font-semibold">Aucune photo téléversée.</p>
                 ) : (
                   photos.map(p => (
-                    <div key={p.id} className="relative rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800 aspect-video group bg-slate-150">
+                    <div key={p.id} className="relative rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800 aspect-video group bg-slate-100 dark:bg-slate-800">
+                      {p.fileUrl ? (
+                        <img
+                          src={p.fileUrl}
+                          alt={p.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-slate-400 text-2xl">📷</div>
+                      )}
                       <div className="absolute inset-0 bg-slate-900/40 p-3 flex flex-col justify-end text-white z-10">
                         <span className="text-[8px] uppercase tracking-wider font-black text-blue-400 bg-blue-900/40 py-0.5 px-1.5 rounded self-start mb-1">{p.stage}</span>
                         <h4 className="text-[10px] font-black truncate">{p.title}</h4>
@@ -647,7 +629,7 @@ const ProjectDetail = () => {
 
                 <FileUploader
                   accept="image/*"
-                  onChange={(file) => setUploadedPhotoFile(file)}
+                  onFileSelect={(file) => setUploadedPhotoFile(file)}
                 />
 
                 <button
@@ -740,93 +722,49 @@ const ProjectDetail = () => {
 
         {/* TAB 5: SIGNATURES (PV RECEPTION) */}
         {activeTab === 'signatures' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-xs font-semibold">
-            {/* Signatures List */}
-            <div className="lg:col-span-2 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-4">
-              <h3 className="font-bold text-slate-800 dark:text-white text-xs uppercase tracking-wider">PV de Réception & Signatures électroniques</h3>
-              <div className="space-y-4">
+          <div className="space-y-4 text-xs font-semibold">
+            {/* Signatures existantes */}
+            <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="font-bold text-slate-800 dark:text-white text-xs uppercase tracking-wider">PV de Réception & Signatures</h3>
+                <button
+                  onClick={() => navigate(`/dashboard/projects/${id}/reception-pv`)}
+                  className="py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs tracking-wide shadow-md transition-colors cursor-pointer"
+                >
+                  ✍️ Signer un PV
+                </button>
+              </div>
+              <div className="space-y-3">
                 {signatures.length === 0 ? (
-                  <p className="text-center text-slate-400 py-8">Aucune signature enregistrée sur ce projet.</p>
+                  <div className="text-center py-12 space-y-3">
+                    <span className="text-3xl block">📋</span>
+                    <p className="text-slate-400 font-semibold">Aucune signature enregistrée.</p>
+                    <button
+                      onClick={() => navigate(`/dashboard/projects/${id}/reception-pv`)}
+                      className="py-2 px-5 rounded-xl border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 font-bold cursor-pointer hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-colors"
+                    >
+                      Créer le premier PV de réception
+                    </button>
+                  </div>
                 ) : (
                   signatures.map(s => (
-                    <div key={s.id} className="p-4 rounded-2xl bg-emerald-50/20 border border-emerald-250 text-emerald-850 dark:text-emerald-400 space-y-3 relative overflow-hidden">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <p className="font-black text-[13px]">{s.signatoryName}</p>
-                          <p className="text-[10px] text-slate-400 font-bold uppercase">{s.signatoryRole}</p>
+                    <div key={s.id} className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/40 flex items-center justify-between">
+                      <div>
+                        <p className="font-black text-slate-800 dark:text-white">{s.clientName}</p>
+                        <p className="text-[10px] text-slate-400 font-bold mt-0.5">
+                          Signé le {new Date(s.signedAt).toLocaleDateString('fr-MA', { dateStyle: 'long' })}
+                          {s.signer?.name && ` — validé par ${s.signer.name}`}
+                        </p>
+                      </div>
+                      {s.signatureData && (
+                        <div className="w-20 h-12 rounded-xl border border-emerald-200 dark:border-emerald-800 overflow-hidden bg-white shrink-0 ml-4">
+                          <img src={s.signatureData} alt="Signature" className="w-full h-full object-contain" />
                         </div>
-                        <span className="text-[10px] text-slate-400 font-bold">Signé le {new Date(s.createdAt).toLocaleDateString('fr-FR')}</span>
-                      </div>
-                      {s.notes && <p className="text-[11px] text-slate-550 dark:text-slate-350 italic">« {s.notes} »</p>}
-                      <div className="border-t border-dashed border-emerald-300 dark:border-emerald-850/80 pt-2 flex items-center justify-between text-[10px]">
-                        <span className="font-extrabold uppercase text-emerald-650 tracking-wider">✓ AUTHENTIFIÉ PAR CLÉ UNIQUE</span>
-                        <span className="font-mono text-slate-400">HASH: 8cf6{s.id}db2...</span>
-                      </div>
+                      )}
                     </div>
                   ))
                 )}
               </div>
-            </div>
-
-            {/* Signature Form */}
-            <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-6">
-              <h3 className="font-bold text-slate-850 dark:text-white text-xs uppercase tracking-wider pb-3 border-b border-slate-100 dark:border-slate-850">
-                ✍️ Signature d'avancement / PV
-              </h3>
-              <form onSubmit={handleSignatureSubmit} className="space-y-4">
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Nom du Signataire</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Ex: M. Khalid Alami"
-                    value={signName}
-                    onChange={(e) => setSignName(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Qualité / Rôle</label>
-                  <select
-                    value={signRole}
-                    onChange={(e) => setSignRole(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-700 dark:text-slate-350 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-                  >
-                    <option value="Chef de chantier">Chef de chantier</option>
-                    <option value="Directeur technique">Directeur technique</option>
-                    <option value="Client (Représentant)">Client (Représentant)</option>
-                    <option value="Bureau de contrôle">Bureau de contrôle</option>
-                  </select>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Notes / Observations de réception</label>
-                  <textarea
-                    placeholder="Réserves formulées ou conformité générale..."
-                    rows="3"
-                    value={signNotes}
-                    onChange={(e) => setSignNotes(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                {/* Simulated Pad drawing box */}
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Dessiner la signature (Cadre de traçage)</label>
-                  <div className="border border-dashed border-slate-200 dark:border-slate-850 rounded-2xl bg-slate-50 dark:bg-slate-950/40 h-28 flex items-center justify-center text-slate-400 font-bold tracking-wide italic cursor-crosshair">
-                    [ Zone de signature tactile simulée ]
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={signPvMutation.isLoading}
-                  className="w-full py-3 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-550 text-white font-bold text-xs tracking-wide shadow-md transition-colors cursor-pointer"
-                >
-                  {signPvMutation.isLoading ? 'Signature...' : 'Signer électroniquement'}
-                </button>
-              </form>
             </div>
           </div>
         )}

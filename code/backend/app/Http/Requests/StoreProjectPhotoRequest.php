@@ -20,10 +20,9 @@ class StoreProjectPhotoRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'photo' => 'required|image|mimes:jpeg,png,jpg,webp|max:10240',
             'title' => 'required|string|max:255',
-            'file_path' => 'required|string|max:255',
             'stage' => 'required|string|max:255',
-            'uploaded_by' => 'nullable|integer|exists:users,id',
         ];
     }
 }

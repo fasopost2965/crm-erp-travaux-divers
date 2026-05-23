@@ -27,6 +27,7 @@ import PaymentForm from './pages/PaymentForm';
 import LeadList from './pages/LeadList';
 import OpportunityList from './pages/OpportunityList';
 import ContactList from './pages/ContactList';
+import ReceptionPV from './pages/ReceptionPV';
 
 // Création du client React Query pour la gestion d'état serveur
 const queryClient = new QueryClient({
@@ -206,6 +207,14 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={['directeur', 'admin', 'chef_chantier', 'technicien']}>
                     <WorkLogForm />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="projects/:id/reception-pv"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'chef_chantier']}>
+                    <ReceptionPV />
                   </ProtectedRoute>
                 }
               />

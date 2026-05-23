@@ -10,6 +10,7 @@ use App\Models\ProjectPhoto;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectPhotoController extends Controller
 {
@@ -32,12 +33,16 @@ class ProjectPhotoController extends Controller
      */
     public function store(StoreProjectPhotoRequest $request, Project $project): ProjectPhotoResource
     {
-        $data = $request->validated();
-        if (!isset($data['uploaded_by'])) {
-            $data['uploaded_by'] = auth()->id();
-        }
+        $validated = $request->validated();
+        $path = $request->file('photo')->store('project-photos', 'public');
 
-        $photo = $project->photos()->create($data);
+        $photo = $project->photos()->create([
+            'title' => $validated['title'],
+            'stage' => $validated['stage'],
+            'file_path' => $path,
+            'uploaded_by' => auth()->id(),
+        ]);
+
         return new ProjectPhotoResource($photo);
     }
 
@@ -55,6 +60,7 @@ class ProjectPhotoController extends Controller
      */
     public function destroy(Project $project, ProjectPhoto $photo): JsonResponse
     {
+        Storage::disk('public')->delete($photo->file_path);
         $photo->delete();
         return response()->json(null, Response::HTTP_NO_CONTENT);
     }
