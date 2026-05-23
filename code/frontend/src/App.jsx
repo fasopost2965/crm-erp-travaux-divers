@@ -20,6 +20,8 @@ import ProjectList from './pages/ProjectList';
 import ProjectDetail from './pages/ProjectDetail';
 import ProjectForm from './pages/ProjectForm';
 import WorkLogForm from './pages/WorkLogForm';
+import WorkLogList from './pages/WorkLogList';
+import ReceptionPV from './pages/ReceptionPV';
 import InvoiceList from './pages/InvoiceList';
 import InvoiceDetail from './pages/InvoiceDetail';
 import InvoiceForm from './pages/InvoiceForm';
@@ -171,8 +173,24 @@ function App() {
               <Route
                 path="projects/:id/work-logs/new"
                 element={
-                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'chef_chantier']}>
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'chef_chantier', 'technicien']}>
                     <WorkLogForm />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="projects/:id/work-logs"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'chef_chantier', 'technicien']}>
+                    <WorkLogList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="projects/:id/pv-reception"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'chef_chantier']}>
+                    <ReceptionPV />
                   </ProtectedRoute>
                 }
               />
