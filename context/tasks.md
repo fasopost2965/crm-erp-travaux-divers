@@ -38,8 +38,8 @@
 - [x] **Tâche 9 : Documents de gestion & Modules métiers** (Création/Visualisation Devis, Suivi Projet, Factures, Règlements)
 - [x] **Tâche 10B : Export PDF Professionnel** (Génération PDF Devis/Factures avec Dompdf)
 - [x] **Tâche 10A : Validation automatisée via Cypress** (14/14 tests passés avec succès)
-- [ ] **Tâche 10C : Saisie mobile-first des heures terrain** (Work Logs avancés & Pointage)
-- [ ] **Tâche 10D : PV de réception de chantier** (avec signature électronique)
+- [x] **Tâche 10C : Saisie mobile-first des heures terrain** (Work Logs avancés & Pointage)
+- [x] **Tâche 10D : PV de réception de chantier** (avec signature électronique)
 
 ---
 
