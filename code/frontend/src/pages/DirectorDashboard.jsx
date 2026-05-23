@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import PageHeader from '../components/common/PageHeader';
@@ -7,25 +8,16 @@ import LoadingSpinner from '../components/common/LoadingSpinner';
 
 const DirectorDashboard = () => {
   const { user } = useAuth();
-  const [stats, setStats] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const response = await api.get('/dashboard/director');
-        setStats(response.data.data || response.data);
-      } catch (err) {
-        console.error("Erreur de récupération du dashboard", err);
-        setError("Impossible de charger les données du tableau de bord.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const { data: statsData, isLoading, error } = useQuery({
+    queryKey: ['directorDashboard'],
+    queryFn: async () => {
+      const res = await api.get('/dashboard/director');
+      return res.data.data || res.data;
+    }
+  });
 
-    fetchStats();
-  }, []);
+  const stats = statsData || {};
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('fr-MA', { style: 'currency', currency: 'MAD', maximumFractionDigits: 0 })
@@ -33,14 +25,17 @@ const DirectorDashboard = () => {
       .replace('MAD', 'DH');
   };
 
-  if (loading) {
+  if (isLoading) {
     return <LoadingSpinner fullPage message="Chargement du tableau de bord Directeur..." />;
   }
 
   if (error) {
     return (
-      <div className="p-6 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-3xl text-red-700 dark:text-red-400 font-medium">
-        ⚠️ {error}
+      <div className="p-5 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-2xl text-red-700 dark:text-red-400 text-sm font-medium flex items-start gap-3">
+        <svg className="w-5 h-5 shrink-0 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        Impossible de charger les données du tableau de bord.
       </div>
     );
   }
@@ -48,7 +43,7 @@ const DirectorDashboard = () => {
   return (
     <div className="space-y-6">
       {/* En-tête de la page */}
-      <PageHeader 
+      <PageHeader
         title={`Bonjour, ${user?.name || 'Directeur'} 👋`}
         breadcrumb={[{ label: "Directeur" }, { label: "Performance Globale" }]}
         actions={
@@ -102,7 +97,7 @@ const DirectorDashboard = () => {
 
       {/* Main Grid for charts / metrics */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
+
         {/* Devis Performance Table card */}
         <div className="lg:col-span-2 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
           <h3 className="text-sm font-bold text-slate-800 dark:text-white mb-6 flex items-center space-x-2">

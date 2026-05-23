@@ -22,8 +22,11 @@ const FinanceDashboard = () => {
 
   if (error) {
     return (
-      <div className="p-6 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-3xl text-red-700 dark:text-red-400 font-medium">
-        ⚠️ Erreur lors de la récupération des données : {error.message}. Veuillez vérifier votre connexion.
+      <div className="p-5 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-2xl text-red-700 dark:text-red-400 text-sm font-medium flex items-start gap-3">
+        <svg className="w-5 h-5 shrink-0 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        Erreur lors de la récupération des données : {error.message}. Veuillez vérifier votre connexion.
       </div>
     );
   }
@@ -39,11 +42,11 @@ const FinanceDashboard = () => {
 
   return (
     <div className="space-y-6">
-      
+
       {/* En-tête de la page */}
-      <PageHeader 
-        title="Trésorerie & Recouvrement" 
-        breadcrumb={[{ label: "Finance" }, { label: "Tableau de bord" }]} 
+      <PageHeader
+        title="Trésorerie & Recouvrement"
+        breadcrumb={[{ label: "Finance" }, { label: "Tableau de bord" }]}
       />
 
       {/* KPI Cards Grid */}
@@ -89,7 +92,7 @@ const FinanceDashboard = () => {
 
       {/* Main content grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
+
         {/* Left Column - Impayés Table (2/3 width) */}
         <div className="lg:col-span-2 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm flex flex-col">
           <div className="flex items-center justify-between mb-6">
@@ -179,7 +182,7 @@ const FinanceDashboard = () => {
                       Échéance le : {new Date(invoice.dueDate).toLocaleDateString('fr-FR')}
                     </p>
                   </div>
-                  
+
                   <div className="text-right">
                     <span className="text-xs font-black text-slate-700 dark:text-slate-350">
                       {formatCurrency(invoice.totalTtc)}
