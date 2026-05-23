@@ -135,6 +135,7 @@ Ce journal consigne toutes les modifications de code, exécutions de commandes e
    - Re-compilation de production validée avec succès via Vite (`npm.cmd run build`) garantissant la solidité et la conformité du build de distribution finale.
 
 6. **Validation finale — Tests HTTP en direct (Tâche 10B)** :
+
    - Écriture et exécution d'un script PHP de test d'intégration HTTP (`test_pdf.php`) simulant les requêtes réelles vers le serveur Laravel actif.
    - **Résultats obtenus** :
      - `GET /api/quotes/1/pdf` → HTTP 200, Content-Type: `application/pdf`, signature `%PDF` ✓, fichier `devis-DEV-2026-0001.pdf` — **10 267 octets** ✅
@@ -143,3 +144,80 @@ Ce journal consigne toutes les modifications de code, exécutions de commandes e
    - Cypress re-exécuté en mode headless : **14/14 tests passés** en 49 secondes, zéro régression ✅
    - Suppression propre du script temporaire `test_pdf.php` après validation.
    - Mise à jour complète de tous les fichiers de documentation : `task.md`, `state.md`, `session-log.md`, `walkthrough.md`.
+
+---
+
+## Session du 2026-05-23
+- **Date** : 23 mai 2026
+- **Durée** : Session complète
+- **Statut** : Tâches 10C + 10D ✅ — MVP v0.5.0 complet
+
+### Objectifs de la Session
+- Implémenter la saisie mobile-first des heures terrain avec GPS et horodatage (Tâche 10C).
+- Créer le module de PV de réception avec canvas de signature électronique réelle et export PDF (Tâche 10D).
+
+### Activités Réalisées
+
+1. **Migrations terrain (Backend)** :
+   - `2026_05_23_000001` : Ajout de `start_time`, `end_time`, `location_lat`, `location_lng`, `status` (enum: draft/submitted/validated) à la table `work_logs`.
+   - `2026_05_23_000002` : Ajout de `signatory_role` et `notes` à la table `project_signatures`.
+
+2. **Mise à jour des modèles, requests et resources (Backend)** :
+   - `WorkLog` : nouveaux champs dans `$fillable`.
+   - `ProjectSignature` : `signatory_role` et `notes` dans `$fillable`.
+   - `StoreWorkLogRequest` : validation GPS (`between:-90,90`), horodatage (`date_format:H:i`), statut (`in:draft,submitted,validated`).
+   - `StoreProjectSignatureRequest` : validation `signatory_role` et `notes`.
+   - `WorkLogResource` : exposition de `startTime`, `endTime`, `locationLat`, `locationLng`, `status`.
+   - `ProjectSignatureResource` : mapping `client_name` → `signatoryName`, ajout `signatoryRole` et `notes`.
+
+3. **Export PV Réception PDF (Backend)** :
+   - `ProjectController::exportPV()` : charge les relations (`account`, `manager`, `tasks`, `workLogs.user`, `signatures.signer`) et génère le PDF via Dompdf.
+   - Route `GET /api/projects/{project}/pv-pdf` ajoutée dans `api.php`.
+   - Template Blade `pv-reception.blade.php` : document professionnel avec en-tête BATIPLUS SARL, informations chantier/client, 3 blocs de stats (tâches terminées/total/heures), tableau des tâches avec badges statut, bilan interventions, déclaration formelle de réception (Code des Obligations et Contrats marocain), blocs signatures côte à côte avec image base64 canvas si disponible, pied de page mentions légales marocaines.
+
+4. **WorkLogForm réécrit (Frontend)** :
+   - 2 modes de saisie via onglets toggle : "Durée directe" (5 boutons rapides 1h/2h/4h/8h/10h + input custom) et "Horodatage" (pickers entrée/sortie avec calcul automatique des heures et feedback visuel vert/rouge).
+   - Capture GPS : bouton `navigator.geolocation.getCurrentPosition()` avec 4 états (idle/loading/captured/error) et affichage des coordonnées.
+   - Radio statut : Brouillon / Soumis (défaut).
+   - Payload conditionnel : timestamps et GPS inclus uniquement si renseignés.
+   - Navigation redirige vers `WorkLogList` après succès.
+
+5. **WorkLogList (Frontend, nouveau)** :
+   - Route `/dashboard/projects/:id/work-logs`.
+   - Filtre par date avec effacer, tri décroissant.
+   - Badges statut colorés (gris=draft, bleu=submitted, vert=validated).
+   - Total heures et nombre d'interventions en temps réel.
+   - Liens retour et bouton "+ Nouveau pointage".
+
+6. **SignaturePad (Frontend, composant nouveau)** :
+   - Canvas 600×160px, fond blanc, trait noir 2px, lineCap round.
+   - Gestion mouse events (mousedown/move/up/leave) et touch events (touchstart/move/end) avec `preventDefault` pour éviter le scroll.
+   - Placeholder "Signez ici..." qui disparaît au premier tracé.
+   - `useImperativeHandle` : expose `getDataURL()`, `isEmpty()`, `clear()` via ref parent.
+   - Bouton "Effacer la signature" intégré.
+
+7. **ReceptionPV (Frontend, page nouvelle)** :
+   - Route `/dashboard/projects/:id/pv-reception`.
+   - Section 1 : 4 KPI cards (tâches terminées, total heures, client, budget) + grille infos (adresse, chef, dates).
+   - Section 2 : Tableau des tâches terminées avec badges priorité.
+   - Section 3 : Signatures électroniques — 2 `SignaturePad` (client avec nom libre + chef de projet avec nom auto depuis `useAuth`), POST parallèle vers l'API via `Promise.all`.
+   - Section 4 : Téléchargement PDF via `api.get(..., { responseType: 'blob' })` + `URL.createObjectURL`.
+
+8. **ProjectDetail mis à jour (Frontend)** :
+   - Onglet "Heures" : quick form remplacé par 2 boutons (Voir tous les pointages → WorkLogList, Nouveau pointage → WorkLogForm) + compteur total heures.
+   - Onglet "Signatures PV" : form simulé remplacé par bouton "Ouvrir le PV de réception" + compteur signatures enregistrées.
+
+9. **App.jsx mis à jour** :
+   - Import `WorkLogList` et `ReceptionPV`.
+   - Route `projects/:id/work-logs` (rôles: directeur, admin, chef_chantier, technicien).
+   - Route `projects/:id/pv-reception` (rôles: directeur, admin, chef_chantier).
+
+10. **Push et PR** :
+    - 2 commits sur `claude/pensive-maxwell-Wm9AD` et push réussi via token PAT.
+    - PR draft créée : https://github.com/fasopost2965/crm-erp-travaux-divers/pull/1
+
+### Prochaines Étapes
+- Lancer `php artisan migrate` pour appliquer les 2 nouvelles migrations.
+- Écrire les tests PHPUnit backend.
+- Configurer un pipeline CI/CD GitHub Actions.
+- Déploiement sur un environnement de staging.
