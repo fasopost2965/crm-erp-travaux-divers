@@ -522,71 +522,33 @@ const ProjectDetail = () => {
               </div>
             </div>
 
-            {/* Quick Saisie Terrain Form */}
+            {/* Actions pointage — remplace Quick Form */}
             <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-6">
               <h3 className="font-bold text-slate-800 dark:text-white text-xs uppercase tracking-wider pb-3 border-b border-slate-100 dark:border-slate-850">
-                ⚡ Saisie rapide heures (Mobile)
+                Gestion des pointages
               </h3>
-              <form onSubmit={handleWorkLogSubmit} className="space-y-4 text-xs font-semibold">
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Tâche associée (optionnel)</label>
-                  <select
-                    value={logTaskId}
-                    onChange={(e) => setLogTaskId(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-700 dark:text-slate-350 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-                  >
-                    <option value="">Sélectionner une tâche...</option>
-                    {tasks.map(t => (
-                      <option key={t.id} value={t.id}>{t.title} ({t.status})</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Date</label>
-                  <input
-                    type="date"
-                    required
-                    value={logDate}
-                    onChange={(e) => setLogDate(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Nombre d'heures</label>
-                  <input
-                    type="number"
-                    step="0.5"
-                    min="0.5"
-                    max="24"
-                    required
-                    value={logHours}
-                    onChange={(e) => setLogHours(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Observations / Travail réalisé</label>
-                  <textarea
-                    required
-                    placeholder="Description succincte..."
-                    rows="3"
-                    value={logDesc}
-                    onChange={(e) => setLogDesc(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
+              <div className="space-y-3 text-xs font-semibold">
+                <p className="text-slate-400 leading-relaxed">
+                  Accédez au journal complet des pointages ou enregistrez une nouvelle intervention terrain avec GPS et horodatage.
+                </p>
                 <button
-                  type="submit"
-                  disabled={createWorkLogMutation.isLoading}
-                  className="w-full py-3 px-5 rounded-xl bg-blue-600 hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md transition-colors cursor-pointer"
+                  onClick={() => navigate(`/dashboard/projects/${id}/work-logs`)}
+                  className="w-full py-3 px-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-700 dark:text-slate-300 font-bold text-xs tracking-wide transition-colors cursor-pointer text-left flex items-center gap-2"
                 >
-                  {createWorkLogMutation.isLoading ? 'Enregistrement...' : 'Enregistrer le pointage'}
+                  📋 Voir tous les pointages
                 </button>
-              </form>
+                <button
+                  onClick={() => navigate(`/dashboard/projects/${id}/work-logs/new`)}
+                  className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md transition-colors cursor-pointer text-left flex items-center gap-2"
+                >
+                  Nouveau pointage (GPS + horodatage)
+                </button>
+              </div>
+              <div className="pt-3 border-t border-slate-100 dark:border-slate-850 space-y-1">
+                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest block">Total heures</span>
+                <span className="text-2xl font-black text-blue-600">{totalHoursLogged}</span>
+                <span className="text-xs text-slate-400 font-semibold ml-1">hrs pointées</span>
+              </div>
             </div>
           </div>
         )}
@@ -768,65 +730,27 @@ const ProjectDetail = () => {
               </div>
             </div>
 
-            {/* Signature Form */}
+            {/* PV de réception — link to full page */}
             <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-6">
               <h3 className="font-bold text-slate-850 dark:text-white text-xs uppercase tracking-wider pb-3 border-b border-slate-100 dark:border-slate-850">
-                ✍️ Signature d'avancement / PV
+                PV de Réception
               </h3>
-              <form onSubmit={handleSignatureSubmit} className="space-y-4">
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Nom du Signataire</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Ex: M. Khalid Alami"
-                    value={signName}
-                    onChange={(e) => setSignName(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Qualité / Rôle</label>
-                  <select
-                    value={signRole}
-                    onChange={(e) => setSignRole(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-700 dark:text-slate-350 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-                  >
-                    <option value="Chef de chantier">Chef de chantier</option>
-                    <option value="Directeur technique">Directeur technique</option>
-                    <option value="Client (Représentant)">Client (Représentant)</option>
-                    <option value="Bureau de contrôle">Bureau de contrôle</option>
-                  </select>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Notes / Observations de réception</label>
-                  <textarea
-                    placeholder="Réserves formulées ou conformité générale..."
-                    rows="3"
-                    value={signNotes}
-                    onChange={(e) => setSignNotes(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                {/* Simulated Pad drawing box */}
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Dessiner la signature (Cadre de traçage)</label>
-                  <div className="border border-dashed border-slate-200 dark:border-slate-850 rounded-2xl bg-slate-50 dark:bg-slate-950/40 h-28 flex items-center justify-center text-slate-400 font-bold tracking-wide italic cursor-crosshair">
-                    [ Zone de signature tactile simulée ]
-                  </div>
-                </div>
-
+              <div className="space-y-3">
+                <p className="text-slate-400 leading-relaxed">
+                  Accédez à la page dédiée pour apposer les signatures électroniques sur canvas et télécharger le PV de réception en PDF.
+                </p>
                 <button
-                  type="submit"
-                  disabled={signPvMutation.isLoading}
-                  className="w-full py-3 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-550 text-white font-bold text-xs tracking-wide shadow-md transition-colors cursor-pointer"
+                  onClick={() => navigate(`/dashboard/projects/${id}/pv-reception`)}
+                  className="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs tracking-wide shadow-md transition-colors cursor-pointer flex items-center gap-2"
                 >
-                  {signPvMutation.isLoading ? 'Signature...' : 'Signer électroniquement'}
+                  Ouvrir le PV de réception
                 </button>
-              </form>
+              </div>
+              <div className="pt-3 border-t border-slate-100 dark:border-slate-850 space-y-1">
+                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest block">Signatures enregistrées</span>
+                <span className="text-2xl font-black text-emerald-600">{signatures.length}</span>
+                <span className="text-xs text-slate-400 font-semibold ml-1">signature(s)</span>
+              </div>
             </div>
           </div>
         )}

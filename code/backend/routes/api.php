@@ -42,6 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('invoices/{invoice}/pdf', [InvoiceController::class, 'exportPdf']);
     Route::post('invoices/{invoice}/payments', [InvoiceController::class, 'storePayment']);
     Route::apiResource('projects', ProjectController::class);
+    Route::get('projects/{project}/pv-pdf', [ProjectController::class, 'exportPV']);
     Route::get('users', function () {
         return \App\Http\Resources\UserResource::collection(\App\Models\User::with('role')->get());
     });

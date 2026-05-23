@@ -13,6 +13,8 @@ class ProjectSignature extends Model
         'project_id',
         'signed_by',
         'client_name',
+        'signatory_role',
+        'notes',
         'signature_data',
         'signed_at'
     ];

@@ -1,105 +1,91 @@
-# Instructions de reprise - Antigravity Maison
+# Instructions de reprise — CRM/ERP Travaux Divers
 
-## État au 21 mai 2026 - 16h40
+## État au 2026-05-23 — MVP COMPLET v0.5.0
 
-### ✅ COMPLET
-- Backend Laravel 11.x API
-- Auth Sanctum + RBAC
-- 28 migrations + 26 modèles
-- API CRM/Ventes/Projets/Dashboards
-- 13 maquettes Stitch (desktop + mobile)
-
-### 🎯 PROCHAINE ÉTAPE : Frontend React/Vite
-
-#### Tâche 7 : Setup frontend
-
-1. Initialiser Vite + React dans `/code/frontend` :
-   ```bash
-   cd code
-   npm create vite@latest frontend -- --template react
-   cd frontend
-   npm install
-   ```
-
-2. Installer les dépendances essentielles :
-   ```bash
-   npm install react-router-dom axios
-   npm install @tanstack/react-query
-   npm install tailwindcss postcss autoprefixer
-   npx tailwindcss init -p
-   ```
-
-3. Configurer Tailwind selon le design system :
-   - Primary: `#1D4ED8`
-   - Background: `#F8FAFC`
-   - Radius: 8-12px
-   - Font: Inter
-
-4. Créer la structure :
-   ```
-   /src
-     /components
-       /common
-       /dashboards
-       /crm
-       /sales
-       /projects
-     /layouts
-     /pages
-     /services
-       api.js
-     /hooks
-     /utils
-     App.jsx
-     main.jsx
-   ```
-
-5. Configurer Axios pour l'API Laravel :
-   - Base URL: `http://localhost:8000/api`
-   - Auth header avec Sanctum token
-   - Interceptors pour erreurs
-
-6. Implémenter l'authentification :
-   - Page login
-   - Context auth
-   - Protected routes
-   - Stockage token
-
-7. Tester la connexion API :
-   - Login
-   - GET `/api/dashboard/director`
-   - Afficher les données
+### ✅ TOUT EST COMPLET (Tâches 1 → 10D)
+- Backend Laravel 11.x API (30 migrations, 26 modèles, RBAC, Sanctum)
+- Frontend React/Vite (20+ pages, Tailwind v4, RBAC strict)
+- 4 Dashboards métiers temps réel (Directeur, Commercial, Chef Chantier, Finance)
+- CRM 360° (clients, contacts, leads, opportunités)
+- Devis, Projets (Kanban), Factures, Règlements
+- Exports PDF professionnels (Devis, Factures, PV Réception)
+- Work Logs mobile-first (GPS, horodatage, statuts)
+- PV de réception avec signature canvas réelle
+- Tests Cypress E2E 14/14 ✅
 
 ---
 
-## 🎨 Priorité d'implémentation des écrans
+## 🔧 Action immédiate requise en production
 
-1. Login + Auth
-2. Layout principal (sidebar/topbar)
-3. Dashboard Directeur
-4. Dashboard Commercial
-5. Liste Clients
-6. Fiche Client
-7. Autres dashboards
-8. Devis
-9. Projets
-10. Factures
+```bash
+cd code/backend
+php artisan migrate
+# Applique les 2 nouvelles migrations :
+# - 2026_05_23_000001_add_fields_to_work_logs_table
+# - 2026_05_23_000002_add_fields_to_project_signatures_table
+```
 
 ---
 
-## 📂 Ressources disponibles
+## 🗂️ Structure des fichiers clés
 
-- **Maquettes Stitch** : `projects/30868049086750529`
-- **IDs Stitch pour référence visuelle** : Référencés précisément dans `/context/decisions.md` (Section 8)
-- **API endpoints documentés** : Référencés dans `/context/core-flows.md` et `/context/antigravity-config.md`
-- **Design system** : `/docs/design-system.md` (ou configuration YAML dans `/context/decisions.md`)
+### Backend (`/code/backend`)
+```
+app/
+  Http/
+    Controllers/Api/   → ProjectController (+ exportPV), WorkLogController, ProjectSignatureController...
+    Requests/          → StoreWorkLogRequest, StoreProjectSignatureRequest (mis à jour)
+    Resources/         → WorkLogResource, ProjectSignatureResource (mis à jour)
+  Models/              → WorkLog, ProjectSignature (mis à jour)
+database/migrations/   → 30 migrations séquentielles
+resources/views/pdf/   → quote.blade.php, invoice.blade.php, pv-reception.blade.php
+routes/api.php         → Toutes les routes (+ GET projects/{id}/pv-pdf)
+```
+
+### Frontend (`/code/frontend/src`)
+```
+pages/
+  WorkLogForm.jsx      → Saisie mobile-first (durée/horodatage/GPS/statut)
+  WorkLogList.jsx      → Liste filtrée avec badges statut
+  ReceptionPV.jsx      → PV réception complet avec PDF
+  ProjectDetail.jsx    → Onglets chantier (Kanban, Heures, Photos, Docs, Signatures PV)
+  [+ 15 autres pages]
+components/common/
+  SignaturePad.jsx     → Canvas tactile réutilisable
+  [+ 10 autres composants]
+App.jsx                → Toutes les routes protégées par RBAC
+```
 
 ---
 
-## 🏠 Comment reprendre à la maison
+## 🚀 Lancer le projet localement
 
-1. Lis `/context/AGENTS.md`
-2. Lis `/context/handoff.md` (ce fichier)
-3. Lis `/context/state.md`
-4. Lance le backend : `cd code/backend && php artisan serve`
-5. Démarre la Tâche 7 dans `/code/frontend` !
+```bash
+# Backend
+cd code/backend
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+php artisan serve   # → http://localhost:8000
+
+# Frontend
+cd code/frontend
+npm install
+npm run dev         # → http://localhost:5173
+```
+
+**Comptes de test** (après seed) :
+- Directeur : `directeur@batiplus.ma` / `password`
+- Commercial : `commercial@batiplus.ma` / `password`
+- Chef chantier : `chef@batiplus.ma` / `password`
+- Finance : `finance@batiplus.ma` / `password`
+
+---
+
+## ⏭️ Prochaines tâches (LATER)
+
+1. **PHPUnit** : Tests unitaires backend (Models, Policies, Controllers)
+2. **Cypress étendu** : Specs pour WorkLogList, ReceptionPV, SignaturePad
+3. **CI/CD** : GitHub Actions (lint + tests + build)
+4. **Déploiement Staging** : VPS ou PaaS marocain

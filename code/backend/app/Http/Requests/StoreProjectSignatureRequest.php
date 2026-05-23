@@ -24,6 +24,8 @@ class StoreProjectSignatureRequest extends FormRequest
             'client_name' => 'required|string|max:255',
             'signature_data' => 'required|string',
             'signed_at' => 'required|date',
+            'signatory_role' => 'nullable|string|max:255',
+            'notes' => 'nullable|string',
         ];
     }
 }
