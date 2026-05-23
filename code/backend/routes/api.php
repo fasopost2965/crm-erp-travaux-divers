@@ -14,6 +14,10 @@ use App\Http\Controllers\Api\ProjectDocumentController;
 use App\Http\Controllers\Api\ProjectSignatureController;
 use App\Http\Controllers\Api\QuoteController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\EmployeeController;
+use App\Http\Controllers\Api\ContractController;
+use App\Http\Controllers\Api\AnalyticsController;
+use App\Http\Controllers\Api\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -60,4 +64,22 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('project-manager', [DashboardController::class, 'projectManager'])->middleware('role:chef_chantier');
         Route::get('finance', [DashboardController::class, 'finance'])->middleware('role:finance');
     });
+
+    // Module RH — Employés & Contrats
+    Route::apiResource('employees', EmployeeController::class);
+    Route::apiResource('employees.contracts', ContractController::class);
+
+    // Analytics
+    Route::prefix('analytics')->middleware('role:directeur,admin')->group(function () {
+        Route::get('overview', [AnalyticsController::class, 'overview']);
+        Route::get('revenue', [AnalyticsController::class, 'revenue']);
+        Route::get('projects-breakdown', [AnalyticsController::class, 'projectsBreakdown']);
+        Route::get('team-hours', [AnalyticsController::class, 'teamHours']);
+    });
+
+    // Notifications
+    Route::get('notifications', [NotificationController::class, 'index']);
+    Route::post('notifications', [NotificationController::class, 'store'])->middleware('role:directeur,admin');
+    Route::patch('notifications/{id}/read', [NotificationController::class, 'markRead']);
+    Route::post('notifications/read-all', [NotificationController::class, 'markAllRead']);
 });

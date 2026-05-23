@@ -28,6 +28,10 @@ import LeadList from './pages/LeadList';
 import OpportunityList from './pages/OpportunityList';
 import ContactList from './pages/ContactList';
 import ReceptionPV from './pages/ReceptionPV';
+import EmployeeList from './pages/EmployeeList';
+import EmployeeForm from './pages/EmployeeForm';
+import EmployeeDetail from './pages/EmployeeDetail';
+import AnalyticsDashboard from './pages/AnalyticsDashboard';
 
 // Création du client React Query pour la gestion d'état serveur
 const queryClient = new QueryClient({
@@ -219,16 +223,46 @@ function App() {
                 }
               />
 
-              {/* Module RH — placeholder */}
+              {/* Module RH */}
               <Route
                 path="rh"
                 element={
-                  <ProtectedRoute allowedRoles={['rh', 'admin', 'super_admin']}>
-                    <div className="max-w-lg mx-auto mt-16 text-center space-y-4">
-                      <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto text-2xl">🏗️</div>
-                      <h2 className="text-xl font-black text-slate-900">Module RH</h2>
-                      <p className="text-slate-500 text-sm">Ce module est en cours de développement. Il couvrira la gestion du personnel, des contrats et des validations de pointage.</p>
-                    </div>
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'super_admin', 'rh']}>
+                    <EmployeeList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="rh/new"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'super_admin', 'rh']}>
+                    <EmployeeForm />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="rh/:id"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'super_admin', 'rh']}>
+                    <EmployeeDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="rh/:id/edit"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'super_admin', 'rh']}>
+                    <EmployeeForm />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Module Analytique */}
+              <Route
+                path="analytics"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'super_admin']}>
+                    <AnalyticsDashboard />
                   </ProtectedRoute>
                 }
               />
