@@ -20,10 +20,12 @@ class StoreProjectSignatureRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'signed_by' => 'nullable|integer|exists:users,id',
-            'client_name' => 'required|string|max:255',
+            'signed_by'      => 'nullable|integer|exists:users,id',
+            'client_name'    => 'required|string|max:255',
+            'signatory_role' => 'nullable|string|max:255',
+            'notes'          => 'nullable|string',
             'signature_data' => 'required|string',
-            'signed_at' => 'required|date',
+            'signed_at'      => 'required|date',
         ];
     }
 }

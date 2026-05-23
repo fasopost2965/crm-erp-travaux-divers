@@ -522,71 +522,27 @@ const ProjectDetail = () => {
               </div>
             </div>
 
-            {/* Quick Saisie Terrain Form */}
-            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6">
-              <h3 className="font-bold text-slate-800 text-xs uppercase tracking-wider pb-3 border-b border-slate-100">
-                ⚡ Saisie rapide heures (Mobile)
-              </h3>
-              <form onSubmit={handleWorkLogSubmit} className="space-y-4 text-xs font-semibold">
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Tâche associée (optionnel)</label>
-                  <select
-                    value={logTaskId}
-                    onChange={(e) => setLogTaskId(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-                  >
-                    <option value="">Sélectionner une tâche...</option>
-                    {tasks.map(t => (
-                      <option key={t.id} value={t.id}>{t.title} ({t.status})</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Date</label>
-                  <input
-                    type="date"
-                    required
-                    value={logDate}
-                    onChange={(e) => setLogDate(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Nombre d'heures</label>
-                  <input
-                    type="number"
-                    step="0.5"
-                    min="0.5"
-                    max="24"
-                    required
-                    value={logHours}
-                    onChange={(e) => setLogHours(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Observations / Travail réalisé</label>
-                  <textarea
-                    required
-                    placeholder="Description succincte..."
-                    rows="3"
-                    value={logDesc}
-                    onChange={(e) => setLogDesc(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={createWorkLogMutation.isLoading}
-                  className="w-full py-3 px-5 rounded-xl bg-blue-600 hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md transition-colors cursor-pointer"
-                >
-                  {createWorkLogMutation.isLoading ? 'Enregistrement...' : 'Enregistrer le pointage'}
-                </button>
-              </form>
+            {/* Navigation to dedicated work log pages */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
+              <h3 className="font-bold text-slate-800 text-sm">Actions terrain</h3>
+              <button
+                onClick={() => navigate(`/dashboard/projects/${id}/work-logs/new`)}
+                className="w-full flex items-center gap-3 p-4 rounded-xl border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold text-sm transition-colors"
+              >
+                <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                Nouveau pointage d'heures
+              </button>
+              <button
+                onClick={() => navigate(`/dashboard/projects/${id}/work-logs`)}
+                className="w-full flex items-center gap-3 p-4 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold text-sm transition-colors"
+              >
+                <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                Voir tous les pointages
+              </button>
             </div>
           </div>
         )}
@@ -768,65 +724,26 @@ const ProjectDetail = () => {
               </div>
             </div>
 
-            {/* Signature Form */}
-            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6">
-              <h3 className="font-bold text-slate-850 text-xs uppercase tracking-wider pb-3 border-b border-slate-100">
-                ✍️ Signature d'avancement / PV
-              </h3>
-              <form onSubmit={handleSignatureSubmit} className="space-y-4">
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Nom du Signataire</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Ex: M. Khalid Alami"
-                    value={signName}
-                    onChange={(e) => setSignName(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Qualité / Rôle</label>
-                  <select
-                    value={signRole}
-                    onChange={(e) => setSignRole(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-                  >
-                    <option value="Chef de chantier">Chef de chantier</option>
-                    <option value="Directeur technique">Directeur technique</option>
-                    <option value="Client (Représentant)">Client (Représentant)</option>
-                    <option value="Bureau de contrôle">Bureau de contrôle</option>
-                  </select>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Notes / Observations de réception</label>
-                  <textarea
-                    placeholder="Réserves formulées ou conformité générale..."
-                    rows="3"
-                    value={signNotes}
-                    onChange={(e) => setSignNotes(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                {/* Simulated Pad drawing box */}
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Dessiner la signature (Cadre de traçage)</label>
-                  <div className="border border-dashed border-slate-200 rounded-2xl bg-slate-50 h-28 flex items-center justify-center text-slate-400 font-bold tracking-wide italic cursor-crosshair">
-                    [ Zone de signature tactile simulée ]
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={signPvMutation.isLoading}
-                  className="w-full py-3 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-550 text-white font-bold text-xs tracking-wide shadow-md transition-colors cursor-pointer"
-                >
-                  {signPvMutation.isLoading ? 'Signature...' : 'Signer électroniquement'}
-                </button>
-              </form>
+            {/* Link to full PV de réception page */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
+              <h3 className="font-bold text-slate-800 text-sm">Clôture du chantier</h3>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                Le PV de réception permet de finaliser le chantier avec les signatures électroniques des deux parties (client et chef de chantier) et de générer le document officiel en PDF.
+              </p>
+              <button
+                onClick={() => navigate(`/dashboard/projects/${id}/pv-reception`)}
+                className="w-full flex items-center justify-center gap-3 py-3.5 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm shadow-sm transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Ouvrir le PV de Réception
+              </button>
+              {signatures.length > 0 && (
+                <p className="text-xs text-emerald-600 font-semibold text-center">
+                  ✓ {signatures.length} signature{signatures.length > 1 ? 's' : ''} enregistrée{signatures.length > 1 ? 's' : ''}
+                </p>
+              )}
             </div>
           </div>
         )}
