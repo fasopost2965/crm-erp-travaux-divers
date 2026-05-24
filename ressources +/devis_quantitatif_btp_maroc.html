@@ -1,0 +1,413 @@
+
+<h2 class="sr-only">Module devis quantitatif estimatif BatiPro — bibliothèque de prix BTP Maroc, saisie des quantités, calcul automatique des totaux avec coefficients MO matériaux frais généraux</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:13px}
+.wrap{border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);overflow:hidden}
+.topbar{background:#1C1C1C;padding:10px 16px;display:flex;align-items:center;gap:8px}
+.tbt{font-size:13px;font-weight:500;color:#fff;flex:1}
+.tbm{font-size:11px;color:rgba(255,255,255,.4)}
+.bto{background:#C85A2A;color:#fff;border:none;padding:5px 12px;border-radius:var(--border-radius-md);font-size:11px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px}
+.btg{background:rgba(255,255,255,.09);color:rgba(255,255,255,.7);border:none;padding:5px 9px;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.main{display:grid;grid-template-columns:220px 1fr;min-height:700px}
+.sidebar{background:var(--color-background-primary);border-right:0.5px solid var(--color-border-tertiary);display:flex;flex-direction:column}
+.sb-head{padding:10px 12px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;gap:6px}
+.sb-title{font-size:12px;font-weight:500;color:var(--color-text-primary);flex:1}
+.search-wrap{padding:8px 10px;border-bottom:0.5px solid var(--color-border-tertiary);position:relative}
+.search-wrap input{width:100%;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:5px 8px 5px 26px;font-size:11px;background:var(--color-background-secondary);color:var(--color-text-primary);outline:none}
+.search-icon{position:absolute;left:18px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--color-text-secondary);pointer-events:none}
+.cat-filters{display:flex;flex-direction:column;gap:0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.cat-btn{padding:7px 12px;font-size:11px;cursor:pointer;color:var(--color-text-secondary);display:flex;align-items:center;gap:6px;border-bottom:0.5px solid var(--color-border-tertiary);transition:background .1s}
+.cat-btn:last-child{border-bottom:none}
+.cat-btn:hover{background:var(--color-background-secondary)}
+.cat-btn.on{background:#FDF0EA;color:#993C1D;font-weight:500}
+.cat-btn i{font-size:14px}
+.cat-btn.on i{color:#C85A2A}
+.price-list{flex:1;overflow-y:auto}
+.price-item{padding:8px 12px;border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer;transition:background .1s}
+.price-item:hover{background:var(--color-background-secondary)}
+.price-item:last-child{border-bottom:none}
+.pi-name{font-size:11px;font-weight:500;color:var(--color-text-primary);margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pi-unit{font-size:10px;color:var(--color-text-secondary)}
+.pi-price{font-size:12px;font-weight:500;color:#C85A2A;white-space:nowrap}
+.pi-add{width:20px;height:20px;border-radius:4px;background:#C85A2A;border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+
+.content{background:var(--color-background-tertiary);display:flex;flex-direction:column}
+.devis-info{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:10px 14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.di-field label{font-size:10px;color:var(--color-text-secondary);display:block;margin-bottom:3px}
+.di-field input,.di-field select{width:100%;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:5px 8px;font-size:11px;background:var(--color-background-primary);color:var(--color-text-primary);outline:none}
+
+.coeff-bar{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:8px 14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.coeff-item{display:flex;align-items:center;gap:5px}
+.coeff-label{font-size:11px;color:var(--color-text-secondary);white-space:nowrap}
+.coeff-input{width:60px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:3px 6px;font-size:11px;background:var(--color-background-secondary);color:var(--color-text-primary);outline:none;text-align:center}
+.coeff-pct{font-size:10px;color:var(--color-text-secondary)}
+
+.devis-table-wrap{flex:1;padding:10px 14px;overflow-y:auto}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;margin-top:12px}
+.section-head:first-child{margin-top:0}
+.sh-title{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:5px}
+.sh-title i{color:#C85A2A;font-size:13px}
+.add-section{font-size:11px;color:#C85A2A;background:none;border:none;cursor:pointer;padding:0}
+
+.devis-table{width:100%;border-collapse:collapse;table-layout:fixed;margin-bottom:6px}
+.devis-table th{padding:6px 8px;text-align:left;font-size:10px;font-weight:500;color:var(--color-text-secondary);background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.devis-table th.r{text-align:right}
+.devis-table td{padding:0;border-bottom:0.5px solid var(--color-border-tertiary);vertical-align:middle}
+.devis-table tr:last-child td{border-bottom:none}
+.devis-table tr:hover td{background:var(--color-background-secondary)}
+.td-input{width:100%;border:none;padding:6px 8px;font-size:11px;background:transparent;color:var(--color-text-primary);outline:none}
+.td-num{padding:6px 8px;font-size:11px;text-align:right;color:var(--color-text-primary);font-weight:500}
+.td-total{padding:6px 8px;font-size:11px;text-align:right;color:#C85A2A;font-weight:500}
+.td-del{width:24px;text-align:center;padding:0 4px}
+.del-btn{background:none;border:none;cursor:pointer;color:var(--color-text-secondary);font-size:13px;padding:4px}
+.del-btn:hover{color:#C84242}
+
+.subtotal-row{display:flex;justify-content:flex-end;padding:5px 8px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);margin-bottom:8px;font-size:11px;gap:12px}
+.st-label{color:var(--color-text-secondary)}
+.st-val{font-weight:500;color:var(--color-text-primary);min-width:80px;text-align:right}
+
+.totaux{background:var(--color-background-primary);border-top:0.5px solid var(--color-border-tertiary);padding:12px 14px}
+.totaux-grid{display:grid;grid-template-columns:1fr 260px;gap:14px}
+.coeff-recap{font-size:11px}
+.coeff-recap-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.coeff-recap-row:last-child{border-bottom:none}
+.cr-label{color:var(--color-text-secondary)}
+.cr-val{font-weight:500;color:var(--color-text-primary)}
+.total-box{background:#1C1C1C;border-radius:var(--border-radius-lg);padding:14px}
+.total-row{display:flex;justify-content:space-between;padding:4px 0;font-size:12px}
+.total-label{color:rgba(255,255,255,.55)}
+.total-val{color:#fff;font-weight:500}
+.total-ttc{font-size:18px;color:#C85A2A;font-weight:500}
+.total-ttc-label{font-size:12px;color:rgba(255,255,255,.55)}
+
+.badge{font-size:10px;padding:2px 6px;border-radius:6px}
+.bo{background:#FAECE7;color:#712B13}
+.bg{background:#E8F6EE;color:#1A6B3C}
+.bb{background:#E6F1FB;color:#0C447C}
+.by{background:#FAEEDA;color:#633806}
+.bgr{background:#F1EFE8;color:#5F5E5A}
+</style>
+
+<div class="wrap">
+<div class="topbar">
+  <i class="ti ti-file-text" style="color:#C85A2A;font-size:15px" aria-hidden="true"></i>
+  <span class="tbt">Devis quantitatif estimatif</span>
+  <span class="tbm" id="devis-ref">D-2026-091 · Brouillon</span>
+  <button class="btg" onclick="sendPrompt('Comment dupliquer ce devis comme modèle pour un chantier similaire ?')"><i class="ti ti-copy" aria-hidden="true"></i> Dupliquer ↗</button>
+  <button class="btg" onclick="sendPrompt('Exporte ce devis en PDF avec en-tête BatiPro et mentions légales')"><i class="ti ti-download" aria-hidden="true"></i> PDF ↗</button>
+  <button class="btg" onclick="sendPrompt('Exporte ce devis au format DPGF Excel pour appel d offres')"><i class="ti ti-table-export" aria-hidden="true"></i> DPGF ↗</button>
+  <button class="bto" onclick="sendPrompt('Envoie ce devis au client pour signature électronique')"><i class="ti ti-send" aria-hidden="true"></i> Envoyer au client ↗</button>
+</div>
+
+<div class="devis-info">
+  <div class="di-field"><label>Client / Maître d'ouvrage</label><input type="text" value="Atlas Hospitality SARL" id="di-client"></div>
+  <div class="di-field"><label>Objet des travaux</label><input type="text" value="Rénovation Hôtel Mogador — Casablanca" id="di-objet"></div>
+  <div class="di-field" style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div><label>Date</label><input type="text" value="24/05/2026"></div>
+    <div><label>Validité</label><select><option>30 jours</option><option>45 jours</option><option>60 jours</option></select></div>
+  </div>
+</div>
+
+<div class="coeff-bar">
+  <span style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Coefficients :</span>
+  <div class="coeff-item">
+    <label class="coeff-label" for="coeff-mo">MO (%)</label>
+    <input class="coeff-input" type="number" id="coeff-mo" value="35" min="0" max="100" step="1" oninput="recalc()">
+    <span class="coeff-pct">du HT</span>
+  </div>
+  <div class="coeff-item">
+    <label class="coeff-label" for="coeff-mat">Matériaux (%)</label>
+    <input class="coeff-input" type="number" id="coeff-mat" value="45" min="0" max="100" step="1" oninput="recalc()">
+    <span class="coeff-pct">du HT</span>
+  </div>
+  <div class="coeff-item">
+    <label class="coeff-label" for="coeff-fg">Frais généraux (%)</label>
+    <input class="coeff-input" type="number" id="coeff-fg" value="12" min="0" max="100" step="1" oninput="recalc()">
+    <span class="coeff-pct">du HT</span>
+  </div>
+  <div class="coeff-item">
+    <label class="coeff-label" for="coeff-marge">Marge (%)</label>
+    <input class="coeff-input" type="number" id="coeff-marge" value="8" min="0" max="100" step="1" oninput="recalc()">
+    <span class="coeff-pct">du HT</span>
+  </div>
+  <div style="margin-left:auto;font-size:11px;color:var(--color-text-secondary)">Total coefficients : <span id="total-coeff" style="font-weight:500;color:var(--color-text-primary)">100%</span></div>
+</div>
+
+<div class="main">
+
+  <div class="sidebar">
+    <div class="sb-head">
+      <i class="ti ti-database" style="color:#C85A2A;font-size:14px" aria-hidden="true"></i>
+      <span class="sb-title">Bibliothèque prix BTP</span>
+    </div>
+    <div class="search-wrap">
+      <i class="ti ti-search search-icon" aria-hidden="true"></i>
+      <input type="text" placeholder="Rechercher un article…" oninput="filterPrix(this.value)" id="prix-search" aria-label="Rechercher dans la bibliothèque de prix">
+    </div>
+    <div class="cat-filters" id="cat-filters"></div>
+    <div class="price-list" id="price-list"></div>
+  </div>
+
+  <div class="content">
+    <div class="devis-table-wrap" id="devis-wrap"></div>
+    <div class="totaux">
+      <div class="totaux-grid">
+        <div class="coeff-recap" id="coeff-recap"></div>
+        <div class="total-box">
+          <div class="total-row"><span class="total-label">Total HT</span><span class="total-val" id="ttl-ht">0 MAD</span></div>
+          <div class="total-row"><span class="total-label">TVA 20%</span><span class="total-val" id="ttl-tva">0 MAD</span></div>
+          <div style="border-top:0.5px solid rgba(255,255,255,.15);margin:8px 0"></div>
+          <div class="total-row"><span class="total-ttc-label">Total TTC</span><span class="total-ttc" id="ttl-ttc">0 MAD</span></div>
+          <button onclick="sendPrompt('Convertir ce devis en contrat de marché signable')" style="width:100%;margin-top:10px;padding:7px;background:#C85A2A;color:#fff;border:none;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px"><i class="ti ti-file-contract" aria-hidden="true"></i> Convertir en contrat ↗</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+const CATS = [
+  {id:'all',   label:'Tous les postes',     icon:'ti-list'},
+  {id:'go',    label:'Gros œuvre',           icon:'ti-building'},
+  {id:'mac',   label:'Maçonnerie',           icon:'ti-wall'},
+  {id:'etan',  label:'Étanchéité',           icon:'ti-droplet'},
+  {id:'rev',   label:'Revêtements',          icon:'ti-layers-intersect'},
+  {id:'men',   label:'Menuiseries',          icon:'ti-door'},
+  {id:'plomb', label:'Plomberie',            icon:'ti-ripple'},
+  {id:'elec',  label:'Électricité',          icon:'ti-bolt'},
+  {id:'clim',  label:'Clim. & VMC',          icon:'ti-wind'},
+  {id:'pein',  label:'Peinture & enduits',   icon:'ti-paint'},
+  {id:'vrd',   label:'VRD & terrassement',   icon:'ti-backhoe'},
+  {id:'div',   label:'Frais de chantier',    icon:'ti-tool'},
+];
+
+const PRIX_DB = [
+  {id:'go1',  cat:'go',    nom:'Béton fondations B25',          unit:'m³',   pu:980,   desc:'Fourniture et mise en œuvre'},
+  {id:'go2',  cat:'go',    nom:'Béton armé dalles',             unit:'m³',   pu:1250,  desc:'Coffrage + béton + acier'},
+  {id:'go3',  cat:'go',    nom:'Béton armé poteaux',            unit:'m³',   pu:1450,  desc:'Coffrage bois + béton B25'},
+  {id:'go4',  cat:'go',    nom:'Terrassement manuel',           unit:'m³',   pu:85,    desc:'Fouilles en terrain normal'},
+  {id:'go5',  cat:'go',    nom:'Terrassement mécanique',        unit:'m³',   pu:45,    desc:'Pelle mécanique 20T'},
+  {id:'mac1', cat:'mac',   nom:'Maçonnerie parpaing 20cm',      unit:'m²',   pu:280,   desc:'Parpaing 20×20×40 + joint'},
+  {id:'mac2', cat:'mac',   nom:'Maçonnerie brique 15cm',        unit:'m²',   pu:310,   desc:'Brique creuse + mortier ciment'},
+  {id:'mac3', cat:'mac',   nom:'Enduit monocouche façade',      unit:'m²',   pu:145,   desc:'Épaisseur 15mm, finition talochée'},
+  {id:'mac4', cat:'mac',   nom:'Chape ciment 5cm',              unit:'m²',   pu:95,    desc:'Sable + ciment CPJ45'},
+  {id:'mac5', cat:'mac',   nom:'Ferraillage acier HA',          unit:'kg',   pu:12.5,  desc:'Acier HA 8 à 25mm, façonné posé'},
+  {id:'et1',  cat:'etan',  nom:'Étanchéité bicouche toiture',   unit:'m²',   pu:320,   desc:'2 couches bitume + protection'},
+  {id:'et2',  cat:'etan',  nom:'Étanchéité salle de bain',      unit:'m²',   pu:180,   desc:'Membrane liquide + armature'},
+  {id:'et3',  cat:'etan',  nom:'Isolation laine de roche 10cm', unit:'m²',   pu:145,   desc:'R=2,7 m².K/W — posée fixée'},
+  {id:'rev1', cat:'rev',   nom:'Carrelage grès cérame 60×60',   unit:'m²',   pu:380,   desc:'Pose collée, joints 3mm'},
+  {id:'rev2', cat:'rev',   nom:'Faïence murale 30×60',          unit:'m²',   pu:290,   desc:'Pose collée sur mur enduit'},
+  {id:'rev3', cat:'rev',   nom:'Parquet stratifié 8mm',         unit:'m²',   pu:340,   desc:'Pose flottante, plinthes incl.'},
+  {id:'rev4', cat:'rev',   nom:'Marbre travertin 60×60',        unit:'m²',   pu:680,   desc:'Fourni posé, joints époxy'},
+  {id:'men1', cat:'men',   nom:'Porte intérieure bois HDF',     unit:'u',    pu:2800,  desc:'Bloc-porte 83cm, peinture blanche'},
+  {id:'men2', cat:'men',   nom:'Fenêtre aluminium 120×140',     unit:'u',    pu:4200,  desc:'Double vitrage 4/16/4, rupteur TB'},
+  {id:'men3', cat:'men',   nom:'Porte d\'entrée blindée',       unit:'u',    pu:8500,  desc:'Acier 3 points, finition laquée'},
+  {id:'men4', cat:'men',   nom:'Volet roulant alu motorisé',    unit:'u',    pu:3600,  desc:'Moteur Somfy, caisson encastré'},
+  {id:'pl1',  cat:'plomb', nom:'Colonne alimentation Ø32',      unit:'ml',   pu:185,   desc:'Tube PPR + fixations + raccords'},
+  {id:'pl2',  cat:'plomb', nom:'Lavabo vasque à poser',         unit:'u',    pu:1200,  desc:'Fourni posé raccordé'},
+  {id:'pl3',  cat:'plomb', nom:'WC suspendu bâti-support',      unit:'u',    pu:3200,  desc:'Bâti + cuvette + abattant'},
+  {id:'pl4',  cat:'plomb', nom:'Chauffe-eau thermodynamique',   unit:'u',    pu:6800,  desc:'300L, COP 3,2'},
+  {id:'el1',  cat:'elec',  nom:'Tableau électrique 24 modules', unit:'u',    pu:2800,  desc:'Hager ou équiv, disj diff inclus'},
+  {id:'el2',  cat:'elec',  nom:'Point lumineux encastré',       unit:'u',    pu:380,   desc:'Spot LED 9W, câblage + interrupteur'},
+  {id:'el3',  cat:'elec',  nom:'Prise de courant 2P+T',         unit:'u',    pu:180,   desc:'Appareillage Legrand ou équiv'},
+  {id:'el4',  cat:'elec',  nom:'Câble NYY 4×16mm²',            unit:'ml',   pu:85,    desc:'Câble alimentation tableau'},
+  {id:'cl1',  cat:'clim',  nom:'Split-system 12000 BTU',        unit:'u',    pu:8500,  desc:'Unités int+ext, pose, fluide'},
+  {id:'cl2',  cat:'clim',  nom:'Ventilation mécanique VMC',     unit:'u',    pu:4200,  desc:'Double flux, 150m³/h'},
+  {id:'pe1',  cat:'pein',  nom:'Peinture vinylique intérieure', unit:'m²',   pu:55,    desc:'2 couches + impression, finition mate'},
+  {id:'pe2',  cat:'pein',  nom:'Peinture façade siloxane',      unit:'m²',   pu:95,    desc:'2 couches, protection 10 ans'},
+  {id:'pe3',  cat:'pein',  nom:'Enduit plâtre projeté',         unit:'m²',   pu:75,    desc:'Plâtre de Paris, épaisseur 15mm'},
+  {id:'vr1',  cat:'vrd',   nom:'Fouille en rigole',             unit:'m³',   pu:75,    desc:'Terrain normal, profondeur ≤1,5m'},
+  {id:'vr2',  cat:'vrd',   nom:'Enrobé bicouche voirie',        unit:'m²',   pu:220,   desc:'Couche de base + roulement'},
+  {id:'vr3',  cat:'vrd',   nom:'Canalisation PVC Ø200',        unit:'ml',   pu:185,   desc:'Tuyau + lit de sable + remblai'},
+  {id:'di1',  cat:'div',   nom:'Installation de chantier',      unit:'fft',  pu:35000, desc:'Clôture, base vie, branchements'},
+  {id:'di2',  cat:'div',   nom:'Nettoyage fin de chantier',     unit:'fft',  pu:8500,  desc:'Évacuation gravats, nettoyage'},
+  {id:'di3',  cat:'div',   nom:'Échafaudage façade',            unit:'m²',   pu:85,    desc:'Location 3 mois, montage/démontage'},
+];
+
+let activeCat = 'all';
+let searchQ = '';
+let devisLines = {
+  go:    [{id:1,ref:'go1',nom:'Béton armé dalles',unit:'m³',  pu:1250,qte:45},
+          {id:2,ref:'mac1',nom:'Maçonnerie parpaing 20cm',unit:'m²',pu:280,qte:320}],
+  rev:   [{id:3,ref:'rev1',nom:'Carrelage grès cérame 60×60',unit:'m²',pu:380,qte:180},
+          {id:4,ref:'pe1',nom:'Peinture vinylique intérieure',unit:'m²',pu:55,qte:640}],
+  men:   [{id:5,ref:'men2',nom:'Fenêtre aluminium 120×140',unit:'u',pu:4200,qte:18},
+          {id:6,ref:'men1',nom:'Porte intérieure bois HDF',unit:'u',pu:2800,qte:12}],
+  inst:  [{id:7,ref:'di1',nom:'Installation de chantier',unit:'fft',pu:35000,qte:1}],
+};
+const SECTION_LABELS = {go:'Gros œuvre & maçonnerie',rev:'Revêtements & peintures',men:'Menuiseries',inst:'Frais de chantier'};
+let nextId = 10;
+let nextLineId = 20;
+
+function fmt(n){return Math.round(n).toLocaleString('fr-MA');}
+
+function buildCats(){
+  document.getElementById('cat-filters').innerHTML = CATS.map(c=>`
+    <div class="cat-btn${c.id===activeCat?' on':''}" onclick="setCat('${c.id}')">
+      <i class="ti ${c.icon}" aria-hidden="true"></i>${c.label}
+    </div>`).join('');
+}
+
+function setCat(id){activeCat=id;buildCats();buildPrixList();}
+
+function filterPrix(q){searchQ=q.toLowerCase();buildPrixList();}
+
+function buildPrixList(){
+  const items = PRIX_DB.filter(p=>{
+    const matchCat = activeCat==='all' || p.cat===activeCat;
+    const matchQ = !searchQ || p.nom.toLowerCase().includes(searchQ) || p.desc.toLowerCase().includes(searchQ);
+    return matchCat && matchQ;
+  });
+  document.getElementById('price-list').innerHTML = items.map(p=>`
+    <div class="price-item" title="${p.desc}">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:4px">
+        <div style="min-width:0;flex:1">
+          <div class="pi-name">${p.nom}</div>
+          <div class="pi-unit">${p.unit} · <span style="font-size:10px;color:var(--color-text-secondary)">${p.desc}</span></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:5px;flex-shrink:0">
+          <span class="pi-price">${fmt(p.pu)}</span>
+          <button class="pi-add" onclick="addLine('${p.id}')" aria-label="Ajouter ${p.nom}"><i class="ti ti-plus" aria-hidden="true"></i></button>
+        </div>
+      </div>
+    </div>`).join('') || `<div style="padding:20px;text-align:center;font-size:11px;color:var(--color-text-secondary)">Aucun résultat</div>`;
+}
+
+function addLine(prixId){
+  const p = PRIX_DB.find(x=>x.id===prixId);
+  if(!p) return;
+  const sectionKey = p.cat==='go'||p.cat==='mac'?'go':p.cat==='rev'||p.cat==='pein'?'rev':p.cat==='men'?'men':p.cat==='div'?'inst':'go';
+  if(!devisLines[sectionKey]) devisLines[sectionKey]=[];
+  devisLines[sectionKey].push({id:nextLineId++,ref:prixId,nom:p.nom,unit:p.unit,pu:p.pu,qte:1});
+  renderDevis();
+  const btn = event.currentTarget;
+  btn.innerHTML='<i class="ti ti-check" aria-hidden="true"></i>';
+  btn.style.background='#2D8A5E';
+  setTimeout(()=>{btn.innerHTML='<i class="ti ti-plus" aria-hidden="true"></i>';btn.style.background='#C85A2A';},800);
+}
+
+function deleteLine(sectionKey, lineId){
+  devisLines[sectionKey] = devisLines[sectionKey].filter(l=>l.id!==lineId);
+  renderDevis();
+}
+
+function updateLine(sectionKey, lineId, field, value){
+  const line = devisLines[sectionKey]?.find(l=>l.id===lineId);
+  if(line) { line[field] = field==='nom'||field==='unit'?value:parseFloat(value)||0; }
+  recalc();
+}
+
+function addSection(){
+  const key = 'sec'+nextId++;
+  devisLines[key] = [];
+  SECTION_LABELS[key] = 'Nouveau poste';
+  renderDevis();
+}
+
+function renderDevis(){
+  const wrap = document.getElementById('devis-wrap');
+  let html = '';
+  for(const [key, lines] of Object.entries(devisLines)){
+    const sectionTotal = lines.reduce((s,l)=>s+l.pu*l.qte,0);
+    html += `<div class="section-head">
+      <div class="sh-title"><i class="ti ti-chevron-right" aria-hidden="true"></i>${SECTION_LABELS[key]||key}</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:11px;font-weight:500;color:#C85A2A">${fmt(sectionTotal)} MAD</span>
+        <button class="add-section" onclick="addEmptyLine('${key}')"><i class="ti ti-plus" style="font-size:12px" aria-hidden="true"></i> Ligne vide</button>
+      </div>
+    </div>
+    <table class="devis-table">
+      <thead><tr>
+        <th style="width:38%">Désignation</th>
+        <th style="width:8%">Qté</th>
+        <th style="width:8%">Unité</th>
+        <th class="r" style="width:13%">P.U. (MAD)</th>
+        <th class="r" style="width:13%">Total HT</th>
+        <th class="r" style="width:10%">TVA</th>
+        <th style="width:10%"></th>
+      </tr></thead>
+      <tbody>
+        ${lines.map(l=>`<tr>
+          <td><input class="td-input" value="${l.nom}" onchange="updateLine('${key}',${l.id},'nom',this.value)" aria-label="Désignation"></td>
+          <td><input class="td-input" type="number" value="${l.qte}" min="0" step="0.01" style="text-align:right" oninput="updateLine('${key}',${l.id},'qte',this.value)" aria-label="Quantité"></td>
+          <td><input class="td-input" value="${l.unit}" onchange="updateLine('${key}',${l.id},'unit',this.value)" aria-label="Unité"></td>
+          <td><input class="td-input" type="number" value="${l.pu}" min="0" step="1" style="text-align:right" oninput="updateLine('${key}',${l.id},'pu',this.value)" aria-label="Prix unitaire"></td>
+          <td class="td-total">${fmt(l.pu*l.qte)}</td>
+          <td class="td-num">20%</td>
+          <td class="td-del"><button class="del-btn" onclick="deleteLine('${key}',${l.id})" aria-label="Supprimer la ligne"><i class="ti ti-trash" aria-hidden="true"></i></button></td>
+        </tr>`).join('')}
+        ${lines.length===0?`<tr><td colspan="7" style="padding:12px;text-align:center;font-size:11px;color:var(--color-text-secondary)">Glissez un article depuis la bibliothèque ou ajoutez une ligne vide</td></tr>`:''}
+      </tbody>
+    </table>`;
+  }
+  html += `<button onclick="addSection()" style="margin-top:8px;font-size:11px;padding:6px 14px;border:0.5px dashed var(--color-border-secondary);border-radius:var(--border-radius-md);background:none;cursor:pointer;color:var(--color-text-secondary);width:100%;display:flex;align-items:center;justify-content:center;gap:5px"><i class="ti ti-plus" aria-hidden="true"></i> Ajouter une section</button>`;
+  wrap.innerHTML = html;
+  recalc();
+}
+
+function addEmptyLine(sectionKey){
+  if(!devisLines[sectionKey]) devisLines[sectionKey]=[];
+  devisLines[sectionKey].push({id:nextLineId++,ref:'',nom:'',unit:'m²',pu:0,qte:1});
+  renderDevis();
+}
+
+function recalc(){
+  const mo = parseFloat(document.getElementById('coeff-mo').value)||0;
+  const mat = parseFloat(document.getElementById('coeff-mat').value)||0;
+  const fg = parseFloat(document.getElementById('coeff-fg').value)||0;
+  const marge = parseFloat(document.getElementById('coeff-marge').value)||0;
+  document.getElementById('total-coeff').textContent = Math.round(mo+mat+fg+marge)+'%';
+
+  let totalHT = 0;
+  for(const lines of Object.values(devisLines)){
+    lines.forEach(l=>{
+      const elt = document.querySelector(`input[aria-label="Quantité"][oninput*="${l.id}"]`);
+      if(elt) l.qte = parseFloat(elt.value)||0;
+      const pu = document.querySelector(`input[aria-label="Prix unitaire"][oninput*="${l.id}"]`);
+      if(pu) l.pu = parseFloat(pu.value)||0;
+      totalHT += l.pu * l.qte;
+      const totalCell = elt?.closest('tr')?.querySelector('.td-total');
+      if(totalCell) totalCell.textContent = fmt(l.pu*l.qte);
+    });
+  }
+
+  const tva = Math.round(totalHT*0.2);
+  const ttc = Math.round(totalHT+tva);
+  const moAmt = Math.round(totalHT*mo/100);
+  const matAmt = Math.round(totalHT*mat/100);
+  const fgAmt = Math.round(totalHT*fg/100);
+  const margeAmt = Math.round(totalHT*marge/100);
+
+  document.getElementById('ttl-ht').textContent = fmt(totalHT)+' MAD';
+  document.getElementById('ttl-tva').textContent = fmt(tva)+' MAD';
+  document.getElementById('ttl-ttc').textContent = fmt(ttc)+' MAD';
+
+  document.getElementById('coeff-recap').innerHTML = `
+    <div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Décomposition du prix</div>
+    ${[
+      ['Main-d\'œuvre ('+mo+'%)', moAmt, '#C85A2A'],
+      ['Matériaux ('+mat+'%)', matAmt, '#2A6CB8'],
+      ['Frais généraux ('+fg+'%)', fgAmt, '#BA7517'],
+      ['Marge bénéficiaire ('+marge+'%)', margeAmt, '#2D8A5E'],
+    ].map(r=>`<div class="coeff-recap-row">
+      <span class="cr-label">${r[0]}</span>
+      <span class="cr-val" style="color:${r[2]}">${fmt(r[1])} MAD</span>
+    </div>`).join('')}
+    <div style="margin-top:8px;height:10px;border-radius:5px;overflow:hidden;display:flex;gap:0">
+      <div style="width:${mo}%;background:#C85A2A;height:100%"></div>
+      <div style="width:${mat}%;background:#2A6CB8;height:100%"></div>
+      <div style="width:${fg}%;background:#BA7517;height:100%"></div>
+      <div style="width:${marge}%;background:#2D8A5E;height:100%"></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:5px;flex-wrap:wrap">
+      ${[['MO','#C85A2A'],['Matériaux','#2A6CB8'],['FG','#BA7517'],['Marge','#2D8A5E']].map(l=>`<span style="font-size:10px;color:var(--color-text-secondary);display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;background:${l[1]};border-radius:2px;display:inline-block"></span>${l[0]}</span>`).join('')}
+    </div>`;
+}
+
+buildCats();
+buildPrixList();
+renderDevis();
+</script>

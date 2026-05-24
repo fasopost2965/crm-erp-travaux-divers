@@ -1,0 +1,509 @@
+
+<h2 class="sr-only">Portail client BatiPro — espace client sécurisé avec suivi chantier, consultation situations, signature électronique devis et messagerie</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:13px;color:var(--color-text-primary)}
+
+.portal{border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);overflow:hidden}
+
+.portal-nav{background:#0C2340;padding:0 18px;display:flex;align-items:center;gap:0;height:52px}
+.pn-logo{display:flex;align-items:center;gap:8px;margin-right:24px}
+.pn-logo-sq{width:28px;height:28px;background:#C85A2A;border-radius:6px;display:flex;align-items:center;justify-content:center}
+.pn-brand{font-size:13px;font-weight:500;color:#fff}
+.pn-brand-sub{font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.04em}
+.pn-link{padding:0 13px;height:52px;display:flex;align-items:center;font-size:12px;color:rgba(255,255,255,.55);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;gap:5px}
+.pn-link:hover{color:rgba(255,255,255,.85)}
+.pn-link.on{color:#fff;border-bottom-color:#C85A2A}
+.pn-link i{font-size:14px}
+.pn-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.pn-bell{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.pn-notif{position:absolute;top:4px;right:4px;width:7px;height:7px;border-radius:50%;background:#C85A2A;border:1.5px solid #0C2340}
+.pn-av{width:30px;height:30px;border-radius:50%;background:#C85A2A;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:#fff;cursor:pointer}
+.pn-name{font-size:12px;color:rgba(255,255,255,.7)}
+
+.portal-body{background:var(--color-background-tertiary)}
+.page{display:none}.page.on{display:block}
+
+.hero{background:#0C2340;padding:18px 20px 22px}
+.hero-greeting{font-size:11px;color:rgba(255,255,255,.45);margin-bottom:4px}
+.hero-name{font-size:18px;font-weight:500;color:#fff;margin-bottom:12px}
+.hero-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.hc{background:rgba(255,255,255,.07);border:0.5px solid rgba(255,255,255,.1);border-radius:var(--border-radius-md);padding:12px}
+.hc-label{font-size:10px;color:rgba(255,255,255,.45);margin-bottom:5px}
+.hc-val{font-size:20px;font-weight:500;color:#fff;line-height:1}
+.hc-sub{font-size:10px;color:rgba(255,255,255,.4);margin-top:2px}
+
+.body-inner{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+
+.panel{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.ph{padding:10px 14px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:space-between}
+.pt{font-size:13px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:6px}
+.pt i{color:#C85A2A}
+.lbtn{font-size:11px;color:#C85A2A;cursor:pointer;background:none;border:none;padding:0}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+.badge{font-size:10px;padding:2px 7px;border-radius:8px;white-space:nowrap}
+.bg{background:#E8F6EE;color:#1A6B3C}
+.br{background:#FBEAEA;color:#A32D2D}
+.bb{background:#E8F4FF;color:#1A5C9A}
+.by{background:#FAEEDA;color:#633806}
+.bo{background:#FAECE7;color:#712B13}
+.bgr{background:#F1EFE8;color:#5F5E5A}
+
+.row{display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:0.5px solid var(--color-border-tertiary);font-size:12px;cursor:pointer;transition:background .1s}
+.row:hover{background:var(--color-background-secondary)}
+.row:last-child{border-bottom:none}
+
+.prog-wrap{width:100%;height:6px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px}
+
+.chantier-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;margin-bottom:10px}
+.ch-head{background:#0C2340;padding:12px 14px;display:flex;align-items:flex-start;justify-content:space-between}
+.ch-title{font-size:13px;font-weight:500;color:#fff;margin-bottom:3px}
+.ch-sub{font-size:11px;color:rgba(255,255,255,.5)}
+.ch-body{padding:12px 14px}
+.ch-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.ch-stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:9px 10px}
+.ch-stat-l{font-size:10px;color:var(--color-text-secondary);margin-bottom:3px}
+.ch-stat-v{font-size:15px;font-weight:500;color:var(--color-text-primary)}
+.milestone-row{display:flex;gap:0;margin-bottom:10px}
+.ms{flex:1;text-align:center;position:relative}
+.ms-dot{width:10px;height:10px;border-radius:50%;margin:0 auto 3px;border:2px solid var(--color-border-secondary);background:var(--color-background-primary)}
+.ms-dot.done{background:#2D8A5E;border-color:#2D8A5E}
+.ms-dot.curr{background:#C85A2A;border-color:#C85A2A}
+.ms-label{font-size:9px;color:var(--color-text-secondary)}
+.ms-line{position:absolute;top:4px;left:50%;right:-50%;height:2px;background:var(--color-border-tertiary);z-index:-1}
+.ms-line.done{background:#2D8A5E}
+
+.photo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.photo-slot{border-radius:var(--border-radius-md);overflow:hidden;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);aspect-ratio:1;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .1s}
+.photo-slot:hover{background:var(--color-background-tertiary)}
+.photo-slot i{font-size:20px;color:var(--color-text-secondary)}
+.photo-slot.has-img{background:linear-gradient(135deg,#2D8A5E22,#C85A2A22)}
+.photo-slot.has-img i{color:#C85A2A}
+
+.sig-area{border:2px dashed var(--color-border-secondary);border-radius:var(--border-radius-lg);height:80px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;margin:10px 0}
+.sig-area:hover,.sig-area.signed{border-color:#2D8A5E;border-style:solid}
+.sig-area.signed{background:#E8F6EE}
+
+.msg-item{display:flex;gap:8px;padding:10px 14px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.msg-item:last-child{border-bottom:none}
+.msg-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#fff;flex-shrink:0}
+.msg-bubble{flex:1;background:var(--color-background-secondary);border-radius:0 var(--border-radius-md) var(--border-radius-md) var(--border-radius-md);padding:8px 10px}
+.msg-bubble.mine{background:#E8F4FF;border-radius:var(--border-radius-md) 0 var(--border-radius-md) var(--border-radius-md)}
+.msg-name{font-size:10px;color:var(--color-text-secondary);margin-bottom:3px}
+.msg-text{font-size:12px;color:var(--color-text-primary);line-height:1.5}
+.msg-time{font-size:10px;color:var(--color-text-secondary);margin-top:3px;text-align:right}
+.msg-input-row{display:flex;gap:8px;padding:10px 14px;border-top:0.5px solid var(--color-border-tertiary)}
+.msg-input{flex:1;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:7px 10px;font-size:12px;background:var(--color-background-primary);color:var(--color-text-primary);outline:none}
+.send-btn{background:#C85A2A;color:#fff;border:none;border-radius:var(--border-radius-md);padding:7px 12px;cursor:pointer;font-size:12px;display:flex;align-items:center;gap:4px}
+
+.timeline-item{display:flex;gap:10px;padding:10px 14px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.timeline-item:last-child{border-bottom:none}
+.tl-left{display:flex;flex-direction:column;align-items:center;gap:0;padding-top:3px}
+.tl-dot{width:8px;height:8px;border-radius:50%;background:#C85A2A;flex-shrink:0}
+.tl-line{width:1.5px;flex:1;background:var(--color-border-tertiary);margin-top:4px}
+.tl-date{font-size:10px;color:var(--color-text-secondary);min-width:44px;padding-top:1px}
+.tl-title{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.tl-sub{font-size:11px;color:var(--color-text-secondary);line-height:1.4}
+
+.doc-item{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer;transition:background .1s}
+.doc-item:hover{background:var(--color-background-secondary)}
+.doc-item:last-child{border-bottom:none}
+.doc-icon{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+
+.sign-block{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;margin-bottom:12px}
+.sign-head{background:#FAECE7;padding:11px 14px;display:flex;align-items:center;justify-content:space-between}
+.sign-title{font-size:13px;font-weight:500;color:#712B13;display:flex;align-items:center;gap:6px}
+.sign-body{padding:14px}
+.sign-line{display:flex;justify-content:space-between;padding:5px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:12px}
+.sign-line:last-child{border-bottom:none}
+.sign-label{color:var(--color-text-secondary)}
+.sign-val{font-weight:500;color:var(--color-text-primary)}
+</style>
+
+<div class="portal">
+
+  <div class="portal-nav">
+    <div class="pn-logo">
+      <div class="pn-logo-sq"><i class="ti ti-building" style="color:#fff;font-size:14px" aria-hidden="true"></i></div>
+      <div>
+        <div class="pn-brand">BatiPro</div>
+        <div class="pn-brand-sub">ESPACE CLIENT</div>
+      </div>
+    </div>
+    <div class="pn-link on" onclick="showPage('accueil',this)"><i class="ti ti-home" aria-hidden="true"></i>Accueil</div>
+    <div class="pn-link" onclick="showPage('chantier',this)"><i class="ti ti-helmet" aria-hidden="true"></i>Mon chantier</div>
+    <div class="pn-link" onclick="showPage('documents',this)"><i class="ti ti-file-text" aria-hidden="true"></i>Documents</div>
+    <div class="pn-link" onclick="showPage('messagerie',this)"><i class="ti ti-message" aria-hidden="true"></i>Messagerie <span style="background:#C85A2A;color:#fff;font-size:9px;padding:1px 5px;border-radius:8px;margin-left:2px">2</span></div>
+    <div class="pn-right">
+      <div class="pn-bell"><i class="ti ti-bell" style="color:rgba(255,255,255,.7);font-size:15px" aria-hidden="true"></i><div class="pn-notif"></div></div>
+      <div class="pn-av">IM</div>
+      <div class="pn-name">Immocap SA</div>
+    </div>
+  </div>
+
+  <!-- ══ ACCUEIL ══════════════════════════════════════════════ -->
+  <div class="page on" id="page-accueil">
+    <div class="hero">
+      <div class="hero-greeting">Bonjour,</div>
+      <div class="hero-name">Immocap SA — Portail suivi chantiers</div>
+      <div class="hero-cards">
+        <div class="hc"><div class="hc-label">Chantiers actifs</div><div class="hc-val">2</div><div class="hc-sub">Al Fath + Sidi Maarouf</div></div>
+        <div class="hc"><div class="hc-label">Factures en attente</div><div class="hc-val">518 K</div><div class="hc-sub">MAD TTC à régler</div></div>
+        <div class="hc"><div class="hc-label">Devis à signer</div><div class="hc-val">1</div><div class="hc-sub">Avenant n°2 — urgent</div></div>
+        <div class="hc"><div class="hc-label">Avancement moyen</div><div class="hc-val">72%</div><div class="hc-sub">Résidence Al Fath</div></div>
+      </div>
+    </div>
+    <div class="body-inner">
+
+      <div class="sign-block">
+        <div class="sign-head">
+          <div class="sign-title"><i class="ti ti-signature" aria-hidden="true"></i>Signature requise — Avenant n°2 · Résidence Al Fath</div>
+          <span class="badge br">Urgent · expire dans 5 jours</span>
+        </div>
+        <div class="sign-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div>
+              <div class="sign-line"><span class="sign-label">Document</span><span class="sign-val">Avenant n°2</span></div>
+              <div class="sign-line"><span class="sign-label">Objet</span><span class="sign-val">Travaux supplémentaires R+3</span></div>
+              <div class="sign-line"><span class="sign-label">Montant HT</span><span class="sign-val">+180 000 MAD</span></div>
+              <div class="sign-line"><span class="sign-label">Date d'émission</span><span class="sign-val">18/05/2026</span></div>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:6px">Votre signature électronique</div>
+              <div class="sig-area" id="sig-zone" onclick="signDoc()">
+                <div id="sig-content" style="text-align:center">
+                  <i class="ti ti-signature" style="font-size:22px;color:var(--color-text-secondary);display:block;margin-bottom:4px" aria-hidden="true"></i>
+                  <div style="font-size:11px;color:var(--color-text-secondary)">Cliquez pour signer</div>
+                </div>
+              </div>
+              <div style="display:flex;gap:6px">
+                <button onclick="signDoc()" style="flex:1;background:#C85A2A;color:#fff;border:none;border-radius:var(--border-radius-md);padding:7px;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px"><i class="ti ti-check" aria-hidden="true"></i> Signer & accepter</button>
+                <button onclick="sendPrompt('Comment refuser ou négocier un avenant dans BatiPro portail client ?')" style="flex:1;background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);color:var(--color-text-primary);border-radius:var(--border-radius-md);padding:7px;font-size:11px;cursor:pointer">Refuser ↗</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="two">
+        <div class="panel">
+          <div class="ph"><div class="pt"><i class="ti ti-history" aria-hidden="true"></i>Dernières activités</div></div>
+          <div class="timeline-item">
+            <div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div>
+            <div class="tl-date">22 mai</div>
+            <div><div class="tl-title">Situation n°4 émise</div><div class="tl-sub">Montant : 345 600 MAD TTC</div></div>
+          </div>
+          <div class="timeline-item">
+            <div class="tl-left"><div class="tl-dot" style="background:#2D8A5E"></div><div class="tl-line"></div></div>
+            <div class="tl-date">20 mai</div>
+            <div><div class="tl-title">Coulage dalles R+1 terminé</div><div class="tl-sub">Avancement : 72% → objectif 80% fin mai</div></div>
+          </div>
+          <div class="timeline-item">
+            <div class="tl-left"><div class="tl-dot" style="background:#2A6CB8"></div><div class="tl-line"></div></div>
+            <div class="tl-date">18 mai</div>
+            <div><div class="tl-title">Avenant n°2 envoyé pour signature</div><div class="tl-sub">Travaux supplémentaires R+3</div></div>
+          </div>
+          <div class="timeline-item">
+            <div class="tl-left"><div class="tl-dot" style="background:#888"></div></div>
+            <div class="tl-date">15 mai</div>
+            <div><div class="tl-title">Situation n°3 payée — merci</div><div class="tl-sub">Encaissement confirmé : 403 200 MAD</div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt"><i class="ti ti-receipt" aria-hidden="true"></i>Factures récentes</div><button class="lbtn" onclick="showPage('documents',document.querySelector('.pn-link:nth-child(4)'))">Toutes ↗</button></div>
+          ${[
+            {ref:'F-2026-047',label:'Situation n°4 — mai',ttc:'345 600',st:'En attente',sc:'by'},
+            {ref:'F-2026-031',label:'Situation n°3 — avr',ttc:'403 200',st:'Payée',sc:'bg'},
+            {ref:'F-2026-018',label:'Situation n°2 — mar',ttc:'633 600',st:'Payée',sc:'bg'},
+            {ref:'F-2026-005',label:'Situation n°1 — fév',ttc:'518 400',st:'En retard',sc:'br'},
+          ].map(f=>`<div class="row">
+            <div style="flex:1;min-width:0">
+              <div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">${f.ref}</div>
+              <div style="font-size:10px;color:var(--color-text-secondary)">${f.label}</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">${f.ttc} MAD</div>
+              <span class="badge ${f.sc}">${f.st}</span>
+            </div>
+            <i class="ti ti-download" style="font-size:14px;color:var(--color-text-secondary)" aria-hidden="true"></i>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CHANTIER ══════════════════════════════════════════════ -->
+  <div class="page" id="page-chantier">
+    <div class="hero" style="padding-bottom:14px">
+      <div class="hero-greeting">Suivi en temps réel</div>
+      <div class="hero-name">Résidence Al Fath — Hay Riad, Casablanca</div>
+    </div>
+    <div class="body-inner">
+      <div class="chantier-card">
+        <div class="ch-head">
+          <div>
+            <div class="ch-title">Avancement global du chantier</div>
+            <div class="ch-sub">Chef de chantier : M. Bensouda · 12 ouvriers</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:26px;font-weight:500;color:#C85A2A">72%</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.5)">Objectif : 30 juin 2026</div>
+          </div>
+        </div>
+        <div class="ch-body">
+          <div style="height:10px;background:var(--color-background-secondary);border-radius:5px;overflow:hidden;margin-bottom:12px">
+            <div style="width:72%;height:100%;background:#C85A2A;border-radius:5px"></div>
+          </div>
+          <div class="ch-stat-grid">
+            <div class="ch-stat"><div class="ch-stat-l">Budget contractuel</div><div class="ch-stat-v">2 400 K <span style="font-size:11px;color:var(--color-text-secondary)">MAD</span></div></div>
+            <div class="ch-stat"><div class="ch-stat-l">Déjà facturé</div><div class="ch-stat-v">1 584 K <span style="font-size:11px;color:var(--color-text-secondary)">MAD</span></div></div>
+            <div class="ch-stat"><div class="ch-stat-l">Reste à facturer</div><div class="ch-stat-v">816 K <span style="font-size:11px;color:var(--color-text-secondary)">MAD</span></div></div>
+          </div>
+          <div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Jalons</div>
+          <div class="milestone-row">
+            <div class="ms"><div class="ms-dot done"></div><div class="ms-label">Installation</div></div>
+            <div class="ms"><div class="ms-dot done"></div><div class="ms-label">Terrassement</div></div>
+            <div class="ms"><div class="ms-dot done"></div><div class="ms-label">Fondations</div></div>
+            <div class="ms"><div class="ms-dot done"></div><div class="ms-label">Structure</div></div>
+            <div class="ms"><div class="ms-dot curr"></div><div class="ms-label">Maçonnerie</div></div>
+            <div class="ms"><div class="ms-dot"></div><div class="ms-label">Second œuvre</div></div>
+            <div class="ms"><div class="ms-dot"></div><div class="ms-label">Finitions</div></div>
+            <div class="ms"><div class="ms-dot"></div><div class="ms-label">Réception</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="two">
+        <div class="panel">
+          <div class="ph"><div class="pt"><i class="ti ti-list-check" aria-hidden="true"></i>Avancement par poste</div></div>
+          ${[
+            ['Installation de chantier',100,'#2D8A5E'],
+            ['Terrassement & fouilles',100,'#2D8A5E'],
+            ['Fondations & béton armé',85,'#2D8A5E'],
+            ['Maçonnerie élévation',60,'#C85A2A'],
+            ['Planchers & dalles',40,'#C85A2A'],
+            ['Enduits & revêtements',10,'#888'],
+            ['Menuiseries',0,'#888'],
+          ].map(p=>`<div class="row" style="cursor:default;gap:10px">
+            <span style="font-size:11px;color:var(--color-text-primary);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p[0]}</span>
+            <div class="prog-wrap" style="width:80px"><div class="prog-fill" style="width:${p[1]}%;background:${p[2]}"></div></div>
+            <span style="font-size:11px;font-weight:500;color:${p[2]};min-width:28px;text-align:right">${p[1]}%</span>
+          </div>`).join('')}
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt"><i class="ti ti-camera" aria-hidden="true"></i>Photos du chantier — semaine 20</div><button class="lbtn">Toutes (47) ↗</button></div>
+          <div style="padding:10px 14px">
+            <div class="photo-grid">
+              ${[
+                {icon:'ti-building',label:'Façade nord'},
+                {icon:'ti-stairs-up',label:'Escalier R+1'},
+                {icon:'ti-home-2',label:'Vue ensemble'},
+                {icon:'ti-tool',label:'Coffrage'},
+                {icon:'ti-camera',label:'+43 photos'},
+                {icon:'ti-video',label:'Vidéo drone'},
+                {icon:'ti-photo',label:'RDC terminé'},
+                {icon:'ti-photo',label:'Ferraillage'},
+              ].map(p=>`<div class="photo-slot has-img" onclick="sendPrompt('Montre-moi la galerie photos complète du chantier')">
+                <div style="text-align:center"><i class="ti ${p.icon}" aria-hidden="true"></i><div style="font-size:9px;color:var(--color-text-secondary);margin-top:3px">${p.label}</div></div>
+              </div>`).join('')}
+            </div>
+          </div>
+          <div style="padding:10px 14px;border-top:0.5px solid var(--color-border-tertiary)">
+            <div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:6px">Journal de chantier récent</div>
+            ${[
+              {date:'22/05',txt:'Coulage plancher R+2 — résultats conformes aux plans'},
+              {date:'20/05',txt:'Livraison fer HA12 — 8 tonnes réceptionnées'},
+              {date:'18/05',txt:'Visite architecte — aucune réserve émise'},
+            ].map(j=>`<div style="display:flex;gap:8px;padding:4px 0;font-size:11px;border-bottom:0.5px solid var(--color-border-tertiary)">
+              <span style="color:var(--color-text-secondary);min-width:38px">${j.date}</span>
+              <span style="color:var(--color-text-primary)">${j.txt}</span>
+            </div>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DOCUMENTS ══════════════════════════════════════════════ -->
+  <div class="page" id="page-documents">
+    <div style="background:#0C2340;padding:14px 18px">
+      <div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:3px">Centre de documents</div>
+      <div style="font-size:16px;font-weight:500;color:#fff">Tous vos documents</div>
+    </div>
+    <div class="body-inner">
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        ${['Tous','Devis','Contrats','Situations','Factures','Avenants'].map((f,i)=>`<div onclick="filterDocs('${f}',this)" style="font-size:11px;padding:4px 10px;border-radius:10px;border:0.5px solid var(--color-border-tertiary);cursor:pointer;background:${i===0?'#1C1C1C':'var(--color-background-primary)'};color:${i===0?'#fff':'var(--color-text-secondary)'};">${f}</div>`).join('')}
+      </div>
+      <div class="panel">
+        <div class="ph"><div class="pt"><i class="ti ti-file-stack" aria-hidden="true"></i>Documents (<span id="doc-count">8</span>)</div><button class="lbtn" onclick="sendPrompt('Comment télécharger tous les documents en une seule archive ZIP ?')">Tout télécharger ↗</button></div>
+        <div id="doc-list">
+          ${[
+            {icon:'ti-file-text',bg:'#FAECE7',ic:'#C85A2A',name:'Avenant n°2 — Travaux R+3',type:'Avenant',date:'18/05/2026',statut:'À signer',sc:'br',action:'Signer'},
+            {icon:'ti-report-money',bg:'#E8F4FF',ic:'#1A5C9A',name:'Situation de travaux n°4 — mai 2026',type:'Situation',date:'22/05/2026',statut:'En attente paiement',sc:'by',action:'PDF'},
+            {icon:'ti-receipt',bg:'#FAEEDA',ic:'#BA7517',name:'Facture F-2026-005 — Situation n°1',type:'Facture',date:'15/02/2026',statut:'Retard paiement',sc:'br',action:'PDF'},
+            {icon:'ti-report-money',bg:'#E8F4FF',ic:'#1A5C9A',name:'Situation de travaux n°3 — avril 2026',type:'Situation',date:'01/05/2026',statut:'Payée',sc:'bg',action:'PDF'},
+            {icon:'ti-receipt',bg:'#E8F6EE',ic:'#2D8A5E',name:'Facture F-2026-031 — Situation n°3',type:'Facture',date:'01/05/2026',statut:'Payée',sc:'bg',action:'PDF'},
+            {icon:'ti-receipt',bg:'#E8F6EE',ic:'#2D8A5E',name:'Facture F-2026-018 — Situation n°2',type:'Facture',date:'01/04/2026',statut:'Payée',sc:'bg',action:'PDF'},
+            {icon:'ti-file-contract',bg:'#F1EFE8',ic:'#5F5E5A',name:'Contrat de marché — Résidence Al Fath',type:'Contrat',date:'10/01/2026',statut:'Signé',sc:'bgr',action:'PDF'},
+            {icon:'ti-file-text',bg:'#FAECE7',ic:'#C85A2A',name:'Devis D-2025-089 — Résidence Al Fath',type:'Devis',date:'20/12/2025',statut:'Accepté',sc:'bg',action:'PDF'},
+          ].map(d=>`<div class="doc-item">
+            <div class="doc-icon" style="background:${d.bg}"><i class="ti ${d.icon}" style="color:${d.ic}" aria-hidden="true"></i></div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${d.name}</div>
+              <div style="font-size:10px;color:var(--color-text-secondary)">${d.type} · ${d.date}</div>
+            </div>
+            <span class="badge ${d.sc}">${d.statut}</span>
+            <button onclick="${d.action==='Signer'?"signDoc()":`sendPrompt('Télécharger ${d.name}')`}" style="font-size:11px;padding:4px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:${d.action==='Signer'?'#C85A2A':'var(--color-background-secondary)'};color:${d.action==='Signer'?'#fff':'var(--color-text-primary)'};cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap"><i class="ti ti-${d.action==='Signer'?'signature':'download'}" style="font-size:12px" aria-hidden="true"></i>${d.action}</button>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MESSAGERIE ══════════════════════════════════════════════ -->
+  <div class="page" id="page-messagerie">
+    <div style="background:#0C2340;padding:14px 18px">
+      <div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:3px">Messagerie sécurisée</div>
+      <div style="font-size:16px;font-weight:500;color:#fff">Conversation avec BatiPro</div>
+    </div>
+    <div class="body-inner">
+      <div class="panel">
+        <div class="ph"><div class="pt"><i class="ti ti-message-dots" aria-hidden="true"></i>Résidence Al Fath — fil de discussion</div><span class="badge bg">En ligne</span></div>
+        <div style="padding:6px 0">
+          <div class="msg-item">
+            <div class="msg-av" style="background:#C85A2A">BP</div>
+            <div>
+              <div class="msg-bubble">
+                <div class="msg-name">BatiPro · M. Bensouda</div>
+                <div class="msg-text">Bonjour, je vous informe que le coulage des dalles R+1 s'est bien déroulé ce matin. Avancement confirmé à 72%. La situation n°4 vous a été envoyée.</div>
+                <div class="msg-time">22 mai · 09h14</div>
+              </div>
+            </div>
+          </div>
+          <div class="msg-item" style="flex-direction:row-reverse">
+            <div class="msg-av" style="background:#2A6CB8">IM</div>
+            <div>
+              <div class="msg-bubble mine">
+                <div class="msg-name" style="text-align:right">Vous · Immocap SA</div>
+                <div class="msg-text">Reçu, merci. Concernant l'avenant n°2, pouvez-vous me détailler les travaux supplémentaires du R+3 ?</div>
+                <div class="msg-time">22 mai · 10h32</div>
+              </div>
+            </div>
+          </div>
+          <div class="msg-item">
+            <div class="msg-av" style="background:#C85A2A">BP</div>
+            <div>
+              <div class="msg-bubble">
+                <div class="msg-name">BatiPro · K. Alaoui (Direction)</div>
+                <div class="msg-text">Bien sûr. L'avenant n°2 couvre : extension de la terrasse R+3 (+45m²), ajout d'une salle technique et renforcement des acrotères. Le détail complet figure dans le document joint à signer.</div>
+                <div class="msg-time">22 mai · 11h05</div>
+              </div>
+            </div>
+          </div>
+          <div class="msg-item">
+            <div class="msg-av" style="background:#C85A2A">BP</div>
+            <div>
+              <div class="msg-bubble">
+                <div class="msg-name">BatiPro · Système</div>
+                <div class="msg-text" style="color:#1A5C9A">📎 Avenant n°2 — document joint (PDF, 2,1 Mo)</div>
+                <div class="msg-time">22 mai · 11h06</div>
+              </div>
+            </div>
+          </div>
+          <div class="msg-item" style="flex-direction:row-reverse">
+            <div class="msg-av" style="background:#2A6CB8">IM</div>
+            <div>
+              <div class="msg-bubble mine">
+                <div class="msg-name" style="text-align:right">Vous · Immocap SA</div>
+                <div class="msg-text">Merci pour les précisions. Je vais examiner le document et revenir vers vous d'ici demain.</div>
+                <div class="msg-time">22 mai · 14h22</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="msg-input-row">
+          <input class="msg-input" type="text" id="msg-input" placeholder="Écrire un message à BatiPro…" onkeydown="if(event.key==='Enter')sendMsg()">
+          <button class="send-btn" onclick="sendMsg()"><i class="ti ti-send" aria-hidden="true"></i> Envoyer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showPage(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.pn-link').forEach(l => l.classList.remove('on'));
+  document.getElementById('page-' + id).classList.add('on');
+  if (el) el.classList.add('on');
+}
+
+function signDoc() {
+  const zone = document.getElementById('sig-zone');
+  const content = document.getElementById('sig-content');
+  if (!zone) return;
+  zone.classList.add('signed');
+  content.innerHTML = `<div style="text-align:center">
+    <i class="ti ti-circle-check" style="font-size:22px;color:#2D8A5E;display:block;margin-bottom:4px" aria-hidden="true"></i>
+    <div style="font-size:11px;color:#1A6B3C;font-weight:500">Signé électroniquement</div>
+    <div style="font-size:10px;color:#2D8A5E;margin-top:2px">Immocap SA · ${new Date().toLocaleDateString('fr-FR')} · ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</div>
+  </div>`;
+  setTimeout(() => {
+    const urgent = document.querySelector('.sign-block .sign-head .badge');
+    if (urgent) { urgent.textContent = 'Signé ✓'; urgent.className = 'badge bg'; }
+  }, 600);
+}
+
+function sendMsg() {
+  const inp = document.getElementById('msg-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  const conv = document.querySelector('#page-messagerie .panel > div:not(.ph):not(.msg-input-row)');
+  const div = document.createElement('div');
+  div.className = 'msg-item';
+  div.style.flexDirection = 'row-reverse';
+  div.innerHTML = `<div class="msg-av" style="background:#2A6CB8">IM</div>
+    <div><div class="msg-bubble mine">
+      <div class="msg-name" style="text-align:right">Vous · Immocap SA</div>
+      <div class="msg-text">${text}</div>
+      <div class="msg-time">À l'instant</div>
+    </div></div>`;
+  conv.appendChild(div);
+  inp.value = '';
+  setTimeout(() => {
+    const rep = document.createElement('div');
+    rep.className = 'msg-item';
+    rep.innerHTML = `<div class="msg-av" style="background:#C85A2A">BP</div>
+      <div><div class="msg-bubble">
+        <div class="msg-name">BatiPro · Système</div>
+        <div class="msg-text">Message reçu. Notre équipe vous répondra dans les meilleurs délais.</div>
+        <div class="msg-time">À l'instant</div>
+      </div></div>`;
+    conv.appendChild(rep);
+  }, 1200);
+}
+
+function filterDocs(type, el) {
+  document.querySelectorAll('[onclick^="filterDocs"]').forEach(e => {
+    e.style.background = 'var(--color-background-primary)';
+    e.style.color = 'var(--color-text-secondary)';
+  });
+  el.style.background = '#1C1C1C'; el.style.color = '#fff';
+  const items = document.querySelectorAll('.doc-item');
+  let count = 0;
+  items.forEach(item => {
+    const typeSpan = item.querySelector('.badge');
+    const nameEl = item.querySelector('[style*="font-weight:500"]');
+    const show = type === 'Tous' || (item.textContent.includes(type));
+    item.style.display = show ? '' : 'none';
+    if (show) count++;
+  });
+  const dc = document.getElementById('doc-count');
+  if (dc) dc.textContent = count;
+}
+</script>

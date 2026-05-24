@@ -13,7 +13,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
           {/* Premium custom loading animation */}
           <div className="relative w-16 h-16">
             <div className="absolute inset-0 rounded-full border-4 border-slate-100"></div>
-            <div className="absolute inset-0 rounded-full border-4 border-blue-600 border-t-transparent animate-spin"></div>
+            <div className="absolute inset-0 rounded-full border-4 border-[#C85A2A] border-t-transparent animate-spin"></div>
           </div>
           <p className="text-slate-500 font-medium animate-pulse">Chargement de votre espace Atlas Works...</p>
         </div>

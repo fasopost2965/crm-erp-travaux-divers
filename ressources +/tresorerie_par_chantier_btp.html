@@ -1,0 +1,376 @@
+
+<h2 class="sr-only">Mouvements de trésorerie filtrés par chantier — liste interactive avec KPIs, graphique et détail des flux encaissements et décaissements par projet</h2>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:13px;color:var(--color-text-primary)}
+
+.topbar{background:#1C1C1C;border-radius:var(--border-radius-lg) var(--border-radius-lg) 0 0;padding:11px 18px;display:flex;align-items:center;gap:10px;margin-bottom:0}
+.tb-title{font-size:14px;font-weight:500;color:#fff;flex:1}
+.tb-meta{font-size:11px;color:rgba(255,255,255,.4)}
+.btn-ghost{background:rgba(255,255,255,.09);color:rgba(255,255,255,.7);border:none;padding:5px 11px;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px}
+
+.outer{border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);overflow:hidden}
+
+.filters-bar{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:10px 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.filter-label{font-size:11px;color:var(--color-text-secondary);white-space:nowrap}
+.chip-row{display:flex;gap:5px;flex-wrap:wrap;flex:1}
+.chip{font-size:11px;padding:4px 10px;border-radius:10px;border:0.5px solid var(--color-border-tertiary);cursor:pointer;color:var(--color-text-secondary);background:var(--color-background-primary);white-space:nowrap;transition:all .12s;display:flex;align-items:center;gap:5px}
+.chip:hover{background:var(--color-background-secondary)}
+.chip.on{color:#fff;border-color:transparent}
+.chip-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+.type-filters{display:flex;gap:5px}
+.type-chip{font-size:11px;padding:4px 9px;border-radius:6px;border:0.5px solid var(--color-border-tertiary);cursor:pointer;color:var(--color-text-secondary);background:var(--color-background-primary);transition:all .12s}
+.type-chip.on-in{background:#E8F6EE;color:#1A6B3C;border-color:#9FE1CB}
+.type-chip.on-out{background:#FBEAEA;color:#A32D2D;border-color:#F7C1C1}
+.type-chip.on-all{background:#1C1C1C;color:#fff;border-color:#1C1C1C}
+
+.search-box{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:5px 10px 5px 28px;font-size:12px;background:var(--color-background-secondary);color:var(--color-text-primary);outline:none;width:160px;position:relative}
+.search-wrap{position:relative;display:flex;align-items:center}
+.search-icon{position:absolute;left:9px;color:var(--color-text-secondary);font-size:13px;pointer-events:none;z-index:1}
+
+.body-wrap{background:var(--color-background-tertiary);padding:14px;display:flex;flex-direction:column;gap:12px}
+
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.kpi{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:11px 13px}
+.kpi-g{border-top:2px solid #2D8A5E}.kpi-r{border-top:2px solid #C84242}.kpi-t{border-top:2px solid #C85A2A}.kpi-b{border-top:2px solid #2A6CB8}
+.kl{font-size:11px;color:var(--color-text-secondary);margin-bottom:4px}
+.kv{font-size:18px;font-weight:500;color:var(--color-text-primary);line-height:1}
+.ks{font-size:10px;color:var(--color-text-secondary);margin-top:2px}
+
+.main-grid{display:grid;grid-template-columns:220px 1fr;gap:12px}
+
+.chantier-list{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;align-self:start}
+.ch-list-head{padding:9px 12px;border-bottom:0.5px solid var(--color-border-tertiary);font-size:12px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:6px}
+.ch-list-head i{color:#C85A2A;font-size:14px}
+
+.ch-item{padding:9px 12px;border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer;transition:background .1s;display:flex;align-items:center;gap:8px}
+.ch-item:hover{background:var(--color-background-secondary)}
+.ch-item.on{background:#FDF0EA;border-left:3px solid #C85A2A}
+.ch-item:last-child{border-bottom:none}
+.ch-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.ch-info{flex:1;min-width:0}
+.ch-name{font-size:12px;font-weight:500;color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ch-loc{font-size:10px;color:var(--color-text-secondary)}
+.ch-badge{font-size:10px;padding:2px 6px;border-radius:6px;white-space:nowrap;align-self:flex-start}
+
+.right-col{display:flex;flex-direction:column;gap:10px}
+
+.panel{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.ph{padding:10px 14px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:space-between}
+.pt{font-size:13px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:6px}
+.pt i{color:#C85A2A}
+.sort-btn{font-size:11px;color:var(--color-text-secondary);background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:3px}
+
+.mvt-row{display:grid;grid-template-columns:70px 1fr 90px 80px 70px;align-items:center;padding:9px 14px;border-bottom:0.5px solid var(--color-border-tertiary);transition:background .1s;cursor:default;gap:8px}
+.mvt-row:hover{background:var(--color-background-secondary)}
+.mvt-row:last-child{border-bottom:none}
+.mvt-row.total-row{background:var(--color-background-secondary);font-weight:500}
+
+.mvt-date{font-size:11px;color:var(--color-text-secondary)}
+.mvt-desc{min-width:0}
+.mvt-title{font-size:12px;font-weight:500;color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mvt-sub{font-size:10px;color:var(--color-text-secondary)}
+.mvt-cat{font-size:10px;padding:2px 6px;border-radius:6px;white-space:nowrap}
+.mvt-amount{font-size:12px;font-weight:500;text-align:right;white-space:nowrap}
+.in-amt{color:#1A6B3C}.out-amt{color:#A32D2D}
+.mvt-status{text-align:center}
+.st-badge{font-size:10px;padding:2px 7px;border-radius:8px;white-space:nowrap}
+
+.header-row{display:grid;grid-template-columns:70px 1fr 90px 80px 70px;padding:6px 14px;gap:8px;background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.col-head{font-size:11px;font-weight:500;color:var(--color-text-secondary)}
+.col-head.r{text-align:right}
+.col-head.c{text-align:center}
+
+.solde-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-top:0.5px solid var(--color-border-tertiary)}
+.solde-label{font-size:11px;color:var(--color-text-secondary);min-width:80px}
+.solde-track{flex:1;height:8px;background:var(--color-background-secondary);border-radius:4px;overflow:hidden}
+.solde-fill-in{height:100%;border-radius:4px;background:#2D8A5E}
+.solde-fill-out{height:100%;border-radius:4px;background:#C84242;float:right}
+.solde-val{font-size:11px;font-weight:500;min-width:70px;text-align:right}
+
+.empty{padding:28px;text-align:center;color:var(--color-text-secondary);font-size:12px}
+</style>
+
+<div class="outer">
+  <div class="topbar">
+    <i class="ti ti-arrows-exchange" style="color:#C85A2A;font-size:16px" aria-hidden="true"></i>
+    <span class="tb-title">Mouvements de trésorerie par chantier</span>
+    <span class="tb-meta" id="count-label">Tous chantiers · 24 mouvements</span>
+    <button class="btn-ghost"><i class="ti ti-download" aria-hidden="true"></i> Export Excel</button>
+  </div>
+
+  <div class="filters-bar">
+    <span class="filter-label">Type :</span>
+    <div class="type-filters">
+      <div class="type-chip on-all" onclick="setType('all',this)" id="tf-all">Tous</div>
+      <div class="type-chip" onclick="setType('in',this)" id="tf-in"><i class="ti ti-arrow-down" style="font-size:11px" aria-hidden="true"></i> Encaissements</div>
+      <div class="type-chip" onclick="setType('out',this)" id="tf-out"><i class="ti ti-arrow-up" style="font-size:11px" aria-hidden="true"></i> Décaissements</div>
+    </div>
+    <div style="width:0.5px;height:20px;background:var(--color-border-tertiary)"></div>
+    <span class="filter-label">Catégorie :</span>
+    <div class="chip-row" id="cat-chips"></div>
+    <div class="search-wrap">
+      <i class="ti ti-search search-icon" aria-hidden="true"></i>
+      <input type="text" class="search-box" placeholder="Rechercher…" oninput="applyFilters()" id="search-input" aria-label="Rechercher un mouvement">
+    </div>
+  </div>
+
+  <div class="body-wrap">
+    <div class="kpi-row" id="kpi-row"></div>
+
+    <div class="main-grid">
+      <div class="chantier-list">
+        <div class="ch-list-head"><i class="ti ti-helmet" aria-hidden="true"></i>Chantiers</div>
+        <div id="ch-sidebar"></div>
+      </div>
+
+      <div class="right-col">
+        <div class="panel">
+          <div class="ph">
+            <div class="pt"><i class="ti ti-list" aria-hidden="true"></i><span id="panel-title">Tous les mouvements</span></div>
+            <button class="sort-btn" onclick="toggleSort()"><i class="ti ti-arrows-sort" aria-hidden="true"></i> <span id="sort-label">Date ↓</span></button>
+          </div>
+          <div class="header-row">
+            <div class="col-head">Date</div>
+            <div class="col-head">Description</div>
+            <div class="col-head">Catégorie</div>
+            <div class="col-head r">Montant</div>
+            <div class="col-head c">Statut</div>
+          </div>
+          <div id="mvt-list"></div>
+        </div>
+
+        <div class="panel" id="solde-panel">
+          <div class="ph"><div class="pt"><i class="ti ti-scale" aria-hidden="true"></i>Balance par chantier</div></div>
+          <div id="balance-bars"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const CHANTIERS = [
+  {id:'all', label:'Tous les chantiers', color:'#1C1C1C', dot:'#888'},
+  {id:'alf', label:'Al Fath — Hay Riad',   color:'#C85A2A', dot:'#C85A2A'},
+  {id:'ain', label:'Entrepôt Aïn Sebaâ',    color:'#2A6CB8', dot:'#2A6CB8'},
+  {id:'villa', label:'Villa Aïn Diab',       color:'#2D8A5E', dot:'#2D8A5E'},
+  {id:'mogador', label:'Hôtel Mogador',       color:'#7F4ABD', dot:'#7F4ABD'},
+  {id:'ecole', label:'École Maarif',          color:'#BA7517', dot:'#BA7517'},
+  {id:'riad', label:'Immeuble Sidi Maarouf',  color:'#993556', dot:'#993556'},
+];
+
+const CATS = ['Encaissement client','Achat matériaux','Paie ouvriers','Location engins','CNSS / DGI','Sous-traitant','Divers'];
+const CAT_COLORS = {
+  'Encaissement client': {bg:'#E8F6EE', color:'#1A6B3C'},
+  'Achat matériaux':     {bg:'#FBEAEA', color:'#A32D2D'},
+  'Paie ouvriers':       {bg:'#FBEAEA', color:'#A32D2D'},
+  'Location engins':     {bg:'#FFF3E0', color:'#8A5000'},
+  'CNSS / DGI':          {bg:'#EDE8FD', color:'#3C3489'},
+  'Sous-traitant':       {bg:'#E8F4FF', color:'#1A5C9A'},
+  'Divers':              {bg:'#F1EFE8', color:'#5F5E5A'},
+};
+const ST = {
+  'confirmé':  {bg:'#E8F6EE', color:'#1A6B3C'},
+  'en attente':{bg:'#FFF3E0', color:'#8A5000'},
+  'rejeté':    {bg:'#FBEAEA', color:'#A32D2D'},
+};
+
+const MVT = [
+  // Al Fath
+  {id:1,  date:'22/05',chantier:'alf',type:'in', cat:'Encaissement client',  desc:'Situation n°4 — Immocap SA',          ref:'F-2026-047', amount:345600, status:'en attente'},
+  {id:2,  date:'15/05',chantier:'alf',type:'in', cat:'Encaissement client',  desc:'Situation n°3 — Immocap SA',          ref:'F-2026-031', amount:403200, status:'confirmé'},
+  {id:3,  date:'18/05',chantier:'alf',type:'out',cat:'Achat matériaux',       desc:'Fer HA12 — Méta-Acier',              ref:'BC-041',     amount:94200,  status:'confirmé'},
+  {id:4,  date:'20/05',chantier:'alf',type:'out',cat:'Paie ouvriers',         desc:'Paie équipe Al Fath — 12 ouvriers',  ref:'PAI-05-01',  amount:72400,  status:'confirmé'},
+  {id:5,  date:'10/05',chantier:'alf',type:'out',cat:'Location engins',       desc:'Grue mobile — Matéraloc',            ref:'LOC-312',    amount:18000,  status:'confirmé'},
+  // Aïn Sebaâ
+  {id:6,  date:'14/05',chantier:'ain',type:'in', cat:'Encaissement client',  desc:'Acompte contrat — LogiMaroc',         ref:'F-2026-038', amount:180000, status:'confirmé'},
+  {id:7,  date:'21/05',chantier:'ain',type:'out',cat:'Achat matériaux',       desc:'Poutrelles métalliques — ArcelorMit',ref:'BC-038',     amount:148000, status:'confirmé'},
+  {id:8,  date:'20/05',chantier:'ain',type:'out',cat:'Paie ouvriers',         desc:'Paie équipe Aïn Sebaâ — 8 ouvriers',ref:'PAI-05-02',  amount:38400,  status:'confirmé'},
+  {id:9,  date:'08/05',chantier:'ain',type:'out',cat:'Sous-traitant',         desc:'Étanchéité — Hydromaroc SARL',        ref:'ST-2026-12', amount:55000,  status:'en attente'},
+  // Villa Aïn Diab
+  {id:10, date:'15/05',chantier:'villa',type:'in', cat:'Encaissement client', desc:'Situation finale — M. Idrissi',       ref:'F-2026-018', amount:633600, status:'confirmé'},
+  {id:11, date:'23/05',chantier:'villa',type:'out',cat:'Achat matériaux',      desc:'Carrelage & faïence — Colorker',     ref:'BC-044',     amount:38400,  status:'confirmé'},
+  {id:12, date:'20/05',chantier:'villa',type:'out',cat:'Paie ouvriers',        desc:'Paie équipe villa — 5 ouvriers',     ref:'PAI-05-03',  amount:24000,  status:'confirmé'},
+  {id:13, date:'16/05',chantier:'villa',type:'out',cat:'Sous-traitant',        desc:'Peinture — AtlasColor',              ref:'ST-2026-14', amount:22000,  status:'confirmé'},
+  // Mogador
+  {id:14, date:'05/05',chantier:'mogador',type:'in', cat:'Encaissement client',desc:'Avance démarrage — Atlas Hotels',    ref:'F-2026-021', amount:250000, status:'confirmé'},
+  {id:15, date:'19/05',chantier:'mogador',type:'out',cat:'Achat matériaux',    desc:'Enduit façade — StuccoMaroc',        ref:'BC-039',     amount:62000,  status:'confirmé'},
+  {id:16, date:'20/05',chantier:'mogador',type:'out',cat:'Paie ouvriers',      desc:'Paie équipe Mogador — 9 ouvriers',   ref:'PAI-05-04',  amount:43200,  status:'confirmé'},
+  {id:17, date:'12/05',chantier:'mogador',type:'out',cat:'Location engins',    desc:'Nacelle — Lift Maghreb',             ref:'LOC-318',    amount:14400,  status:'confirmé'},
+  // École
+  {id:18, date:'02/05',chantier:'ecole',type:'in', cat:'Encaissement client', desc:'Situation n°2 — Groupe Éducatif AL', ref:'F-2026-022', amount:185000, status:'confirmé'},
+  {id:19, date:'17/05',chantier:'ecole',type:'out',cat:'Achat matériaux',      desc:'Câblage électrique — Nexans Maroc',  ref:'BC-040',     amount:47000,  status:'confirmé'},
+  {id:20, date:'20/05',chantier:'ecole',type:'out',cat:'Paie ouvriers',        desc:'Paie équipe école — 6 ouvriers',     ref:'PAI-05-05',  amount:28800,  status:'confirmé'},
+  // Sidi Maarouf
+  {id:21, date:'01/05',chantier:'riad',type:'in', cat:'Encaissement client',  desc:'Avance contrat — Promoteur STAR',     ref:'F-2026-010', amount:420000, status:'confirmé'},
+  {id:22, date:'22/05',chantier:'riad',type:'out',cat:'Achat matériaux',       desc:'Ciment & granulats — CBI Maroc',     ref:'BC-045',     amount:98000,  status:'confirmé'},
+  {id:23, date:'20/05',chantier:'riad',type:'out',cat:'Paie ouvriers',         desc:'Paie équipe Sidi Maarouf — 18 ouv.', ref:'PAI-05-06',  amount:86400,  status:'confirmé'},
+  {id:24, date:'10/05',chantier:'riad',type:'out',cat:'CNSS / DGI',            desc:'Déclaration CNSS — avril 2026',       ref:'CNSS-04',    amount:62800,  status:'confirmé'},
+];
+
+let activeChantier = 'all';
+let activeType = 'all';
+let activeCats = new Set();
+let sortAsc = false;
+
+function fmt(n){return Math.abs(Math.round(n)).toLocaleString('fr-MA')}
+
+function buildCatChips(){
+  const el = document.getElementById('cat-chips');
+  el.innerHTML = CATS.map(c=>{
+    const cc = CAT_COLORS[c];
+    return `<div class="chip" onclick="toggleCat('${c}',this)" data-cat="${c}">
+      <span class="chip-dot" style="background:${cc.color}"></span>${c}
+    </div>`;
+  }).join('');
+}
+
+function toggleCat(cat, el){
+  if(activeCats.has(cat)){activeCats.delete(cat);el.classList.remove('on');el.style.background='';el.style.color='';}
+  else{activeCats.add(cat);el.classList.add('on');const cc=CAT_COLORS[cat];el.style.background=cc.bg;el.style.color=cc.color;}
+  applyFilters();
+}
+
+function setChantier(id){
+  activeChantier=id;
+  document.querySelectorAll('.ch-item').forEach(el=>el.classList.remove('on'));
+  document.getElementById('ch-'+id)?.classList.add('on');
+  applyFilters();
+}
+
+function setType(t, el){
+  activeType=t;
+  document.querySelectorAll('.type-chip').forEach(x=>{x.className='type-chip';});
+  el.className='type-chip on-'+t;
+  applyFilters();
+}
+
+function toggleSort(){sortAsc=!sortAsc;document.getElementById('sort-label').textContent='Date '+(sortAsc?'↑':'↓');applyFilters();}
+
+function filtered(){
+  const q = document.getElementById('search-input').value.toLowerCase();
+  return MVT.filter(m=>{
+    if(activeChantier!=='all' && m.chantier!==activeChantier) return false;
+    if(activeType!=='all' && m.type!==activeType) return false;
+    if(activeCats.size>0 && !activeCats.has(m.cat)) return false;
+    if(q && !m.desc.toLowerCase().includes(q) && !m.cat.toLowerCase().includes(q) && !m.ref.toLowerCase().includes(q)) return false;
+    return true;
+  }).sort((a,b)=>{
+    const da=a.date.split('/').reverse().join('');
+    const db=b.date.split('/').reverse().join('');
+    return sortAsc ? da.localeCompare(db) : db.localeCompare(da);
+  });
+}
+
+function applyFilters(){
+  const data = filtered();
+  const ch = CHANTIERS.find(c=>c.id===activeChantier);
+  const totalIn = data.filter(m=>m.type==='in').reduce((s,m)=>s+m.amount,0);
+  const totalOut = data.filter(m=>m.type==='out').reduce((s,m)=>s+m.amount,0);
+  const solde = totalIn - totalOut;
+
+  document.getElementById('count-label').textContent =
+    (ch?ch.label:'Tous chantiers') + ' · ' + data.length + ' mouvement' + (data.length>1?'s':'');
+  document.getElementById('panel-title').textContent =
+    ch && ch.id!=='all' ? ch.label : 'Tous les mouvements';
+
+  document.getElementById('kpi-row').innerHTML = `
+    <div class="kpi kpi-g"><div class="kl">Encaissements</div><div class="kv">${fmt(totalIn)}</div><div class="ks">MAD TTC</div></div>
+    <div class="kpi kpi-r"><div class="kl">Décaissements</div><div class="kv">${fmt(totalOut)}</div><div class="ks">MAD</div></div>
+    <div class="kpi ${solde>=0?'kpi-b':'kpi-r'}"><div class="kl">Solde net</div><div class="kv" style="color:${solde>=0?'#1A6B3C':'#A32D2D'}">${solde>=0?'+':''}${fmt(solde)}</div><div class="ks">MAD</div></div>
+    <div class="kpi kpi-t"><div class="kl">Mouvements</div><div class="kv">${data.length}</div><div class="ks">${data.filter(m=>m.type==='in').length} entrées · ${data.filter(m=>m.type==='out').length} sorties</div></div>`;
+
+  document.getElementById('mvt-list').innerHTML = data.length === 0
+    ? `<div class="empty"><i class="ti ti-inbox" style="font-size:24px;display:block;margin-bottom:6px" aria-hidden="true"></i>Aucun mouvement pour cette sélection</div>`
+    : data.map(m=>{
+        const cc = CAT_COLORS[m.cat];
+        const sc = ST[m.status];
+        const chObj = CHANTIERS.find(c=>c.id===m.chantier);
+        return `<div class="mvt-row">
+          <div class="mvt-date">${m.date}</div>
+          <div class="mvt-desc">
+            <div class="mvt-title">${m.desc}</div>
+            <div class="mvt-sub" style="display:flex;align-items:center;gap:5px">
+              ${activeChantier==='all'?`<span style="width:6px;height:6px;border-radius:50%;background:${chObj?.dot};display:inline-block"></span><span>${chObj?.label.split('—')[0].trim()}</span> ·`:''}
+              ${m.ref}
+            </div>
+          </div>
+          <div><span class="mvt-cat" style="background:${cc.bg};color:${cc.color}">${m.cat}</span></div>
+          <div class="mvt-amount ${m.type==='in'?'in-amt':'out-amt'}">${m.type==='in'?'+':'-'} ${fmt(m.amount)}</div>
+          <div class="mvt-status"><span class="st-badge" style="background:${sc.bg};color:${sc.color}">${m.status}</span></div>
+        </div>`;
+      }).join('');
+
+  renderBalance();
+}
+
+function renderBalance(){
+  const bars = document.getElementById('balance-bars');
+  const chantierIds = activeChantier==='all'
+    ? CHANTIERS.filter(c=>c.id!=='all').map(c=>c.id)
+    : [activeChantier];
+
+  const rows = chantierIds.map(cid=>{
+    const ch = CHANTIERS.find(c=>c.id===cid);
+    const data = MVT.filter(m=>m.chantier===cid);
+    const totalIn  = data.filter(m=>m.type==='in').reduce((s,m)=>s+m.amount,0);
+    const totalOut = data.filter(m=>m.type==='out').reduce((s,m)=>s+m.amount,0);
+    return {ch, totalIn, totalOut, solde:totalIn-totalOut};
+  });
+
+  const maxVal = Math.max(...rows.map(r=>Math.max(r.totalIn,r.totalOut)), 1);
+
+  bars.innerHTML = rows.map(r=>{
+    const wIn  = Math.round(r.totalIn  / maxVal * 100);
+    const wOut = Math.round(r.totalOut / maxVal * 100);
+    return `<div style="padding:9px 14px;border-bottom:0.5px solid var(--color-border-tertiary)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="width:8px;height:8px;border-radius:50%;background:${r.ch.dot};flex-shrink:0"></span>
+        <span style="font-size:12px;font-weight:500;color:var(--color-text-primary);flex:1">${r.ch.label.split('—')[0].trim()}</span>
+        <span style="font-size:12px;font-weight:500;color:${r.solde>=0?'#1A6B3C':'#A32D2D'}">${r.solde>=0?'+':''}${fmt(r.solde)} MAD</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:3px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="font-size:10px;color:var(--color-text-secondary);width:72px;text-align:right">+${fmt(r.totalIn)}</span>
+          <div style="flex:1;height:6px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden">
+            <div style="width:${wIn}%;height:100%;background:#2D8A5E;border-radius:3px"></div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="font-size:10px;color:var(--color-text-secondary);width:72px;text-align:right">-${fmt(r.totalOut)}</span>
+          <div style="flex:1;height:6px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden">
+            <div style="width:${wOut}%;height:100%;background:#C84242;border-radius:3px"></div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function buildSidebar(){
+  document.getElementById('ch-sidebar').innerHTML = CHANTIERS.map(ch=>{
+    const data = ch.id==='all' ? MVT : MVT.filter(m=>m.chantier===ch.id);
+    const n = data.length;
+    const solde = data.filter(m=>m.type==='in').reduce((s,m)=>s+m.amount,0)
+                - data.filter(m=>m.type==='out').reduce((s,m)=>s+m.amount,0);
+    return `<div class="ch-item${ch.id==='all'?' on':''}" id="ch-${ch.id}" onclick="setChantier('${ch.id}')">
+      <div class="ch-dot" style="background:${ch.dot}"></div>
+      <div class="ch-info">
+        <div class="ch-name">${ch.label.split('—')[0].trim()}</div>
+        <div class="ch-loc" style="display:flex;justify-content:space-between">
+          <span>${n} mvts</span>
+          <span style="font-weight:500;color:${solde>=0?'#1A6B3C':'#A32D2D'}">${solde>=0?'+':''}${fmt(solde)}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+buildCatChips();
+buildSidebar();
+applyFilters();
+</script>

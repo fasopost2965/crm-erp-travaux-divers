@@ -1,0 +1,366 @@
+
+<h2 class="sr-only">Prototype CRM/ERP pour entreprise de travaux marocaine — tableau de bord principal avec navigation et modules</h2>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+
+.app { display: flex; height: 620px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-lg); overflow: hidden; background: var(--color-background-tertiary); }
+
+.sidebar { width: 200px; background: #1C1C1C; display: flex; flex-direction: column; padding: 0; flex-shrink: 0; }
+.sidebar-logo { padding: 18px 16px 14px; border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+.logo-mark { display: flex; align-items: center; gap: 8px; }
+.logo-icon { width: 28px; height: 28px; background: #C85A2A; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+.logo-text { font-size: 13px; font-weight: 500; color: #fff; line-height: 1.2; }
+.logo-sub { font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 0.05em; }
+
+.nav { flex: 1; padding: 10px 0; overflow-y: auto; }
+.nav-section { padding: 8px 12px 4px; font-size: 10px; color: rgba(255,255,255,0.28); letter-spacing: 0.08em; text-transform: uppercase; }
+.nav-item { display: flex; align-items: center; gap: 9px; padding: 8px 14px; cursor: pointer; font-size: 13px; color: rgba(255,255,255,0.55); border-radius: 0; transition: all 0.15s; margin: 1px 6px; border-radius: 6px; }
+.nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.85); }
+.nav-item.active { background: rgba(200,90,42,0.2); color: #E8784A; }
+.nav-item i { font-size: 15px; width: 16px; }
+.badge { margin-left: auto; background: #C85A2A; color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 10px; }
+
+.sidebar-user { padding: 12px 14px; border-top: 0.5px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 8px; }
+.avatar { width: 28px; height: 28px; border-radius: 50%; background: #C85A2A; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: #fff; flex-shrink: 0; }
+.user-info { flex: 1; min-width: 0; }
+.user-name { font-size: 12px; color: rgba(255,255,255,0.8); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-role { font-size: 10px; color: rgba(255,255,255,0.35); }
+
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+.topbar { background: var(--color-background-primary); border-bottom: 0.5px solid var(--color-border-tertiary); padding: 12px 20px; display: flex; align-items: center; gap: 12px; }
+.topbar-title { font-size: 15px; font-weight: 500; color: var(--color-text-primary); flex: 1; }
+.topbar-meta { font-size: 12px; color: var(--color-text-secondary); }
+.btn-primary { background: #C85A2A; color: #fff; border: none; padding: 7px 14px; border-radius: var(--border-radius-md); font-size: 12px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+.btn-sm { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); padding: 5px 10px; border-radius: var(--border-radius-md); font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+
+.content { flex: 1; overflow-y: auto; padding: 16px 20px; }
+
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+.kpi-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 14px; }
+.kpi-label { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+.kpi-value { font-size: 22px; font-weight: 500; color: var(--color-text-primary); line-height: 1; }
+.kpi-sub { font-size: 11px; color: var(--color-text-secondary); margin-top: 4px; }
+.kpi-trend { font-size: 11px; color: #2D8A5E; }
+.kpi-trend.down { color: #C84242; }
+.kpi-accent { width: 3px; height: 100%; position: absolute; left: 0; top: 0; border-radius: 4px 0 0 4px; background: #C85A2A; }
+
+.section-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 12px; margin-bottom: 12px; }
+
+.panel { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; }
+.panel-header { padding: 12px 14px; border-bottom: 0.5px solid var(--color-border-tertiary); display: flex; align-items: center; justify-content: space-between; }
+.panel-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); display: flex; align-items: center; gap: 6px; }
+.panel-title i { color: #C85A2A; }
+.view-all { font-size: 11px; color: #C85A2A; cursor: pointer; }
+
+.chantier-row { display: flex; align-items: center; padding: 10px 14px; border-bottom: 0.5px solid var(--color-border-tertiary); gap: 10px; cursor: pointer; transition: background 0.1s; }
+.chantier-row:hover { background: var(--color-background-secondary); }
+.chantier-row:last-child { border-bottom: none; }
+.ch-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.ch-dot.en-cours { background: #2D8A5E; }
+.ch-dot.retard { background: #C85A2A; }
+.ch-dot.pause { background: #888; }
+.ch-info { flex: 1; min-width: 0; }
+.ch-name { font-size: 12px; font-weight: 500; color: var(--color-text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ch-meta { font-size: 11px; color: var(--color-text-secondary); }
+.ch-pct { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); min-width: 30px; text-align: right; }
+.progress-wrap { width: 60px; height: 4px; background: var(--color-background-secondary); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 2px; background: #2D8A5E; }
+.progress-fill.retard { background: #C85A2A; }
+
+.alert-item { padding: 9px 14px; border-bottom: 0.5px solid var(--color-border-tertiary); display: flex; gap: 8px; align-items: flex-start; }
+.alert-item:last-child { border-bottom: none; }
+.alert-icon { width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 13px; }
+.alert-icon.warn { background: #FFF0E6; color: #C85A2A; }
+.alert-icon.danger { background: #FBEAEA; color: #C84242; }
+.alert-icon.info { background: #E8F4FF; color: #2A6CB8; }
+.alert-text { font-size: 12px; color: var(--color-text-primary); line-height: 1.4; }
+.alert-time { font-size: 10px; color: var(--color-text-secondary); margin-top: 2px; }
+
+.agenda-row { display: flex; padding: 8px 14px; gap: 10px; align-items: center; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.agenda-row:last-child { border-bottom: none; }
+.agenda-date { font-size: 11px; color: #C85A2A; font-weight: 500; min-width: 36px; }
+.agenda-name { font-size: 12px; color: var(--color-text-primary); }
+.agenda-tag { font-size: 10px; padding: 2px 7px; border-radius: 10px; margin-left: auto; white-space: nowrap; }
+.tag-devis { background: #E8F4FF; color: #1A5C9A; }
+.tag-livraison { background: #E8F6EE; color: #1A6B3C; }
+.tag-reunion { background: #F5EEF8; color: #6A3A8A; }
+.tag-paiement { background: #FFF3E0; color: #8A5000; }
+
+.tabs { display: flex; border-bottom: 0.5px solid var(--color-border-tertiary); padding: 0 14px; gap: 0; }
+.tab { padding: 8px 12px; font-size: 12px; color: var(--color-text-secondary); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -0.5px; transition: all 0.15s; }
+.tab.active { color: #C85A2A; border-bottom-color: #C85A2A; font-weight: 500; }
+
+.mini-stat { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.mini-stat:last-child { border-bottom: none; }
+.mini-stat-label { font-size: 12px; color: var(--color-text-secondary); }
+.mini-stat-val { font-size: 12px; font-weight: 500; color: var(--color-text-primary); }
+
+.bar-chart { padding: 10px 14px 14px; }
+.bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.bar-label { font-size: 11px; color: var(--color-text-secondary); min-width: 70px; text-align: right; }
+.bar-track { flex: 1; height: 14px; background: var(--color-background-secondary); border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 3px; }
+.bar-val { font-size: 11px; color: var(--color-text-secondary); min-width: 45px; }
+
+.nav-tab { display: flex; gap: 0; padding: 0 12px; background: var(--color-background-primary); border-bottom: 0.5px solid var(--color-border-tertiary); overflow: hidden; }
+.nav-tab-item { padding: 0 12px; height: 36px; font-size: 12px; color: var(--color-text-secondary); cursor: pointer; display: flex; align-items: center; gap: 5px; border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.15s; }
+.nav-tab-item.on { color: #C85A2A; border-bottom-color: #C85A2A; font-weight: 500; }
+.nav-tab-item:hover:not(.on) { color: var(--color-text-primary); background: var(--color-background-secondary); }
+</style>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <div class="logo-icon"><i class="ti ti-building" style="color:#fff;font-size:14px" aria-hidden="true"></i></div>
+        <div>
+          <div class="logo-text">BatiPro</div>
+          <div class="logo-sub">ERP TRAVAUX</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="nav" aria-label="Navigation principale">
+      <div class="nav-section">Général</div>
+      <div class="nav-item active" onclick="switchPage('dashboard')" tabindex="0"><i class="ti ti-layout-dashboard" aria-hidden="true"></i> Tableau de bord</div>
+      <div class="nav-item" onclick="switchPage('chantiers')" tabindex="0"><i class="ti ti-helmet" aria-hidden="true"></i> Chantiers <span class="badge">7</span></div>
+
+      <div class="nav-section">Commercial</div>
+      <div class="nav-item" onclick="switchPage('clients')" tabindex="0"><i class="ti ti-users" aria-hidden="true"></i> Clients</div>
+      <div class="nav-item" onclick="switchPage('devis')" tabindex="0"><i class="ti ti-file-text" aria-hidden="true"></i> Devis <span class="badge">3</span></div>
+      <div class="nav-item" onclick="switchPage('factures')" tabindex="0"><i class="ti ti-receipt" aria-hidden="true"></i> Facturation</div>
+
+      <div class="nav-section">Opérations</div>
+      <div class="nav-item" onclick="switchPage('rh')" tabindex="0"><i class="ti ti-id-badge" aria-hidden="true"></i> RH & Équipes</div>
+      <div class="nav-item" onclick="switchPage('achats')" tabindex="0"><i class="ti ti-truck" aria-hidden="true"></i> Achats & Stock</div>
+
+      <div class="nav-section">Finance</div>
+      <div class="nav-item" onclick="switchPage('tresorerie')" tabindex="0"><i class="ti ti-coins" aria-hidden="true"></i> Trésorerie</div>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="avatar">KA</div>
+      <div class="user-info">
+        <div class="user-name">Karim Alaoui</div>
+        <div class="user-role">Directeur</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-title" id="page-title">Tableau de bord</div>
+      <span class="topbar-meta">Mai 2026 &nbsp;·&nbsp; Casablanca</span>
+      <button class="btn-sm"><i class="ti ti-search" aria-hidden="true"></i></button>
+      <button class="btn-sm"><i class="ti ti-bell" aria-hidden="true"></i></button>
+      <button class="btn-primary" onclick="sendPrompt('Montre-moi comment créer un nouveau devis dans ce CRM')"><i class="ti ti-plus" aria-hidden="true"></i> Nouveau</button>
+    </div>
+
+    <!-- NAV TABS -->
+    <div class="nav-tab" id="nav-tabs">
+      <div class="nav-tab-item on"><i class="ti ti-layout-dashboard" style="font-size:13px" aria-hidden="true"></i> Aperçu</div>
+      <div class="nav-tab-item" onclick="sendPrompt('Montre-moi le module chantiers du CRM')"><i class="ti ti-helmet" style="font-size:13px" aria-hidden="true"></i> Chantiers actifs</div>
+      <div class="nav-tab-item" onclick="sendPrompt('Montre-moi les alertes et tâches urgentes')"><i class="ti ti-alert-triangle" style="font-size:13px" aria-hidden="true"></i> Alertes</div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+      <!-- KPI ROW -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label"><i class="ti ti-chart-bar" style="color:#C85A2A;font-size:13px" aria-hidden="true"></i> CA ce mois</div>
+          <div class="kpi-value">1,24 M</div>
+          <div class="kpi-sub">MAD &nbsp;<span class="kpi-trend">↑ +12%</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label"><i class="ti ti-helmet" style="color:#2D8A5E;font-size:13px" aria-hidden="true"></i> Chantiers actifs</div>
+          <div class="kpi-value">7</div>
+          <div class="kpi-sub">dont <span style="color:#C85A2A">2 en retard</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label"><i class="ti ti-clock" style="color:#C84242;font-size:13px" aria-hidden="true"></i> Créances</div>
+          <div class="kpi-value">340 K</div>
+          <div class="kpi-sub">MAD &nbsp;<span class="kpi-trend down">3 impayés</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label"><i class="ti ti-users" style="color:#2A6CB8;font-size:13px" aria-hidden="true"></i> Effectif terrain</div>
+          <div class="kpi-value">34</div>
+          <div class="kpi-sub">ouvriers &nbsp;<span class="kpi-trend">+2 ce mois</span></div>
+        </div>
+      </div>
+
+      <!-- SECTION GRID -->
+      <div class="section-grid">
+        <!-- CHANTIERS -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title"><i class="ti ti-helmet" aria-hidden="true"></i> Chantiers en cours</div>
+            <span class="view-all" onclick="sendPrompt('Affiche-moi tous les chantiers avec leur statut et avancement')">Voir tout ↗</span>
+          </div>
+          <div>
+            <div class="chantier-row">
+              <div class="ch-dot en-cours"></div>
+              <div class="ch-info">
+                <div class="ch-name">Résidence Al Fath — Hay Riad</div>
+                <div class="ch-meta">Maçonnerie · Chef : M. Bensouda</div>
+              </div>
+              <div class="progress-wrap"><div class="progress-fill" style="width:72%"></div></div>
+              <div class="ch-pct">72%</div>
+            </div>
+            <div class="chantier-row">
+              <div class="ch-dot retard"></div>
+              <div class="ch-info">
+                <div class="ch-name">Entrepôt Logistique — Aïn Sebaâ</div>
+                <div class="ch-meta">Gros œuvre · Chef : M. Tazi</div>
+              </div>
+              <div class="progress-wrap"><div class="progress-fill retard" style="width:38%"></div></div>
+              <div class="ch-pct" style="color:#C85A2A">38%</div>
+            </div>
+            <div class="chantier-row">
+              <div class="ch-dot en-cours"></div>
+              <div class="ch-info">
+                <div class="ch-name">Villa Préfecture — Ain Diab</div>
+                <div class="ch-meta">Finitions · Chef : Mme Chraibi</div>
+              </div>
+              <div class="progress-wrap"><div class="progress-fill" style="width:91%"></div></div>
+              <div class="ch-pct">91%</div>
+            </div>
+            <div class="chantier-row">
+              <div class="ch-dot retard"></div>
+              <div class="ch-info">
+                <div class="ch-name">Hôtel Mogador — Centre-ville</div>
+                <div class="ch-meta">Ravalement · Chef : M. Slimani</div>
+              </div>
+              <div class="progress-wrap"><div class="progress-fill retard" style="width:22%"></div></div>
+              <div class="ch-pct" style="color:#C85A2A">22%</div>
+            </div>
+            <div class="chantier-row">
+              <div class="ch-dot en-cours"></div>
+              <div class="ch-info">
+                <div class="ch-name">École Privée — Maarif</div>
+                <div class="ch-meta">Électricité + plomberie</div>
+              </div>
+              <div class="progress-wrap"><div class="progress-fill" style="width:55%"></div></div>
+              <div class="ch-pct">55%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ALERTES + AGENDA -->
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title"><i class="ti ti-alert-circle" aria-hidden="true"></i> Alertes</div>
+            </div>
+            <div class="alert-item">
+              <div class="alert-icon danger"><i class="ti ti-cash" aria-hidden="true"></i></div>
+              <div>
+                <div class="alert-text">Facture F-2024-118 impayée (88 400 MAD)</div>
+                <div class="alert-time">Client: Immocap SA · +45 jours</div>
+              </div>
+            </div>
+            <div class="alert-item">
+              <div class="alert-icon warn"><i class="ti ti-clock" aria-hidden="true"></i></div>
+              <div>
+                <div class="alert-text">Chantier Aïn Sebaâ : retard 12 jours</div>
+                <div class="alert-time">Délai contractuel dépassé</div>
+              </div>
+            </div>
+            <div class="alert-item">
+              <div class="alert-icon info"><i class="ti ti-package" aria-hidden="true"></i></div>
+              <div>
+                <div class="alert-text">Stock ciment quasi-épuisé (2 sacs)</div>
+                <div class="alert-time">Commande recommandée</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title"><i class="ti ti-calendar-event" aria-hidden="true"></i> Agenda semaine</div>
+            </div>
+            <div class="agenda-row">
+              <div class="agenda-date">Lun 26</div>
+              <div class="agenda-name">Remise devis Villa Bouskoura</div>
+              <span class="agenda-tag tag-devis">Devis</span>
+            </div>
+            <div class="agenda-row">
+              <div class="agenda-date">Mar 27</div>
+              <div class="agenda-name">Livraison fer à béton — Aïn Sebaâ</div>
+              <span class="agenda-tag tag-livraison">Livraison</span>
+            </div>
+            <div class="agenda-row">
+              <div class="agenda-date">Jeu 29</div>
+              <div class="agenda-name">Réunion de chantier Hay Riad</div>
+              <span class="agenda-tag tag-reunion">Réunion</span>
+            </div>
+            <div class="agenda-row">
+              <div class="agenda-date">Ven 30</div>
+              <div class="agenda-name">Encaissement Immocap (attendu)</div>
+              <span class="agenda-tag tag-paiement">Paiement</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CA PAR TYPE TRAVAUX -->
+      <div class="panel" style="margin-bottom:0">
+        <div class="panel-header">
+          <div class="panel-title"><i class="ti ti-chart-bar" aria-hidden="true"></i> CA par type de travaux — mai 2026</div>
+          <span class="view-all" onclick="sendPrompt('Analyse détaillée de la rentabilité par type de travaux')">Analyser ↗</span>
+        </div>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <div class="bar-label">Gros œuvre</div>
+            <div class="bar-track"><div class="bar-fill" style="width:78%;background:#C85A2A"></div></div>
+            <div class="bar-val">487 K MAD</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Finitions</div>
+            <div class="bar-track"><div class="bar-fill" style="width:52%;background:#E8784A"></div></div>
+            <div class="bar-val">325 K MAD</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Électricité</div>
+            <div class="bar-track"><div class="bar-fill" style="width:34%;background:#2A6CB8"></div></div>
+            <div class="bar-val">213 K MAD</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Plomberie</div>
+            <div class="bar-track"><div class="bar-fill" style="width:22%;background:#2D8A5E"></div></div>
+            <div class="bar-val">138 K MAD</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Ravalement</div>
+            <div class="bar-track"><div class="bar-fill" style="width:12%;background:#888"></div></div>
+            <div class="bar-val">77 K MAD</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchPage(page) {
+  const titles = {
+    dashboard: 'Tableau de bord',
+    chantiers: 'Chantiers',
+    clients: 'Clients & Prospects',
+    devis: 'Devis & Contrats',
+    factures: 'Facturation',
+    rh: 'RH & Équipes',
+    achats: 'Achats & Stock',
+    tresorerie: 'Trésorerie'
+  };
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('page-title').textContent = titles[page] || page;
+}
+</script>

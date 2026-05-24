@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../services/api';
@@ -30,7 +30,7 @@ const InvoiceForm = () => {
 
   // Line items state
   const [items, setItems] = useState([
-    { section: 'Gros Œuvre', description: '', unit: 'm²', quantity: 1, unitPriceHt: 0 }
+    { section: 'Gros Å’uvre', description: '', unit: 'mÂ²', quantity: 1, unitPriceHt: 0 }
   ]);
 
   // Fetch Quotes list
@@ -74,10 +74,10 @@ const InvoiceForm = () => {
           unitPriceHt: it.unitPriceHt || 0
         })));
       }
-      showToast('Détails du devis répliqués dans la facture.');
+      showToast('DÃ©tails du devis rÃ©pliquÃ©s dans la facture.');
     },
     onError: (err) => {
-      showToast(`Erreur lors du pré-remplissage à partir du devis : ${err.message}`, 'error');
+      showToast(`Erreur lors du prÃ©-remplissage Ã  partir du devis : ${err.message}`, 'error');
     }
   });
 
@@ -126,7 +126,7 @@ const InvoiceForm = () => {
       }
     },
     onSuccess: () => {
-      showToast(`Facture ${isEdit ? 'mise à jour' : 'créée'} avec succès !`);
+      showToast(`Facture ${isEdit ? 'mise Ã  jour' : 'crÃ©Ã©e'} avec succÃ¨s !`);
       queryClient.invalidateQueries(['invoicesList']);
       if (isEdit) {
         queryClient.invalidateQueries(['invoiceDetail', id]);
@@ -142,7 +142,7 @@ const InvoiceForm = () => {
   const handleAddItemRow = () => {
     setItems([
       ...items,
-      { section: items[items.length - 1]?.section || 'Gros Œuvre', description: '', unit: 'U', quantity: 1, unitPriceHt: 0 }
+      { section: items[items.length - 1]?.section || 'Gros Å’uvre', description: '', unit: 'U', quantity: 1, unitPriceHt: 0 }
     ]);
   };
 
@@ -172,12 +172,12 @@ const InvoiceForm = () => {
   const handleApplySituationPercentage = () => {
     const pct = parseFloat(situationPercentage || 100) / 100;
     if (pct <= 0 || pct > 1) {
-      showToast('Veuillez spécifier un pourcentage valide entre 1% et 100%.', 'error');
+      showToast('Veuillez spÃ©cifier un pourcentage valide entre 1% et 100%.', 'error');
       return;
     }
 
     if (!quoteId && !refQuoteId) {
-      showToast('Sélectionnez d\'abord un devis de référence pour charger les prix d\'origine.', 'error');
+      showToast('SÃ©lectionnez d\'abord un devis de rÃ©fÃ©rence pour charger les prix d\'origine.', 'error');
       return;
     }
 
@@ -188,14 +188,14 @@ const InvoiceForm = () => {
       quantity: parseFloat((it.quantity * pct).toFixed(2))
     }));
     setItems(scaledItems);
-    showToast(`Pourcentage de situation de ${situationPercentage}% appliqué aux quantités.`);
+    showToast(`Pourcentage de situation de ${situationPercentage}% appliquÃ© aux quantitÃ©s.`);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!quoteId) {
-      showToast('Le devis de référence associé est obligatoire.', 'error');
+      showToast('Le devis de rÃ©fÃ©rence associÃ© est obligatoire.', 'error');
       return;
     }
     if (!accountId) {
@@ -210,7 +210,7 @@ const InvoiceForm = () => {
     // Validate items
     const invalidItem = items.find(it => !it.description.trim() || it.quantity <= 0 || it.unitPriceHt < 0);
     if (invalidItem) {
-      showToast('Toutes les lignes doivent avoir une description, une quantité positive et un prix HT supérieur ou égal à 0.', 'error');
+      showToast('Toutes les lignes doivent avoir une description, une quantitÃ© positive et un prix HT supÃ©rieur ou Ã©gal Ã  0.', 'error');
       return;
     }
 
@@ -242,7 +242,7 @@ const InvoiceForm = () => {
 
   const quoteOptions = (quotesData || []).map(q => ({
     value: q.id,
-    label: `${q.quoteNumber} — ${q.title}`
+    label: `${q.quoteNumber} â€” ${q.title}`
   }));
 
   const accountOptions = (accountsData || []).map(acc => ({
@@ -263,7 +263,7 @@ const InvoiceForm = () => {
         breadcrumb={[
           { label: 'Finances' },
           { label: 'Factures', link: '/dashboard/invoices' },
-          { label: isEdit ? 'Édition' : 'Nouveau' }
+          { label: isEdit ? 'Ã‰dition' : 'Nouveau' }
         ]}
       />
 
@@ -278,30 +278,30 @@ const InvoiceForm = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Numéro de facture</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">NumÃ©ro de facture</label>
                   <input
                     type="text"
                     required
                     value={invoiceNumber}
                     onChange={(e) => setInvoiceNumber(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-semibold"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all font-semibold"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Objet / Libellé de facturation</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Objet / LibellÃ© de facturation</label>
                   <input
                     type="text"
                     required
-                    placeholder="Ex: Facture de situation n° 1 — Plomberie Anfa"
+                    placeholder="Ex: Facture de situation nÂ° 1 â€” Plomberie Anfa"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-semibold"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all font-semibold"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Devis de référence associé</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Devis de rÃ©fÃ©rence associÃ©</label>
                   <AutocompleteSelect
                     options={quoteOptions}
                     value={quoteId}
@@ -309,17 +309,17 @@ const InvoiceForm = () => {
                       setQuoteId(val);
                       setRefQuoteId(val); // triggers React Query details fetch
                     }}
-                    placeholder="Sélectionner le devis d'origine..."
+                    placeholder="SÃ©lectionner le devis d'origine..."
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Client facturé</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Client facturÃ©</label>
                   <AutocompleteSelect
                     options={accountOptions}
                     value={accountId}
                     onChange={setAccountId}
-                    placeholder="Sélectionner le client..."
+                    placeholder="SÃ©lectionner le client..."
                   />
                 </div>
               </div>
@@ -350,36 +350,36 @@ const InvoiceForm = () => {
                         placeholder="Section"
                         value={item.section}
                         onChange={(e) => handleItemChange(idx, 'section', e.target.value)}
-                        className="block w-full px-3 py-2 rounded-xl bg-white border border-slate-150 text-slate-850 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 font-semibold"
+                        className="block w-full px-3 py-2 rounded-xl bg-white border border-slate-150 text-slate-850 text-xs focus:outline-none focus:ring-1 focus:ring-[#C85A2A] font-semibold"
                       />
                     </div>
 
                     <div className="w-full sm:flex-1 space-y-1">
-                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Prestation facturée</label>
+                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Prestation facturÃ©e</label>
                       <input
                         type="text"
                         required
                         placeholder="Description..."
                         value={item.description}
                         onChange={(e) => handleItemChange(idx, 'description', e.target.value)}
-                        className="block w-full px-3 py-2 rounded-xl bg-white border border-slate-150 text-slate-850 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 font-semibold"
+                        className="block w-full px-3 py-2 rounded-xl bg-white border border-slate-150 text-slate-850 text-xs focus:outline-none focus:ring-1 focus:ring-[#C85A2A] font-semibold"
                       />
                     </div>
 
                     <div className="w-16 space-y-1">
-                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Unité</label>
+                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">UnitÃ©</label>
                       <input
                         type="text"
                         required
                         placeholder="U"
                         value={item.unit}
                         onChange={(e) => handleItemChange(idx, 'unit', e.target.value)}
-                        className="block w-full px-3 py-2 rounded-xl bg-white border border-slate-150 text-slate-850 text-xs text-center focus:outline-none focus:ring-1 focus:ring-blue-500 font-semibold"
+                        className="block w-full px-3 py-2 rounded-xl bg-white border border-slate-150 text-slate-850 text-xs text-center focus:outline-none focus:ring-1 focus:ring-[#C85A2A] font-semibold"
                       />
                     </div>
 
                     <div className="w-20 space-y-1">
-                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Qté</label>
+                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">QtÃ©</label>
                       <input
                         type="number"
                         step="0.01"
@@ -387,7 +387,7 @@ const InvoiceForm = () => {
                         min="0.01"
                         value={item.quantity}
                         onChange={(e) => handleItemChange(idx, 'quantity', parseFloat(e.target.value) || 0)}
-                        className="block w-full px-3 py-2 rounded-xl bg-white border border-slate-150 text-slate-850 text-xs text-right focus:outline-none focus:ring-1 focus:ring-blue-500 font-semibold"
+                        className="block w-full px-3 py-2 rounded-xl bg-white border border-slate-150 text-slate-850 text-xs text-right focus:outline-none focus:ring-1 focus:ring-[#C85A2A] font-semibold"
                       />
                     </div>
 
@@ -399,7 +399,7 @@ const InvoiceForm = () => {
                         min="0"
                         value={item.unitPriceHt}
                         onChange={(e) => handleItemChange(idx, 'unitPriceHt', parseFloat(e.target.value) || 0)}
-                        className="block w-full px-3 py-2 rounded-xl bg-white border border-slate-150 text-slate-850 text-xs text-right focus:outline-none focus:ring-1 focus:ring-blue-500 font-semibold"
+                        className="block w-full px-3 py-2 rounded-xl bg-white border border-slate-150 text-slate-850 text-xs text-right focus:outline-none focus:ring-1 focus:ring-[#C85A2A] font-semibold"
                       />
                     </div>
 
@@ -408,7 +408,7 @@ const InvoiceForm = () => {
                       onClick={() => handleRemoveItemRow(idx)}
                       className="p-2 rounded-xl hover:bg-red-50 text-red-500 cursor-pointer shrink-0 transition-colors"
                     >
-                      🗑️
+                      ðŸ—‘ï¸
                     </button>
                   </div>
                 ))}
@@ -420,7 +420,7 @@ const InvoiceForm = () => {
           <div className="space-y-6">
             <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6">
               <h3 className="font-bold text-slate-850 text-xs uppercase tracking-wider pb-3 border-b border-slate-100">
-                Paramètres fiscaux & Type
+                ParamÃ¨tres fiscaux & Type
               </h3>
 
               <div className="space-y-4">
@@ -429,10 +429,10 @@ const InvoiceForm = () => {
                   <select
                     value={type}
                     onChange={(e) => setType(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer font-bold"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] cursor-pointer font-bold"
                   >
-                    <option value="Standard">Standard (Complète)</option>
-                    <option value="Acompte">Acompte à la signature</option>
+                    <option value="Standard">Standard (ComplÃ¨te)</option>
+                    <option value="Acompte">Acompte Ã  la signature</option>
                     <option value="Situation">Facture de situation (Avancement)</option>
                     <option value="Solde">Facture de Solde</option>
                   </select>
@@ -448,42 +448,42 @@ const InvoiceForm = () => {
                         max="100"
                         value={situationPercentage}
                         onChange={(e) => setSituationPercentage(e.target.value)}
-                        className="block w-full px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-800 text-xs font-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="block w-full px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-800 text-xs font-black focus:outline-none focus:ring-2 focus:ring-[#C85A2A]"
                       />
                       <button
                         type="button"
                         onClick={handleApplySituationPercentage}
-                        className="py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-550 text-white font-bold text-[10px] uppercase shrink-0 cursor-pointer transition-colors"
+                        className="py-2 px-3 rounded-xl bg-[#C85A2A] hover:bg-blue-550 text-white font-bold text-[10px] uppercase shrink-0 cursor-pointer transition-colors"
                       >
                         Appliquer
                       </button>
                     </div>
                     <span className="text-[9px] text-slate-400 font-bold leading-normal block">
-                      Cliquez sur "Appliquer" pour multiplier les quantités de chaque ligne de devis d'origine par le taux d'avancement spécifié.
+                      Cliquez sur "Appliquer" pour multiplier les quantitÃ©s de chaque ligne de devis d'origine par le taux d'avancement spÃ©cifiÃ©.
                     </span>
                   </div>
                 )}
 
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">État initial</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Ã‰tat initial</label>
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer font-bold"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] cursor-pointer font-bold"
                   >
                     <option value="Brouillon">Brouillon</option>
-                    <option value="Envoyée">Envoyée</option>
-                    <option value="Payée">Payée</option>
+                    <option value="EnvoyÃ©e">EnvoyÃ©e</option>
+                    <option value="PayÃ©e">PayÃ©e</option>
                   </select>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Date d'échéance réglementaire</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Date d'Ã©chÃ©ance rÃ©glementaire</label>
                   <input
                     type="date"
                     value={dueDate}
                     onChange={(e) => setDueDate(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-850 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer font-bold"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-850 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] cursor-pointer font-bold"
                   />
                 </div>
 
@@ -492,13 +492,13 @@ const InvoiceForm = () => {
                   <select
                     value={tvaRate}
                     onChange={(e) => setTvaRate(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer font-bold"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] cursor-pointer font-bold"
                   >
                     <option value="20">20% (Taux standard Maroc)</option>
-                    <option value="14">14% (Taux réduit)</option>
+                    <option value="14">14% (Taux rÃ©duit)</option>
                     <option value="10">10%</option>
                     <option value="7">7%</option>
-                    <option value="0">Exonéré (0%)</option>
+                    <option value="0">ExonÃ©rÃ© (0%)</option>
                   </select>
                 </div>
               </div>
@@ -524,9 +524,9 @@ const InvoiceForm = () => {
                 <button
                   type="submit"
                   disabled={saveMutation.isLoading}
-                  className="w-full py-3 px-5 rounded-xl bg-blue-600 hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 disabled:bg-slate-300 disabled:cursor-not-allowed transition-all cursor-pointer"
+                  className="w-full py-3 px-5 rounded-xl bg-[#C85A2A] hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 disabled:bg-slate-300 disabled:cursor-not-allowed transition-all cursor-pointer"
                 >
-                  {saveMutation.isLoading ? 'Enregistrement...' : isEdit ? 'Enregistrer les modifications' : 'Émettre la Facture'}
+                  {saveMutation.isLoading ? 'Enregistrement...' : isEdit ? 'Enregistrer les modifications' : 'Ã‰mettre la Facture'}
                 </button>
               </div>
             </div>

@@ -2,128 +2,150 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+const ROLES = [
+  { label: 'Directeur', slug: 'directeur', email: 'directeur@travaux.ma', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
+  { label: 'Chef chantier', slug: 'chef_chantier', email: 'chef@travaux.ma', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' },
+  { label: 'Commercial', slug: 'commercial', email: 'commercial@travaux.ma', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
+  { label: 'Finance', slug: 'finance', email: 'finance@travaux.ma', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+  { label: 'Admin', slug: 'admin', email: 'admin@travaux.ma', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z' },
+  { label: 'RH', slug: 'rh', email: 'rh@travaux.ma', icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z' },
+];
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loadingSubmit, setLoadingSubmit] = useState(false);
+  const [selectedRole, setSelectedRole] = useState(null);
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
   const from = location.state?.from?.pathname || '/';
+
+  const handleRoleSelect = (role) => {
+    setSelectedRole(role.slug);
+    setEmail(role.email);
+    setPassword('password');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoadingSubmit(true);
-
     try {
       const user = await login(email, password);
-      if (user?.role?.slug === 'directeur' || user?.role?.slug === 'admin') {
-        navigate('/dashboard/director');
-      } else {
-        navigate(from);
-      }
+      const role = user?.role?.slug;
+      if (role === 'directeur' || role === 'admin' || role === 'super_admin') navigate('/dashboard/director');
+      else if (role === 'commercial') navigate('/dashboard/commercial');
+      else if (role === 'chef_chantier') navigate('/dashboard/project-manager');
+      else if (role === 'finance') navigate('/dashboard/finance');
+      else navigate(from);
     } catch (err) {
-      console.error(err);
-      if (err.response && err.response.data && err.response.data.message) {
-        setError(err.response.data.message);
-      } else {
-        setError('Erreur de connexion. Veuillez vérifier votre réseau.');
-      }
+      setError(err.response?.data?.message || 'Identifiants incorrects. Vérifiez vos données.');
     } finally {
       setLoadingSubmit(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-slate-50 font-sans">
-      <div className="flex-1 min-h-[420px] flex flex-col justify-between px-8 py-10 md:px-14 md:py-16 text-white" style={{ backgroundColor: 'var(--color-primary)' }}>
-        <div className="space-y-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-white/15 shadow-lg shadow-black/10 mb-4">
-            <span className="text-2xl font-black">A</span>
+    <div style={{ minHeight: '100vh', background: '#F4F4F5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Inter, system-ui, sans-serif', padding: '20px 16px' }}>
+      <div style={{ width: '100%', maxWidth: 400, background: '#fff', border: '0.5px solid #E4E4E7', borderRadius: 12, overflow: 'hidden' }}>
+        {/* Card header dark */}
+        <div style={{ background: '#1C1C1C', padding: '20px 24px 16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+            <div style={{ width: 32, height: 32, background: '#C85A2A', borderRadius: 7, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <span style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>A</span>
+            </div>
+            <div>
+              <div style={{ fontSize: 15, fontWeight: 600, color: '#fff', lineHeight: 1.2 }}>Atlas Works</div>
+              <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.06em' }}>ERP · BTP Maroc</div>
+            </div>
           </div>
-          <div className="space-y-4 max-w-md">
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">Atlas Works</h1>
-            <p className="text-lg text-slate-200 max-w-lg">
-              Portail ERP & CRM dédié aux équipes BTP. Gestion fluide des devis, chantiers, factures et équipes.
-            </p>
-          </div>
+          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>Gestion chantiers · Facturation · Paie · CRM</div>
         </div>
 
-        <div className="space-y-4">
-          <div className="rounded-3xl bg-white/10 border border-white/15 p-6">
-            <p className="text-sm uppercase tracking-[0.2em] text-blue-200/80 font-semibold mb-3">ERP & CRM BTP</p>
-            <p className="text-sm leading-6 text-blue-100/80">
-              Un espace clair, fonctionnel et performant pour piloter votre activité BTP sans effort.
-            </p>
+        <div style={{ padding: '20px 24px 24px' }}>
+          {/* Role selector */}
+          <div style={{ marginBottom: 16 }}>
+            <div style={{ fontSize: 11, fontWeight: 500, color: '#71717A', marginBottom: 8, letterSpacing: '0.04em', textTransform: 'uppercase' }}>Connexion rapide par rôle</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+              {ROLES.map((role) => (
+                <button
+                  key={role.slug}
+                  type="button"
+                  onClick={() => handleRoleSelect(role)}
+                  style={{
+                    border: selectedRole === role.slug ? '1px solid #C85A2A' : '0.5px solid #E4E4E7',
+                    borderRadius: 7,
+                    padding: '8px 4px',
+                    textAlign: 'center',
+                    cursor: 'pointer',
+                    background: selectedRole === role.slug ? '#FDF0EA' : '#fff',
+                    transition: 'all 0.1s',
+                  }}
+                >
+                  <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={selectedRole === role.slug ? '#C85A2A' : '#71717A'} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ margin: '0 auto 3px' }}>
+                    <path d={role.icon} />
+                  </svg>
+                  <div style={{ fontSize: 10, color: selectedRole === role.slug ? '#993C1D' : '#71717A', fontWeight: selectedRole === role.slug ? 500 : 400, lineHeight: 1.2 }}>{role.label}</div>
+                </button>
+              ))}
+            </div>
           </div>
-          <p className="text-xs text-slate-200/80 max-w-sm">
-            Pour toute question, contactez l'équipe Atlas Works et commencez votre journée en toute sérénité.
-          </p>
-        </div>
-      </div>
 
-      <div className="flex-1 flex items-center justify-center px-6 py-10 md:px-14 md:py-16">
-        <div className="w-full max-w-lg bg-white rounded-[28px] shadow-[0_40px_80px_rgba(0,0,0,0.08)] p-10">
-          <div className="mb-8">
-            <h2 className="text-3xl font-black text-slate-900 mb-2">Bienvenue</h2>
-            <p className="text-sm text-slate-500">Connectez-vous pour accéder à votre tableau de bord Atlas Works.</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '14px 0', color: '#A1A1AA', fontSize: 11 }}>
+            <div style={{ flex: 1, height: '0.5px', background: '#E4E4E7' }} />
+            ou saisissez manuellement
+            <div style={{ flex: 1, height: '0.5px', background: '#E4E4E7' }} />
           </div>
 
           {error && (
-            <div className="mb-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+            <div style={{ background: '#FBEAEA', border: '0.5px solid #F7C1C1', borderRadius: 7, padding: '8px 12px', fontSize: 12, color: '#A32D2D', marginBottom: 12 }}>
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-slate-700 mb-2">Adresse e-mail</label>
+          <form onSubmit={handleSubmit}>
+            <div style={{ marginBottom: 10 }}>
+              <label style={{ display: 'block', fontSize: 11, fontWeight: 500, color: '#71717A', marginBottom: 5, letterSpacing: '0.03em' }}>Adresse e-mail</label>
               <input
-                id="email"
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition"
-                placeholder="directeur@exemple.com"
+                placeholder="directeur@travaux.ma"
+                style={{ width: '100%', border: '0.5px solid #D4D4D8', borderRadius: 7, padding: '9px 12px', fontSize: 13, background: '#fff', color: '#18181B', outline: 'none', boxSizing: 'border-box' }}
+                onFocus={e => e.target.style.borderColor = '#C85A2A'}
+                onBlur={e => e.target.style.borderColor = '#D4D4D8'}
               />
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-slate-700 mb-2">Mot de passe</label>
+            <div style={{ marginBottom: 16 }}>
+              <label style={{ display: 'block', fontSize: 11, fontWeight: 500, color: '#71717A', marginBottom: 5, letterSpacing: '0.03em' }}>Mot de passe</label>
               <input
-                id="password"
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition"
                 placeholder="••••••••"
+                style={{ width: '100%', border: '0.5px solid #D4D4D8', borderRadius: 7, padding: '9px 12px', fontSize: 13, background: '#fff', color: '#18181B', outline: 'none', boxSizing: 'border-box' }}
+                onFocus={e => e.target.style.borderColor = '#C85A2A'}
+                onBlur={e => e.target.style.borderColor = '#D4D4D8'}
               />
-            </div>
-
-            <div className="flex items-center justify-between text-sm text-slate-500">
-              <label className="inline-flex items-center gap-2">
-                <input type="checkbox" className="h-4 w-4 rounded border-slate-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)]" />
-                Se souvenir de moi
-              </label>
-              <a href="#" className="font-semibold text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] transition-colors">Mot de passe oublié ?</a>
             </div>
 
             <button
               type="submit"
               disabled={loadingSubmit}
-              className="w-full rounded-3xl py-3 px-4 text-sm font-bold text-white transition-shadow shadow-[0_16px_30px_rgba(26,71,49,0.25)]"
-              style={{ backgroundColor: 'var(--color-primary)' }}
+              style={{ width: '100%', padding: '10px', background: loadingSubmit ? '#A8481F' : '#C85A2A', color: '#fff', border: 'none', borderRadius: 7, fontSize: 13, fontWeight: 500, cursor: loadingSubmit ? 'default' : 'pointer', opacity: loadingSubmit ? 0.8 : 1, transition: 'opacity 0.15s' }}
             >
-              {loadingSubmit ? 'Connexion...' : 'Se connecter'}
+              {loadingSubmit ? 'Connexion...' : 'Se connecter →'}
             </button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-slate-400">Gestion des projets, des finances et du suivi commercial au même endroit.</p>
+          <p style={{ marginTop: 14, textAlign: 'center', fontSize: 11, color: '#A1A1AA' }}>
+            Mot de passe démo : <strong>password</strong>
+          </p>
         </div>
       </div>
     </div>

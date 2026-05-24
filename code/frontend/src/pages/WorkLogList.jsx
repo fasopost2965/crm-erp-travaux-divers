@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
@@ -8,7 +8,7 @@ import LoadingSpinner from '../components/common/LoadingSpinner';
 const STATUS_CONFIG = {
   draft:     { label: 'Brouillon',  cls: 'bg-slate-100 text-slate-600 border-slate-200' },
   submitted: { label: 'Soumis',     cls: 'bg-blue-50 text-blue-700 border-blue-200' },
-  validated: { label: 'Validé',     cls: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+  validated: { label: 'ValidÃ©',     cls: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
 };
 
 const StatusPill = ({ status }) => {
@@ -58,7 +58,7 @@ const WorkLogList = () => {
   if (error) {
     return (
       <div className="p-5 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm">
-        ⚠️ Erreur lors du chargement : {error.message}
+        âš ï¸ Erreur lors du chargement : {error.message}
       </div>
     );
   }
@@ -75,7 +75,7 @@ const WorkLogList = () => {
         actions={
           <button
             onClick={() => navigate(`/dashboard/projects/${projectId}/work-logs/new`)}
-            className="flex items-center gap-2 py-2.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-sm transition-colors"
+            className="flex items-center gap-2 py-2.5 px-5 rounded-xl bg-[#C85A2A] hover:bg-[#A8481F] text-white font-semibold text-sm shadow-sm transition-colors"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -93,7 +93,7 @@ const WorkLogList = () => {
             type="month"
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value)}
-            className="block w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="block w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#C85A2A]"
           />
         </div>
         <div className="flex-1 space-y-1">
@@ -101,12 +101,12 @@ const WorkLogList = () => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="block w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="block w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-[#C85A2A]"
           >
             <option value="">Tous</option>
             <option value="draft">Brouillon</option>
             <option value="submitted">Soumis</option>
-            <option value="validated">Validé</option>
+            <option value="validated">ValidÃ©</option>
           </select>
         </div>
         {(dateFilter || statusFilter) && (
@@ -115,7 +115,7 @@ const WorkLogList = () => {
               onClick={() => { setDateFilter(''); setStatusFilter(''); }}
               className="py-2 px-4 text-sm text-slate-500 hover:text-blue-600 font-medium transition-colors"
             >
-              Réinitialiser
+              RÃ©initialiser
             </button>
           </div>
         )}
@@ -129,8 +129,8 @@ const WorkLogList = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <p className="text-sm font-semibold text-slate-700 mb-1">Aucun pointage trouvé</p>
-          <p className="text-sm text-slate-400">Commencez par enregistrer les premières heures de ce chantier.</p>
+          <p className="text-sm font-semibold text-slate-700 mb-1">Aucun pointage trouvÃ©</p>
+          <p className="text-sm text-slate-400">Commencez par enregistrer les premiÃ¨res heures de ce chantier.</p>
         </div>
       ) : (
         <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
@@ -139,7 +139,7 @@ const WorkLogList = () => {
               <tr className="bg-slate-50 border-b border-slate-200">
                 <th className="px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-widest">Date</th>
                 <th className="px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-widest">Intervenant</th>
-                <th className="px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-widest">Créneaux</th>
+                <th className="px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-widest">CrÃ©neaux</th>
                 <th className="px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-widest">Heures</th>
                 <th className="px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-widest">GPS</th>
                 <th className="px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-widest">Statut</th>
@@ -150,34 +150,34 @@ const WorkLogList = () => {
               {logs.map((log) => (
                 <tr key={log.id} className="hover:bg-blue-50/30 transition-colors">
                   <td className="px-5 py-4 text-sm font-semibold text-slate-800 whitespace-nowrap">
-                    {log.workDate ? new Date(log.workDate).toLocaleDateString('fr-FR') : '—'}
+                    {log.workDate ? new Date(log.workDate).toLocaleDateString('fr-FR') : 'â€”'}
                   </td>
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-2">
                       <div className="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600 shrink-0">
                         {log.user?.name?.charAt(0) || '?'}
                       </div>
-                      <span className="text-sm text-slate-700">{log.user?.name || '—'}</span>
+                      <span className="text-sm text-slate-700">{log.user?.name || 'â€”'}</span>
                     </div>
                   </td>
                   <td className="px-5 py-4 text-xs text-slate-500 whitespace-nowrap">
                     {log.startTime && log.endTime
-                      ? `${log.startTime.slice(0, 5)} → ${log.endTime.slice(0, 5)}`
-                      : <span className="text-slate-300">—</span>}
+                      ? `${log.startTime.slice(0, 5)} â†’ ${log.endTime.slice(0, 5)}`
+                      : <span className="text-slate-300">â€”</span>}
                   </td>
                   <td className="px-5 py-4">
                     <span className="text-sm font-bold text-slate-900">{log.hoursWorked}h</span>
                   </td>
                   <td className="px-5 py-4 text-xs text-slate-400">
                     {log.locationLat
-                      ? <span title={`${log.locationLat}, ${log.locationLng}`}>📍</span>
-                      : <span className="text-slate-200">—</span>}
+                      ? <span title={`${log.locationLat}, ${log.locationLng}`}>ðŸ“</span>
+                      : <span className="text-slate-200">â€”</span>}
                   </td>
                   <td className="px-5 py-4">
                     <StatusPill status={log.status} />
                   </td>
                   <td className="px-5 py-4 text-sm text-slate-500 max-w-xs truncate">
-                    {log.description || <span className="text-slate-300">—</span>}
+                    {log.description || <span className="text-slate-300">â€”</span>}
                   </td>
                 </tr>
               ))}
@@ -185,7 +185,7 @@ const WorkLogList = () => {
             <tfoot>
               <tr className="bg-slate-50 border-t border-slate-200">
                 <td colSpan={3} className="px-5 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">
-                  Total — {logs.length} pointage{logs.length > 1 ? 's' : ''}
+                  Total â€” {logs.length} pointage{logs.length > 1 ? 's' : ''}
                 </td>
                 <td className="px-5 py-3 text-sm font-black text-blue-700">
                   {totalHours.toFixed(1)}h
@@ -202,7 +202,7 @@ const WorkLogList = () => {
         onClick={() => navigate(`/dashboard/projects/${projectId}`)}
         className="text-sm text-slate-500 hover:text-blue-600 font-medium transition-colors"
       >
-        ← Retour à la fiche projet
+        â† Retour Ã  la fiche projet
       </button>
     </div>
   );

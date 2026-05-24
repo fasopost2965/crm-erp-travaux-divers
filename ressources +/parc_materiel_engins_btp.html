@@ -1,0 +1,512 @@
+
+<h2 class="sr-only">Module parc matériel et engins BTP — gestion machines propres et locations, planning d'affectation par chantier, maintenance préventive, coûts et alertes</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:13px;color:var(--color-text-primary)}
+.wrap{border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);overflow:hidden}
+.topbar{background:#1C1C1C;padding:10px 16px;display:flex;align-items:center;gap:8px}
+.tbt{font-size:13px;font-weight:500;color:#fff;flex:1}
+.bto{background:#C85A2A;color:#fff;border:none;padding:5px 12px;border-radius:var(--border-radius-md);font-size:11px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px}
+.btg{background:rgba(255,255,255,.09);color:rgba(255,255,255,.7);border:none;padding:5px 9px;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px}
+
+.tabs{display:flex;background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:0 14px}
+.tab{padding:9px 13px;font-size:12px;color:var(--color-text-secondary);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-0.5px;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.tab.on{color:#C85A2A;border-bottom-color:#C85A2A;font-weight:500}
+.tab i{font-size:14px}
+
+.page{display:none}.page.on{display:flex;flex-direction:column;gap:0}
+.body{background:var(--color-background-tertiary);padding:12px;display:flex;flex-direction:column;gap:10px}
+
+.kpi4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.kpi{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 12px}
+.kt{border-top:2px solid #C85A2A}.kg{border-top:2px solid #2D8A5E}.kr{border-top:2px solid #C84242}.kb{border-top:2px solid #2A6CB8}.ky{border-top:2px solid #BA7517}
+.kl{font-size:11px;color:var(--color-text-secondary);margin-bottom:3px}
+.kv{font-size:18px;font-weight:500;color:var(--color-text-primary);line-height:1}
+.ks{font-size:10px;color:var(--color-text-secondary);margin-top:2px}
+
+.panel{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.ph{padding:9px 12px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:space-between}
+.pt{font-size:12px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:5px}
+.pt i{color:#C85A2A;font-size:14px}
+.lbtn{font-size:11px;color:#C85A2A;background:none;border:none;cursor:pointer;padding:0}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+
+.badge{font-size:10px;padding:2px 7px;border-radius:8px;white-space:nowrap}
+.bg{background:#E8F6EE;color:#1A6B3C}
+.br{background:#FBEAEA;color:#A32D2D}
+.bb{background:#E8F4FF;color:#1A5C9A}
+.by{background:#FAEEDA;color:#633806}
+.bo{background:#FAECE7;color:#712B13}
+.bgr{background:#F1EFE8;color:#5F5E5A}
+.bpur{background:#EEEDFE;color:#3C3489}
+
+.engin-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;cursor:pointer;transition:border-color .15s}
+.engin-card:hover{border-color:#C85A2A}
+.engin-card.selected{border-color:#C85A2A;border-width:1.5px}
+.ec-head{padding:10px 12px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:flex-start;gap:8px}
+.ec-icon{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.ec-name{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.ec-sub{font-size:10px;color:var(--color-text-secondary)}
+.ec-body{padding:8px 12px;display:flex;flex-direction:column;gap:5px}
+.ec-row{display:flex;justify-content:space-between;font-size:11px}
+.ec-label{color:var(--color-text-secondary)}
+.ec-val{font-weight:500;color:var(--color-text-primary)}
+.ec-footer{padding:7px 12px;border-top:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:space-between}
+
+.prog{flex:1;height:5px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden}
+.prog-f{height:100%;border-radius:3px}
+
+.gantt-wrap{overflow-x:auto;padding:10px 12px}
+.gantt-grid{display:grid}
+.gantt-row{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.gantt-label{font-size:11px;color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
+.gantt-track{flex:1;height:20px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden;position:relative}
+.gantt-bar{position:absolute;top:2px;height:16px;border-radius:2px;display:flex;align-items:center;padding:0 5px}
+.gantt-bar-text{font-size:9px;font-weight:500;color:#fff;white-space:nowrap;overflow:hidden}
+.gantt-header{display:flex;gap:6px;margin-bottom:4px}
+.gantt-spacer{flex-shrink:0}
+.gantt-months{flex:1;display:flex}
+.gantt-month{flex:1;text-align:center;font-size:10px;color:var(--color-text-secondary);font-weight:500}
+
+.maint-row{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:0.5px solid var(--color-border-tertiary);font-size:12px}
+.maint-row:last-child{border-bottom:none}
+.maint-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.alert-bar{display:flex;align-items:center;gap:6px;padding:8px 12px;border-bottom:0.5px solid var(--color-border-tertiary);font-size:11px}
+.alert-bar:last-child{border-bottom:none}
+
+.detail-wrap{background:var(--color-background-tertiary);padding:12px;display:flex;flex-direction:column;gap:10px}
+.stat-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:12px}
+.stat-row:last-child{border-bottom:none}
+.stat-label{color:var(--color-text-secondary)}
+.stat-val{font-weight:500;color:var(--color-text-primary)}
+
+.toggle{width:34px;height:18px;background:var(--color-border-secondary);border-radius:9px;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.toggle.on{background:#C85A2A}
+.toggle::after{content:'';position:absolute;width:12px;height:12px;background:#fff;border-radius:50%;top:3px;left:3px;transition:left .2s}
+.toggle.on::after{left:19px}
+</style>
+
+<div class="wrap">
+<div class="topbar">
+  <i class="ti ti-bulldozer" style="color:#C85A2A;font-size:16px" aria-hidden="true"></i>
+  <span class="tbt">Parc matériel & engins BTP</span>
+  <span style="font-size:11px;color:rgba(255,255,255,.4)">18 engins · 3 chantiers actifs</span>
+  <button class="btg" onclick="sendPrompt('Comment ajouter un nouvel engin au parc BatiPro ?')"><i class="ti ti-plus" aria-hidden="true"></i> Ajouter ↗</button>
+  <button class="btg" onclick="sendPrompt('Exporte le planning d affectation des engins en PDF')"><i class="ti ti-download" aria-hidden="true"></i> Planning PDF ↗</button>
+  <button class="bto" onclick="sendPrompt('Comment créer un bon de commande de location d engin ?')"><i class="ti ti-truck" aria-hidden="true"></i> Commander location ↗</button>
+</div>
+
+<div class="tabs">
+  <div class="tab on" onclick="sw('parc',this)"><i class="ti ti-layout-grid" aria-hidden="true"></i>Parc & statuts</div>
+  <div class="tab" onclick="sw('planning',this)"><i class="ti ti-calendar-week" aria-hidden="true"></i>Planning affectation</div>
+  <div class="tab" onclick="sw('maintenance',this)"><i class="ti ti-tool" aria-hidden="true"></i>Maintenance</div>
+  <div class="tab" onclick="sw('couts',this)"><i class="ti ti-coins" aria-hidden="true"></i>Coûts & analyse</div>
+</div>
+
+<!-- ══ PARC & STATUTS ══════════════════════════════════════ -->
+<div class="page on" id="page-parc">
+<div class="body">
+
+  <div class="kpi4">
+    <div class="kpi kt"><div class="kl">Engins propres</div><div class="kv">11</div><div class="ks">valeur : 4,2 M MAD</div></div>
+    <div class="kpi kg"><div class="kl">En service</div><div class="kv">8</div><div class="ks">sur 11 disponibles</div></div>
+    <div class="kpi kr"><div class="kl">En maintenance</div><div class="kv">2</div><div class="ks">retour estimé J+3</div></div>
+    <div class="kpi kb"><div class="kl">Locations en cours</div><div class="kv">7</div><div class="ks">38 400 MAD / mois</div></div>
+  </div>
+
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:2px">
+    <div onclick="filterEngins('all',this)" style="font-size:11px;padding:4px 10px;border-radius:10px;border:0.5px solid var(--color-border-tertiary);cursor:pointer;background:#1C1C1C;color:#fff">Tous</div>
+    <div onclick="filterEngins('propre',this)" style="font-size:11px;padding:4px 10px;border-radius:10px;border:0.5px solid var(--color-border-tertiary);cursor:pointer;background:var(--color-background-primary);color:var(--color-text-secondary)">Propres</div>
+    <div onclick="filterEngins('location',this)" style="font-size:11px;padding:4px 10px;border-radius:10px;border:0.5px solid var(--color-border-tertiary);cursor:pointer;background:var(--color-background-primary);color:var(--color-text-secondary)">Locations</div>
+    <div onclick="filterEngins('dispo',this)" style="font-size:11px;padding:4px 10px;border-radius:10px;border:0.5px solid var(--color-border-tertiary);cursor:pointer;background:var(--color-background-primary);color:var(--color-text-secondary)">Disponibles</div>
+    <div onclick="filterEngins('maint',this)" style="font-size:11px;padding:4px 10px;border-radius:10px;border:0.5px solid var(--color-border-tertiary);cursor:pointer;background:var(--color-background-primary);color:var(--color-text-secondary)">Maintenance</div>
+  </div>
+
+  <div id="engins-grid" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px"></div>
+
+</div>
+</div>
+
+<!-- ══ PLANNING AFFECTATION ══════════════════════════════ -->
+<div class="page" id="page-planning">
+<div class="body">
+  <div class="panel">
+    <div class="ph">
+      <div class="pt"><i class="ti ti-calendar-week" aria-hidden="true"></i>Planning affectation — mai à juillet 2026</div>
+      <div style="display:flex;gap:5px">
+        <span class="badge bgr">Al Fath</span>
+        <span class="badge bb">Aïn Sebaâ</span>
+        <span class="badge bo">Mogador</span>
+        <span class="badge bpur">Sidi Maarouf</span>
+      </div>
+    </div>
+    <div class="gantt-wrap">
+      <div class="gantt-header">
+        <div class="gantt-spacer" style="width:140px"></div>
+        <div class="gantt-months">
+          <div class="gantt-month">Mai 2026</div>
+          <div class="gantt-month">Juin 2026</div>
+          <div class="gantt-month">Juillet 2026</div>
+        </div>
+      </div>
+      <div id="gantt-rows"></div>
+    </div>
+  </div>
+
+  <div class="two">
+    <div class="panel">
+      <div class="ph"><div class="pt"><i class="ti ti-alert-triangle" aria-hidden="true"></i>Conflits détectés</div><span class="badge br">2 conflits</span></div>
+      <div class="alert-bar">
+        <div style="width:28px;height:28px;border-radius:6px;background:#FBEAEA;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-alert-circle" style="color:#A32D2D;font-size:14px" aria-hidden="true"></i></div>
+        <div style="flex:1">
+          <div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Bétonnière B2 — double affectation</div>
+          <div style="font-size:10px;color:var(--color-text-secondary)">Al Fath + Aïn Sebaâ du 1 au 14 juin</div>
+        </div>
+        <button onclick="sendPrompt('Comment résoudre le conflit d affectation de la bétonnière B2 entre Al Fath et Aïn Sebaâ ?')" style="font-size:10px;padding:3px 8px;background:#C85A2A;color:#fff;border:none;border-radius:6px;cursor:pointer">Résoudre ↗</button>
+      </div>
+      <div class="alert-bar">
+        <div style="width:28px;height:28px;border-radius:6px;background:#FAEEDA;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-alert-triangle" style="color:#BA7517;font-size:14px" aria-hidden="true"></i></div>
+        <div style="flex:1">
+          <div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Nacelle N1 — disponible 10 jours seulement</div>
+          <div style="font-size:10px;color:var(--color-text-secondary)">Mogador nécessite 18 jours — commander prolongation</div>
+        </div>
+        <button onclick="sendPrompt('Créer un bon de commande de prolongation location nacelle N1 chez Lift Maghreb')" style="font-size:10px;padding:3px 8px;background:#BA7517;color:#fff;border:none;border-radius:6px;cursor:pointer">Commander ↗</button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ph"><div class="pt"><i class="ti ti-package" aria-hidden="true"></i>Retours planifiés</div></div>
+      <div class="maint-row">
+        <div style="width:8px;height:8px;border-radius:50%;background:#2D8A5E;flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Grue mobile GM1 ← Al Fath</div><div style="font-size:10px;color:var(--color-text-secondary)">Retour prévu le 30 juin 2026</div></div>
+        <span class="badge bg">Planifié</span>
+      </div>
+      <div class="maint-row">
+        <div style="width:8px;height:8px;border-radius:50%;background:#BA7517;flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Nacelle N1 (loc.) ← Mogador</div><div style="font-size:10px;color:var(--color-text-secondary)">Fin location le 15 juin · Matéraloc</div></div>
+        <span class="badge by">À prolonger</span>
+      </div>
+      <div class="maint-row">
+        <div style="width:8px;height:8px;border-radius:50%;background:#2A6CB8;flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Compacteur C1 ← Sidi Maarouf</div><div style="font-size:10px;color:var(--color-text-secondary)">Retour prévu le 10 juillet 2026</div></div>
+        <span class="badge bb">Planifié</span>
+      </div>
+      <div class="maint-row">
+        <div style="width:8px;height:8px;border-radius:50%;background:#C84242;flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Pelle hydraulique PH2 ← Aïn Sebaâ</div><div style="font-size:10px;color:var(--color-text-secondary)">Retour prévu le 31 mai — en avance</div></div>
+        <span class="badge bg">En avance</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ MAINTENANCE ══════════════════════════════════════ -->
+<div class="page" id="page-maintenance">
+<div class="body">
+  <div class="two">
+    <div class="panel">
+      <div class="ph"><div class="pt"><i class="ti ti-tool" aria-hidden="true"></i>Interventions en cours</div><span class="badge br">2 en cours</span></div>
+      <div class="maint-row">
+        <div class="maint-icon" style="background:#FBEAEA"><i class="ti ti-engine" style="color:#A32D2D" aria-hidden="true"></i></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Bétonnière B1 — panne moteur</div>
+          <div style="font-size:10px;color:var(--color-text-secondary)">Atelier Ben Slimane · Pièce commandée</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:10px;color:#A32D2D;font-weight:500">J+3</div>
+          <div style="font-size:10px;color:var(--color-text-secondary)">~3 200 MAD</div>
+        </div>
+      </div>
+      <div class="maint-row">
+        <div class="maint-icon" style="background:#FAEEDA"><i class="ti ti-settings" style="color:#BA7517" aria-hidden="true"></i></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Pelle PH1 — révision 500h</div>
+          <div style="font-size:10px;color:var(--color-text-secondary)">Révision périodique · Concessionnaire CAT</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:10px;color:#BA7517;font-weight:500">J+1</div>
+          <div style="font-size:10px;color:var(--color-text-secondary)">~8 500 MAD</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ph"><div class="pt"><i class="ti ti-calendar-check" aria-hidden="true"></i>Maintenance préventive à venir</div></div>
+      <div class="maint-row">
+        <div class="maint-icon" style="background:#E8F4FF"><i class="ti ti-oil" style="color:#1A5C9A" aria-hidden="true"></i></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Grue GM1 — vidange + filtres</div>
+          <div style="font-size:10px;color:var(--color-text-secondary)">Kilométrage : 498h / seuil 500h</div>
+        </div>
+        <span class="badge br">2h restantes</span>
+      </div>
+      <div class="maint-row">
+        <div class="maint-icon" style="background:#FAEEDA"><i class="ti ti-certificate" style="color:#BA7517" aria-hidden="true"></i></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Compacteur C1 — vignette & assurance</div>
+          <div style="font-size:10px;color:var(--color-text-secondary)">Expiration le 15 juin 2026</div>
+        </div>
+        <span class="badge by">22 jours</span>
+      </div>
+      <div class="maint-row">
+        <div class="maint-icon" style="background:#E8F6EE"><i class="ti ti-tool" style="color:#1A6B3C" aria-hidden="true"></i></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Camion benne CB2 — contrôle technique</div>
+          <div style="font-size:10px;color:var(--color-text-secondary)">Expiration le 30 juillet 2026</div>
+        </div>
+        <span class="badge bg">67 jours</span>
+      </div>
+      <div class="maint-row">
+        <div class="maint-icon" style="background:#E8F6EE"><i class="ti ti-oil" style="color:#1A6B3C" aria-hidden="true"></i></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Bétonnière B2 — courroies + roulements</div>
+          <div style="font-size:10px;color:var(--color-text-secondary)">Planifié au 1er juillet 2026</div>
+        </div>
+        <span class="badge bg">38 jours</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="ph"><div class="pt"><i class="ti ti-history" aria-hidden="true"></i>Historique interventions — 2026</div>
+      <button class="lbtn" onclick="sendPrompt('Exporte l historique complet de maintenance en Excel')">Export ↗</button>
+    </div>
+    <table style="width:100%;font-size:11px;border-collapse:collapse;table-layout:fixed">
+      <thead><tr style="background:var(--color-background-secondary)">
+        <th style="padding:6px 10px;text-align:left;font-weight:500;color:var(--color-text-secondary);width:14%">Date</th>
+        <th style="padding:6px 10px;text-align:left;font-weight:500;color:var(--color-text-secondary);width:18%">Engin</th>
+        <th style="padding:6px 10px;text-align:left;font-weight:500;color:var(--color-text-secondary);width:30%">Intervention</th>
+        <th style="padding:6px 10px;text-align:left;font-weight:500;color:var(--color-text-secondary);width:18%">Prestataire</th>
+        <th style="padding:6px 10px;text-align:right;font-weight:500;color:var(--color-text-secondary);width:12%">Coût</th>
+        <th style="padding:6px 10px;text-align:center;font-weight:500;color:var(--color-text-secondary);width:8%">Type</th>
+      </tr></thead>
+      <tbody>
+        ${[
+          ['10/05','Pelle PH2','Remplacement chenilles','Méca-BTP',18500,'Curatif'],
+          ['02/05','Grue GM1','Vidange + filtres air','Interne',1200,'Préventif'],
+          ['28/04','Camion CB1','Révision 100 000 km','Renault Trucks',9800,'Préventif'],
+          ['15/04','Compacteur C1','Changement courroie','Interne',450,'Préventif'],
+          ['05/04','Bétonnière B2','Réparation tambour','Méca-BTP',3600,'Curatif'],
+          ['20/03','Pelle PH1','Révision 500h','CAT Maroc',8500,'Préventif'],
+        ].map((r,i)=>`<tr style="border-bottom:0.5px solid var(--color-border-tertiary);background:${i%2?'var(--color-background-secondary)':''}">
+          <td style="padding:7px 10px;color:var(--color-text-secondary)">${r[0]}</td>
+          <td style="padding:7px 10px;font-weight:500;color:var(--color-text-primary)">${r[1]}</td>
+          <td style="padding:7px 10px;color:var(--color-text-primary)">${r[2]}</td>
+          <td style="padding:7px 10px;color:var(--color-text-secondary)">${r[3]}</td>
+          <td style="padding:7px 10px;text-align:right;font-weight:500;color:var(--color-text-primary)">${r[4].toLocaleString('fr-MA')} MAD</td>
+          <td style="padding:7px 10px;text-align:center"><span class="badge ${r[5]==='Préventif'?'bg':'br'}">${r[5]}</span></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ══ COÛTS & ANALYSE ══════════════════════════════════ -->
+<div class="page" id="page-couts">
+<div class="body">
+  <div class="kpi4">
+    <div class="kpi kt"><div class="kl">Coût total mai</div><div class="kv">98 K</div><div class="ks">MAD (propres + loc.)</div></div>
+    <div class="kpi ky"><div class="kl">Locations en cours</div><div class="kv">38,4 K</div><div class="ks">MAD / mois</div></div>
+    <div class="kpi kr"><div class="kl">Maintenance mai</div><div class="kv">11,7 K</div><div class="ks">MAD curatif + préventif</div></div>
+    <div class="kpi kg"><div class="kl">Taux d'utilisation</div><div class="kv">73%</div><div class="ks">parc propre actif</div></div>
+  </div>
+
+  <div class="two">
+    <div class="panel">
+      <div class="ph"><div class="pt"><i class="ti ti-chart-bar" aria-hidden="true"></i>Coût engins par chantier — mai</div></div>
+      <div style="padding:10px 12px">
+        ${[
+          ['Al Fath — Hay Riad',42,'#C85A2A','GM1 + B1 + B2'],
+          ['Aïn Sebaâ',28,'#2A6CB8','PH2 + CB1 + CB2'],
+          ['Sidi Maarouf',18,'#2D8A5E','PH1 + C1 + CB3'],
+          ['Mogador',12,'#BA7517','N1 (loc.) + SC1'],
+        ].map(r=>`<div style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+            <span style="font-size:11px;color:var(--color-text-primary)">${r[0]}</span>
+            <span style="font-size:11px;font-weight:500;color:${r[2]}">${r[1]}%</span>
+          </div>
+          <div style="height:8px;background:var(--color-background-secondary);border-radius:4px;overflow:hidden;margin-bottom:2px">
+            <div style="width:${r[1]}%;height:100%;background:${r[2]};border-radius:4px"></div>
+          </div>
+          <div style="font-size:10px;color:var(--color-text-secondary)">${r[3]}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ph"><div class="pt"><i class="ti ti-scale" aria-hidden="true"></i>Propre vs Location — analyse</div></div>
+      <div style="padding:12px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+          <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px;text-align:center">
+            <div style="font-size:10px;color:var(--color-text-secondary);margin-bottom:4px">Parc propre</div>
+            <div style="font-size:17px;font-weight:500;color:#C85A2A">59 600</div>
+            <div style="font-size:10px;color:var(--color-text-secondary)">MAD / mois</div>
+            <div style="font-size:10px;color:var(--color-text-secondary);margin-top:3px">amort. + maint.</div>
+          </div>
+          <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px;text-align:center">
+            <div style="font-size:10px;color:var(--color-text-secondary);margin-bottom:4px">Locations</div>
+            <div style="font-size:17px;font-weight:500;color:#2A6CB8">38 400</div>
+            <div style="font-size:10px;color:var(--color-text-secondary)">MAD / mois</div>
+            <div style="font-size:10px;color:var(--color-text-secondary);margin-top:3px">7 engins loués</div>
+          </div>
+        </div>
+        <div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:6px">Recommandations système</div>
+        <div style="background:#E8F6EE;border-radius:var(--border-radius-md);padding:8px 10px;margin-bottom:6px;display:flex;gap:7px;align-items:flex-start">
+          <i class="ti ti-trending-down" style="color:#1A6B3C;font-size:14px;flex-shrink:0;margin-top:1px" aria-hidden="true"></i>
+          <div style="font-size:11px;color:#1A6B3C">La nacelle N1 est louée 4 mois/an à 9 600 MAD/mois. L'achat (120 000 MAD) serait rentabilisé en 12,5 mois.</div>
+        </div>
+        <div style="background:#FAEEDA;border-radius:var(--border-radius-md);padding:8px 10px;display:flex;gap:7px;align-items:flex-start">
+          <i class="ti ti-alert-triangle" style="color:#BA7517;font-size:14px;flex-shrink:0;margin-top:1px" aria-hidden="true"></i>
+          <div style="font-size:11px;color:#633806">Le compacteur C2 est inutilisé depuis 45 jours. Envisager la revente ou mise en location externe.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="ph"><div class="pt"><i class="ti ti-file-invoice" aria-hidden="true"></i>Bons de location en cours — fournisseurs</div>
+      <button class="lbtn" onclick="sendPrompt('Créer un nouveau bon de commande de location engin')">+ Nouveau BC ↗</button>
+    </div>
+    <table style="width:100%;font-size:11px;border-collapse:collapse;table-layout:fixed">
+      <thead><tr style="background:var(--color-background-secondary)">
+        <th style="padding:6px 10px;text-align:left;font-weight:500;color:var(--color-text-secondary);width:14%">Référence</th>
+        <th style="padding:6px 10px;text-align:left;font-weight:500;color:var(--color-text-secondary);width:18%">Engin loué</th>
+        <th style="padding:6px 10px;text-align:left;font-weight:500;color:var(--color-text-secondary);width:16%">Fournisseur</th>
+        <th style="padding:6px 10px;text-align:left;font-weight:500;color:var(--color-text-secondary);width:14%">Chantier</th>
+        <th style="padding:6px 10px;text-align:right;font-weight:500;color:var(--color-text-secondary);width:12%">MAD/jour</th>
+        <th style="padding:6px 10px;text-align:left;font-weight:500;color:var(--color-text-secondary);width:14%">Période</th>
+        <th style="padding:6px 10px;text-align:right;font-weight:500;color:var(--color-text-secondary);width:12%">Total MAD</th>
+      </tr></thead>
+      <tbody>
+        ${[
+          ['LOC-2026-018','Nacelle 18m','Matéraloc','Mogador','480','1 mai → 15 juin',21600,'by'],
+          ['LOC-2026-017','Compacteur','Equip-Loc','Sidi Maarouf','320','15 avr → 15 jul',28800,'bg'],
+          ['LOC-2026-016','Camion benne','TransBTP','Aïn Sebaâ','750','1 mai → 30 mai',22500,'bg'],
+          ['LOC-2026-015','Échafaudage','ScafMaroc','Mogador','220','10 avr → 10 jul',19800,'bg'],
+          ['LOC-2026-014','Pelle 20T','LG Equip','Al Fath','1200','1 mar → 31 mai',43200,'bb'],
+          ['LOC-2026-013','Grue tour','Potain MA','Sidi Maarouf','2800','1 jan → 31 dec',336000,'bb'],
+        ].map((r,i)=>`<tr style="border-bottom:0.5px solid var(--color-border-tertiary);background:${i%2?'var(--color-background-secondary)':''}">
+          <td style="padding:7px 10px;color:var(--color-text-secondary)">${r[0]}</td>
+          <td style="padding:7px 10px;font-weight:500;color:var(--color-text-primary)">${r[1]}</td>
+          <td style="padding:7px 10px;color:var(--color-text-secondary)">${r[2]}</td>
+          <td style="padding:7px 10px"><span class="badge ${r[7]}">${r[3]}</span></td>
+          <td style="padding:7px 10px;text-align:right;color:var(--color-text-primary)">${r[4]}</td>
+          <td style="padding:7px 10px;color:var(--color-text-secondary);font-size:10px">${r[5]}</td>
+          <td style="padding:7px 10px;text-align:right;font-weight:500;color:#C85A2A">${r[6].toLocaleString('fr-MA')}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+</div>
+
+<script>
+const ENGINS = [
+  {id:'gm1',nom:'Grue mobile GM1',type:'Grue mobile 50T',proprio:'propre',statut:'service',chantier:'Al Fath',valeur:850000,icon:'ti-crane',color:'#FAECE7',ic:'#C85A2A',heure:498,heureMax:500,vignette:'15/09/2026',assurance:'30/11/2026'},
+  {id:'ph1',nom:'Pelle hydraulique PH1',type:'Pelle 20T CAT 320',proprio:'propre',statut:'maint',chantier:'—',valeur:680000,icon:'ti-backhoe',color:'#FAEEDA',ic:'#BA7517',heure:502,heureMax:1000,vignette:'20/08/2026',assurance:'31/12/2026'},
+  {id:'ph2',nom:'Pelle hydraulique PH2',type:'Pelle 14T JCB',proprio:'propre',statut:'service',chantier:'Aïn Sebaâ',valeur:420000,icon:'ti-backhoe',color:'#E8F4FF',ic:'#1A5C9A',heure:280,heureMax:1000,vignette:'10/10/2026',assurance:'31/12/2026'},
+  {id:'b1',nom:'Bétonnière B1',type:'Bétonnière 500L',proprio:'propre',statut:'maint',chantier:'—',valeur:45000,icon:'ti-cylinder',color:'#FBEAEA',ic:'#A32D2D',heure:1240,heureMax:2000,vignette:'N/A',assurance:'N/A'},
+  {id:'b2',nom:'Bétonnière B2',type:'Bétonnière 350L',proprio:'propre',statut:'service',chantier:'Al Fath',valeur:32000,icon:'ti-cylinder',color:'#E8F6EE',ic:'#1A6B3C',heure:820,heureMax:2000,vignette:'N/A',assurance:'N/A'},
+  {id:'cb1',nom:'Camion benne CB1',type:'Mercedes Actros 8×4',proprio:'propre',statut:'service',chantier:'Aïn Sebaâ',valeur:580000,icon:'ti-truck',color:'#FAECE7',ic:'#C85A2A',heure:0,heureMax:0,vignette:'30/07/2026',assurance:'31/08/2026'},
+  {id:'cb2',nom:'Camion benne CB2',type:'Iveco Trakker 6×4',proprio:'propre',statut:'service',chantier:'Aïn Sebaâ',valeur:420000,icon:'ti-truck',color:'#E8F4FF',ic:'#1A5C9A',heure:0,heureMax:0,vignette:'15/11/2026',assurance:'31/12/2026'},
+  {id:'c1',nom:'Compacteur C1',type:'Compacteur vibrant 8T',proprio:'propre',statut:'service',chantier:'Sidi Maarouf',valeur:280000,icon:'ti-road',color:'#E8F6EE',ic:'#1A6B3C',heure:340,heureMax:1000,vignette:'15/06/2026',assurance:'30/09/2026'},
+  {id:'c2',nom:'Compacteur C2',type:'Compacteur tandem 3T',proprio:'propre',statut:'dispo',chantier:'Dépôt',valeur:95000,icon:'ti-road',color:'#F1EFE8',ic:'#5F5E5A',heure:180,heureMax:1000,vignette:'20/10/2026',assurance:'31/12/2026'},
+  {id:'sc1',nom:'Scie à carrelage SC1',type:'Scie eau 900mm',proprio:'propre',statut:'service',chantier:'Mogador',valeur:18000,icon:'ti-cut',color:'#EEEDFE',ic:'#3C3489',heure:0,heureMax:0,vignette:'N/A',assurance:'N/A'},
+  {id:'n1',nom:'Nacelle N1',type:'Nacelle 18m articulée',proprio:'location',statut:'service',chantier:'Mogador',valeur:0,icon:'ti-arrow-autofit-height',color:'#FAEEDA',ic:'#BA7517',heure:0,heureMax:0,fournisseur:'Matéraloc',tauxJ:480},
+];
+
+let filterMode = 'all';
+let selectedId = null;
+
+const STATUT_LABELS = {service:'En service',maint:'Maintenance',dispo:'Disponible'};
+const STATUT_COLORS = {service:'bg',maint:'br',dispo:'bgr'};
+
+function filterEngins(mode, el){
+  filterMode = mode;
+  document.querySelectorAll('[onclick^="filterEngins"]').forEach(e=>{
+    e.style.background='var(--color-background-primary)';e.style.color='var(--color-text-secondary)';
+  });
+  el.style.background='#1C1C1C';el.style.color='#fff';
+  buildEngins();
+}
+
+function buildEngins(){
+  const list = ENGINS.filter(e=>{
+    if(filterMode==='propre') return e.proprio==='propre';
+    if(filterMode==='location') return e.proprio==='location';
+    if(filterMode==='dispo') return e.statut==='dispo';
+    if(filterMode==='maint') return e.statut==='maint';
+    return true;
+  });
+  document.getElementById('engins-grid').innerHTML = list.map(e=>{
+    const pct = e.heureMax>0 ? Math.round(e.heure/e.heureMax*100) : null;
+    const progColor = pct===null?'#888':pct>=90?'#C84242':pct>=70?'#BA7517':'#2D8A5E';
+    return `<div class="engin-card${e.id===selectedId?' selected':''}" onclick="selectEngin('${e.id}')">
+      <div class="ec-head">
+        <div class="ec-icon" style="background:${e.color}"><i class="ti ${e.icon}" style="color:${e.ic}" aria-hidden="true"></i></div>
+        <div style="flex:1;min-width:0">
+          <div class="ec-name">${e.nom}</div>
+          <div class="ec-sub">${e.type}</div>
+        </div>
+        <span class="badge ${STATUT_COLORS[e.statut]}">${STATUT_LABELS[e.statut]}</span>
+      </div>
+      <div class="ec-body">
+        <div class="ec-row"><span class="ec-label">Affectation</span><span class="ec-val">${e.chantier}</span></div>
+        <div class="ec-row"><span class="ec-label">Type</span><span class="badge ${e.proprio==='propre'?'bo':'bb'}">${e.proprio==='propre'?'Propre':'Location'}</span></div>
+        ${pct!==null?`<div style="margin-top:4px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+            <span style="font-size:10px;color:var(--color-text-secondary)">Compteur : ${e.heure}h / ${e.heureMax}h</span>
+            <span style="font-size:10px;color:${progColor};font-weight:500">${pct}%</span>
+          </div>
+          <div class="prog"><div class="prog-f" style="width:${pct}%;background:${progColor}"></div></div>
+        </div>`:''}
+      </div>
+      <div class="ec-footer">
+        ${e.proprio==='propre'?`<span style="font-size:10px;color:var(--color-text-secondary)">Valeur : ${(e.valeur/1000).toFixed(0)}K MAD</span>`:`<span style="font-size:10px;color:var(--color-text-secondary)">${e.fournisseur} · ${e.tauxJ} MAD/j</span>`}
+        <button onclick="event.stopPropagation();sendPrompt('Planifier une maintenance pour ${e.nom}')" style="font-size:10px;padding:2px 8px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);color:var(--color-text-primary);border-radius:6px;cursor:pointer"><i class="ti ti-tool" style="font-size:11px" aria-hidden="true"></i> Entretien ↗</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function selectEngin(id){
+  selectedId = id === selectedId ? null : id;
+  buildEngins();
+}
+
+function buildGantt(){
+  const rows = [
+    {label:'Grue GM1',bars:[{start:0,end:100,color:'#C85A2A',ch:'Al Fath'}]},
+    {label:'Pelle PH1',bars:[{start:0,end:30,color:'#2D8A5E',ch:'Dispo'},{start:35,end:100,color:'#2A6CB8',ch:'S.Maarouf'}]},
+    {label:'Pelle PH2',bars:[{start:0,end:45,color:'#2A6CB8',ch:'Aïn Sebaâ'}]},
+    {label:'Bétonnière B1',bars:[{start:15,end:100,color:'#C84242',ch:'Maint.'}]},
+    {label:'Bétonnière B2',bars:[{start:0,end:55,color:'#C85A2A',ch:'Al Fath'},{start:55,end:100,color:'#C85A2A',ch:'Al Fath'}]},
+    {label:'Camion CB1',bars:[{start:0,end:35,color:'#2A6CB8',ch:'Aïn Sebaâ'}]},
+    {label:'Compacteur C1',bars:[{start:0,end:100,color:'#3C3489',ch:'S.Maarouf'}]},
+    {label:'Nacelle N1 (loc)',bars:[{start:0,end:50,color:'#BA7517',ch:'Mogador'}]},
+  ];
+  document.getElementById('gantt-rows').innerHTML = rows.map(r=>`
+    <div class="gantt-row">
+      <div class="gantt-label" style="width:140px;font-size:11px">${r.label}</div>
+      <div class="gantt-track">
+        ${r.bars.map(b=>`<div class="gantt-bar" style="left:${b.start}%;width:${b.end-b.start}%;background:${b.color}">
+          <span class="gantt-bar-text">${b.ch}</span>
+        </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function sw(page, el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('page-'+page).classList.add('on');
+  el.classList.add('on');
+  if(page==='planning') buildGantt();
+}
+
+buildEngins();
+</script>

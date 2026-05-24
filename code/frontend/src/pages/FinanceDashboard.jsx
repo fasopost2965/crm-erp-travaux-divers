@@ -1,198 +1,607 @@
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
-import PageHeader from '../components/common/PageHeader';
-import KPICard from '../components/common/KPICard';
-import StatusBadge from '../components/common/StatusBadge';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 
-const FinanceDashboard = () => {
-  // Récupérer les statistiques du Dashboard Finance via React Query depuis l'API Laravel
-  const { data: dashboardData, isLoading, error } = useQuery({
-    queryKey: ['financeDashboard'],
-    queryFn: async () => {
-      const response = await api.get('/dashboard/finance');
-      return response.data.data || response.data;
-    }
-  });
+// Formatage monétaire Dirhams marocains
+const formatCurrency = (val) =>
+  new Intl.NumberFormat('fr-MA', { style: 'currency', currency: 'MAD', maximumFractionDigits: 0 })
+    .format(val || 0)
+    .replace('MAD', 'DH');
 
-  if (isLoading) {
-    return <LoadingSpinner fullPage message="Chargement des données comptables..." />;
-  }
+// Formatage date courte française
+const formatDate = (d) => {
+  if (!d) return '—';
+  return new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(d));
+};
+
+// Calcul du nombre de jours de retard ou restants
+const daysFromToday = (dateStr) => {
+  if (!dateStr) return null;
+  const diff = new Date().setHours(0, 0, 0, 0) - new Date(dateStr).setHours(0, 0, 0, 0);
+  return Math.ceil(diff / (1000 * 60 * 60 * 24));
+};
+
+// Badge coloré
+const Badge = ({ label, color = 'blue' }) => {
+  const map = {
+    blue: { bg: '#e8f0fb', text: '#0066cc' },
+    green: { bg: '#e6f9ed', text: '#34c759' },
+    red: { bg: '#fff0ee', text: '#ff3b30' },
+    orange: { bg: '#fff4e5', text: '#ff9500' },
+    grey: { bg: '#f0f0f0', text: '#7a7a7a' },
+  };
+  const { bg, text } = map[color] || map.grey;
+  return (
+    <span
+      style={{
+        background: bg,
+        color: text,
+        fontSize: 11,
+        fontWeight: 700,
+        padding: '3px 9px',
+        borderRadius: 9999,
+        letterSpacing: '0.02em',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {label}
+    </span>
+  );
+};
+
+// Anneau CSS grand format (hero)
+const RingChartHero = ({ percent = 0, size = 120, stroke = 12 }) => {
+  const clamp = Math.min(100, Math.max(0, Math.round(percent)));
+  const inner = size - stroke * 2;
+  const color = clamp >= 80 ? '#34c759' : clamp >= 50 ? '#0066cc' : '#ff9500';
+  return (
+    <div
+      style={{
+        width: size,
+        height: size,
+        borderRadius: '50%',
+        background: `conic-gradient(${color} ${clamp * 3.6}deg, rgba(255,255,255,0.15) ${clamp * 3.6}deg)`,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexShrink: 0,
+      }}
+    >
+      <div
+        style={{
+          width: inner,
+          height: inner,
+          borderRadius: '50%',
+          background: '#272729',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <span style={{ fontSize: 24, fontWeight: 700, color: '#ffffff', letterSpacing: '-0.5px', lineHeight: 1 }}>
+          {clamp}%
+        </span>
+        <span style={{ fontSize: 10, color: '#7a7a7a', marginTop: 2 }}>encaisse</span>
+      </div>
+    </div>
+  );
+};
+
+// Card KPI
+const KpiCard = ({ title, value, sub, highlight, badge, badgeColor }) => (
+  <div
+    style={{
+      background: '#ffffff',
+      border: '1px solid #e0e0e0',
+      borderRadius: 18,
+      padding: 24,
+    }}
+  >
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+      <span style={{ fontSize: 13, fontWeight: 600, color: '#7a7a7a', letterSpacing: '-0.224px' }}>{title}</span>
+      {badge !== undefined && badge > 0 && (
+        <Badge label={`${badge}`} color={badgeColor || 'grey'} />
+      )}
+    </div>
+    <div
+      style={{
+        fontSize: 26,
+        fontWeight: 700,
+        color: highlight || '#1d1d1f',
+        letterSpacing: '-0.374px',
+        lineHeight: 1.1,
+        marginBottom: 6,
+      }}
+    >
+      {value}
+    </div>
+    {sub && <div style={{ fontSize: 13, color: '#7a7a7a' }}>{sub}</div>}
+  </div>
+);
+
+const FinanceDashboard = () => {
+  const { user } = useAuth();
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await api.get('/dashboard/finance');
+        setStats(res.data.data || res.data);
+      } catch (err) {
+        console.error('Erreur dashboard finance', err);
+        setError('Impossible de charger les donnees financieres.');
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  if (loading) return <LoadingSpinner fullPage message="Chargement des donnees comptables..." />;
 
   if (error) {
     return (
-      <div className="p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700 font-medium">
-        ⚠️ Erreur lors de la récupération des données : {error.message}. Veuillez vérifier votre connexion.
+      <div
+        style={{
+          padding: 24,
+          background: '#fff0ee',
+          border: '1px solid #ff3b30',
+          borderRadius: 18,
+          color: '#ff3b30',
+          fontWeight: 600,
+          fontSize: 14,
+        }}
+      >
+        {error}
       </div>
     );
   }
 
-  // Formatage des montants monétaires en Dirhams marocains (DH)
-  const formatCurrency = (val) => {
-    return new Intl.NumberFormat('fr-MA', { style: 'currency', currency: 'MAD', maximumFractionDigits: 0 })
-      .format(val)
-      .replace('MAD', 'DH');
-  };
+  const d = stats || {};
+  const collectionRate = Math.round(d.collectionRate || 0);
+  const paymentsReceived = d.paymentsReceivedAmount || 0;
+  const invoicesIssuedAmount = d.invoicesIssued?.amount || 0;
+  const invoicesIssuedCount = d.invoicesIssued?.count || 0;
+  const unpaidList = d.unpaidInvoices?.list || [];
+  const unpaidTotal = d.unpaidInvoices?.totalAmount || 0;
+  const upcomingList = d.upcomingDueDates?.list || [];
+  const upcomingTotal = d.upcomingDueDates?.totalAmount || 0;
 
-  const stats = dashboardData || {};
+  // Pourcentage d'encaissement pour la barre de progression
+  const encaissementPct =
+    invoicesIssuedAmount > 0 ? Math.min(100, Math.round((paymentsReceived / invoicesIssuedAmount) * 100)) : 0;
 
   return (
-    <div className="space-y-6">
-      
-      {/* En-tête de la page */}
-      <PageHeader 
-        title="Trésorerie & Recouvrement" 
-        breadcrumb={[{ label: "Finance" }, { label: "Tableau de bord" }]} 
-      />
+    <div
+      style={{
+        fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif',
+        background: '#f5f5f7',
+        minHeight: '100vh',
+        padding: '32px 24px',
+        boxSizing: 'border-box',
+      }}
+    >
+      {/* Hero card sombre avec ring chart */}
+      <div
+        style={{
+          background: '#272729',
+          borderRadius: 18,
+          padding: '32px 40px',
+          marginBottom: 24,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: 28,
+        }}
+      >
+        {/* Gauche — ring + taux */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+          <RingChartHero percent={collectionRate} size={120} stroke={12} />
+          <div>
+            <p style={{ fontSize: 13, color: '#7a7a7a', fontWeight: 600, marginBottom: 8 }}>
+              Tresorerie & Recouvrement — {user?.name || 'Finance'}
+            </p>
+            <h1
+              style={{
+                fontSize: 20,
+                fontWeight: 700,
+                color: '#ffffff',
+                letterSpacing: '-0.374px',
+                marginBottom: 8,
+              }}
+            >
+              Taux d'encaissement global
+            </h1>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
+              <span style={{ fontSize: 36, fontWeight: 700, color: '#ffffff', letterSpacing: '-1px' }}>
+                {formatCurrency(paymentsReceived)}
+              </span>
+              <span style={{ fontSize: 14, color: '#7a7a7a' }}>encaisses ce mois</span>
+            </div>
+          </div>
+        </div>
 
-      {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <KPICard
-          title="Facturation Émise (Ce Mois)"
-          value={formatCurrency(stats.invoicesIssued?.amount || 0)}
-          icon={
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-          }
+        {/* Droite — stats rapides */}
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+          <div
+            style={{
+              background: 'rgba(255,255,255,0.06)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: 14,
+              padding: '14px 20px',
+              minWidth: 130,
+            }}
+          >
+            <div style={{ fontSize: 11, color: '#7a7a7a', fontWeight: 600, marginBottom: 6 }}>Factures emises</div>
+            <div style={{ fontSize: 26, fontWeight: 700, color: '#ffffff', letterSpacing: '-0.5px' }}>
+              {invoicesIssuedCount}
+            </div>
+            <div style={{ fontSize: 12, color: '#7a7a7a', marginTop: 4 }}>{formatCurrency(invoicesIssuedAmount)}</div>
+          </div>
+          <div
+            style={{
+              background: unpaidList.length > 0 ? 'rgba(255,59,48,0.1)' : 'rgba(255,255,255,0.06)',
+              border: `1px solid ${unpaidList.length > 0 ? 'rgba(255,59,48,0.25)' : 'rgba(255,255,255,0.1)'}`,
+              borderRadius: 14,
+              padding: '14px 20px',
+              minWidth: 130,
+            }}
+          >
+            <div style={{ fontSize: 11, color: '#7a7a7a', fontWeight: 600, marginBottom: 6 }}>Impayes</div>
+            <div style={{ fontSize: 26, fontWeight: 700, color: unpaidList.length > 0 ? '#ff3b30' : '#ffffff', letterSpacing: '-0.5px' }}>
+              {unpaidList.length}
+            </div>
+            <div style={{ fontSize: 12, color: unpaidList.length > 0 ? '#ff3b30' : '#7a7a7a', marginTop: 4 }}>
+              {formatCurrency(unpaidTotal)}
+            </div>
+          </div>
+          <div
+            style={{
+              background: 'rgba(255,255,255,0.06)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: 14,
+              padding: '14px 20px',
+              minWidth: 130,
+            }}
+          >
+            <div style={{ fontSize: 11, color: '#7a7a7a', fontWeight: 600, marginBottom: 6 }}>Echeances 7j</div>
+            <div style={{ fontSize: 26, fontWeight: 700, color: '#ff9500', letterSpacing: '-0.5px' }}>
+              {upcomingList.length}
+            </div>
+            <div style={{ fontSize: 12, color: '#7a7a7a', marginTop: 4 }}>{formatCurrency(upcomingTotal)}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* 4 KPI cards */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: 16,
+          marginBottom: 24,
+        }}
+      >
+        <KpiCard
+          title="Factures Emises"
+          value={formatCurrency(invoicesIssuedAmount)}
+          sub={`${invoicesIssuedCount} facture${invoicesIssuedCount > 1 ? 's' : ''} ce mois`}
         />
-        <KPICard
-          title="Encaissé Ce Mois"
-          value={formatCurrency(stats.paymentsReceivedAmount || 0)}
-          icon={
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          }
+        <KpiCard
+          title="Paiements Recus"
+          value={formatCurrency(paymentsReceived)}
+          sub="Tresorerie encaissee"
+          highlight="#34c759"
         />
-        <KPICard
-          title="Créances Impayées (En Retard)"
-          value={formatCurrency(stats.unpaidInvoices?.totalAmount || 0)}
-          icon={
-            <svg className="w-6 h-6 text-rose-650" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-          }
+        <KpiCard
+          title="Impayes"
+          value={formatCurrency(unpaidTotal)}
+          sub={`${unpaidList.length} facture${unpaidList.length > 1 ? 's' : ''} en souffrance`}
+          highlight={unpaidList.length > 0 ? '#ff3b30' : '#34c759'}
+          badge={unpaidList.length}
+          badgeColor="red"
         />
-        <KPICard
-          title="Taux de Recouvrement"
-          value={`${Math.round(stats.collectionRate || 0)}%`}
-          icon={
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
-            </svg>
-          }
+        <KpiCard
+          title="Echeances 7 jours"
+          value={formatCurrency(upcomingTotal)}
+          sub={`${upcomingList.length} facture${upcomingList.length > 1 ? 's' : ''} a venir`}
+          highlight={upcomingList.length > 0 ? '#ff9500' : '#1d1d1f'}
+          badge={upcomingList.length}
+          badgeColor="orange"
         />
       </div>
 
-      {/* Main content grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        {/* Left Column - Impayés Table (2/3 width) */}
-        <div className="lg:col-span-2 bg-white border border-slate-100 rounded-3xl p-6 shadow-sm flex flex-col">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-base font-bold text-slate-800 flex items-center space-x-2">
-              <svg className="w-5 h-5 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
-              <span>Suivi des Créances Impayées</span>
+      {/* Barre d'encaissement */}
+      <div
+        style={{
+          background: '#ffffff',
+          border: '1px solid #e0e0e0',
+          borderRadius: 18,
+          padding: 24,
+          marginBottom: 16,
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, flexWrap: 'wrap', gap: 8 }}>
+          <div>
+            <h2 style={{ fontSize: 15, fontWeight: 600, color: '#1d1d1f', letterSpacing: '-0.374px' }}>
+              Progression d'encaissement
             </h2>
-            <span className="text-xs font-bold text-rose-600 px-2.5 py-1 rounded-xl bg-rose-50 border border-rose-100">
-              {stats.unpaidInvoices?.list?.length || 0} Facture(s) en souffrance
+            <p style={{ fontSize: 13, color: '#7a7a7a', marginTop: 2 }}>
+              Paiements recus par rapport aux factures emises
+            </p>
+          </div>
+          <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+            <span style={{ fontSize: 13, color: '#7a7a7a' }}>
+              {formatCurrency(paymentsReceived)}
+              <span style={{ color: '#e0e0e0', margin: '0 6px' }}>/</span>
+              {formatCurrency(invoicesIssuedAmount)}
             </span>
+            <Badge
+              label={`${encaissementPct}% encaisse`}
+              color={encaissementPct >= 80 ? 'green' : encaissementPct >= 50 ? 'blue' : 'orange'}
+            />
+          </div>
+        </div>
+        <div style={{ height: 8, background: '#f0f0f0', borderRadius: 9999, overflow: 'hidden' }}>
+          <div
+            style={{
+              width: `${Math.max(1, encaissementPct)}%`,
+              height: '100%',
+              background: encaissementPct >= 80 ? '#34c759' : encaissementPct >= 50 ? '#0066cc' : '#ff9500',
+              borderRadius: 9999,
+              transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)',
+            }}
+          />
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6, fontSize: 12, color: '#7a7a7a' }}>
+          <span>0 DH</span>
+          <span>{formatCurrency(invoicesIssuedAmount)}</span>
+        </div>
+      </div>
+
+      {/* Grille tableau impayés + échéances */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.8fr 1fr', gap: 16 }}>
+        {/* Tableau des impayés */}
+        <div
+          style={{
+            background: '#ffffff',
+            border: '1px solid #e0e0e0',
+            borderRadius: 18,
+            padding: 24,
+            overflow: 'hidden',
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 10 }}>
+            <div>
+              <h2 style={{ fontSize: 15, fontWeight: 600, color: '#1d1d1f', letterSpacing: '-0.374px' }}>
+                Suivi des creances impayees
+              </h2>
+              <p style={{ fontSize: 13, color: '#7a7a7a', marginTop: 2 }}>Facturation en souffrance — a relancer</p>
+            </div>
+            {unpaidList.length > 0 && (
+              <Badge label={`${unpaidList.length} facture${unpaidList.length > 1 ? 's' : ''}`} color="red" />
+            )}
           </div>
 
-          {!stats.unpaidInvoices?.list || stats.unpaidInvoices.list.length === 0 ? (
-            <div className="text-center py-12 text-slate-450 font-medium text-sm flex-1 flex flex-col items-center justify-center">
-              🎉 Félicitations, aucun impayé n'est à signaler !
+          {unpaidList.length === 0 ? (
+            <div
+              style={{
+                textAlign: 'center',
+                padding: '40px 0',
+                color: '#34c759',
+                fontSize: 14,
+                fontWeight: 600,
+              }}
+            >
+              Aucun impaye — encaissement a jour
             </div>
           ) : (
-            <div className="overflow-x-auto flex-1">
-              <table className="w-full text-left border-collapse">
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
                 <thead>
-                  <tr className="bg-slate-50/50 border-b border-slate-100">
-                    <th className="px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">N° Facture</th>
-                    <th className="px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">Libellé</th>
-                    <th className="px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">Montant TTC</th>
-                    <th className="px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">Échéance</th>
-                    <th className="px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">Statut</th>
-                    <th className="px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">Actions</th>
+                  <tr
+                    style={{
+                      borderBottom: '1px solid #f0f0f0',
+                    }}
+                  >
+                    {['N Facture', 'Client / Libelle', 'Montant TTC', 'Echeance', 'Retard', 'Action'].map((h, i) => (
+                      <th
+                        key={i}
+                        style={{
+                          padding: '8px 12px',
+                          textAlign: i >= 4 ? 'right' : 'left',
+                          fontSize: 11,
+                          fontWeight: 700,
+                          color: '#7a7a7a',
+                          letterSpacing: '0.05em',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {h.toUpperCase()}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {stats.unpaidInvoices.list.map((invoice) => (
-                    <tr key={invoice.id} className="hover:bg-slate-50/50 transition-all text-xs font-medium">
-                      <td className="px-4 py-3.5 text-slate-800 font-bold">{invoice.invoiceNumber}</td>
-                      <td className="px-4 py-3.5 text-slate-500 truncate max-w-[150px]">{invoice.title}</td>
-                      <td className="px-4 py-3.5 text-slate-850 font-bold">{formatCurrency(invoice.totalTtc)}</td>
-                      <td className="px-4 py-3.5 text-slate-400">
-                        {new Date(invoice.dueDate).toLocaleDateString('fr-FR')}
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <StatusBadge status={invoice.status} />
-                      </td>
-                      <td className="px-4 py-3.5 text-right">
-                        <button className="py-1 px-3.5 rounded-lg bg-blue-600 hover:bg-blue-550 text-white font-bold text-[10px] cursor-pointer transition-all shadow-inner">
-                          Relancer
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                <tbody>
+                  {unpaidList.map((inv, i) => {
+                    const delay = daysFromToday(inv.dueDate);
+                    const isUrgent = delay !== null && delay > 30;
+                    const isMedium = delay !== null && delay > 7 && delay <= 30;
+                    const rowBg = i % 2 === 0 ? '#ffffff' : '#fafafa';
+                    const delayColor = isUrgent ? '#ff3b30' : isMedium ? '#ff9500' : '#7a7a7a';
+                    return (
+                      <tr
+                        key={inv.id || i}
+                        style={{ background: rowBg, borderBottom: '1px solid #f0f0f0' }}
+                      >
+                        <td style={{ padding: '12px 12px', fontWeight: 700, color: '#1d1d1f', whiteSpace: 'nowrap' }}>
+                          {inv.invoiceNumber || inv.invoice_number || `#${inv.id}`}
+                        </td>
+                        <td style={{ padding: '12px 12px', color: '#7a7a7a', maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {inv.account?.name || inv.title || 'Client inconnu'}
+                        </td>
+                        <td style={{ padding: '12px 12px', fontWeight: 700, color: '#1d1d1f', whiteSpace: 'nowrap' }}>
+                          {formatCurrency(inv.totalTtc || inv.total_ttc)}
+                        </td>
+                        <td style={{ padding: '12px 12px', color: '#7a7a7a', whiteSpace: 'nowrap' }}>
+                          {formatDate(inv.dueDate || inv.due_date)}
+                        </td>
+                        <td style={{ padding: '12px 12px', textAlign: 'right', whiteSpace: 'nowrap' }}>
+                          {delay !== null && delay > 0 ? (
+                            <span
+                              style={{
+                                background: isUrgent ? '#fff0ee' : isMedium ? '#fff4e5' : '#f0f0f0',
+                                color: delayColor,
+                                fontSize: 11,
+                                fontWeight: 700,
+                                padding: '3px 8px',
+                                borderRadius: 9999,
+                              }}
+                            >
+                              +{delay}j
+                            </span>
+                          ) : (
+                            <span style={{ color: '#7a7a7a', fontSize: 11 }}>—</span>
+                          )}
+                        </td>
+                        <td style={{ padding: '12px 12px', textAlign: 'right' }}>
+                          <button
+                            style={{
+                              background: '#0066cc',
+                              color: '#ffffff',
+                              border: 'none',
+                              borderRadius: 9999,
+                              padding: '6px 14px',
+                              fontSize: 12,
+                              fontWeight: 600,
+                              cursor: 'pointer',
+                              transition: 'transform 0.1s ease',
+                              whiteSpace: 'nowrap',
+                            }}
+                            onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.95)')}
+                            onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                            onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                          >
+                            Relancer
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
+                {/* Ligne total */}
+                <tfoot>
+                  <tr style={{ borderTop: '2px solid #e0e0e0', background: '#f5f5f7' }}>
+                    <td
+                      colSpan={2}
+                      style={{ padding: '12px 12px', fontSize: 12, fontWeight: 700, color: '#7a7a7a' }}
+                    >
+                      Total en souffrance
+                    </td>
+                    <td
+                      colSpan={4}
+                      style={{ padding: '12px 12px', fontSize: 14, fontWeight: 700, color: '#ff3b30' }}
+                    >
+                      {formatCurrency(unpaidTotal)}
+                    </td>
+                  </tr>
+                </tfoot>
               </table>
             </div>
           )}
         </div>
 
-        {/* Right Column - Upcoming Due Dates (1/3 width) */}
-        <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
-          <h2 className="text-sm font-bold text-slate-800 mb-6 flex items-center space-x-2">
-            <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <span>Échéances Futures (7 prochains jours)</span>
+        {/* Colonne echéances 7j */}
+        <div
+          style={{
+            background: '#ffffff',
+            border: '1px solid #e0e0e0',
+            borderRadius: 18,
+            padding: 24,
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <h2 style={{ fontSize: 15, fontWeight: 600, color: '#1d1d1f', letterSpacing: '-0.374px', marginBottom: 4 }}>
+            Echeances a venir
           </h2>
+          <p style={{ fontSize: 13, color: '#7a7a7a', marginBottom: 16 }}>7 prochains jours</p>
 
-          <div className="mb-6 p-4 rounded-2xl bg-blue-50/50 border border-blue-100 flex items-center justify-between">
-            <span className="text-xs text-slate-450 font-semibold">Total à percevoir</span>
-            <span className="text-sm font-black text-blue-600">
-              {formatCurrency(stats.upcomingDueDates?.totalAmount || 0)}
-            </span>
+          {/* Total encadré */}
+          <div
+            style={{
+              background: '#e8f0fb',
+              border: '1px solid rgba(0,102,204,0.2)',
+              borderRadius: 12,
+              padding: '12px 16px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 16,
+            }}
+          >
+            <span style={{ fontSize: 13, color: '#0066cc', fontWeight: 600 }}>Total a percevoir</span>
+            <span style={{ fontSize: 15, fontWeight: 700, color: '#0066cc' }}>{formatCurrency(upcomingTotal)}</span>
           </div>
 
-          {!stats.upcomingDueDates?.list || stats.upcomingDueDates.list.length === 0 ? (
-            <div className="text-center py-8 text-slate-400 font-medium text-xs">
-              Aucune facture n'arrive à échéance cette semaine.
+          {upcomingList.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '32px 0', color: '#7a7a7a', fontSize: 13, flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              Aucune facture n'arrive a echeance cette semaine
             </div>
           ) : (
-            <div className="space-y-4">
-              {stats.upcomingDueDates.list.map((invoice) => (
-                <div key={invoice.id} className="p-4 border border-slate-50 rounded-2xl flex justify-between items-center hover:border-slate-100 transition-all duration-300">
-                  <div className="space-y-0.5">
-                    <span className="text-[10px] font-bold text-slate-400">{invoice.invoiceNumber}</span>
-                    <h4 className="text-xs font-bold text-slate-800 truncate max-w-[150px]">
-                      {invoice.title}
-                    </h4>
-                    <p className="text-[9px] text-slate-400">
-                      Échéance le : {new Date(invoice.dueDate).toLocaleDateString('fr-FR')}
-                    </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
+              {upcomingList.map((inv, i) => {
+                const delay = daysFromToday(inv.dueDate || inv.due_date);
+                // Pour les echéances futures, delay est negatif (pas encore echu)
+                const daysLeft = delay !== null ? -delay : null;
+                const isClose = daysLeft !== null && daysLeft <= 2;
+                return (
+                  <div
+                    key={inv.id || i}
+                    style={{
+                      background: isClose ? '#fff4e5' : '#f5f5f7',
+                      border: isClose ? '1px solid rgba(255,149,0,0.25)' : '1px solid transparent',
+                      borderRadius: 12,
+                      padding: '12px 14px',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      gap: 8,
+                    }}
+                  >
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 11, color: '#7a7a7a', fontWeight: 600, marginBottom: 3 }}>
+                        {inv.invoiceNumber || inv.invoice_number || `#${inv.id}`}
+                      </div>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: '#1d1d1f', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {inv.account?.name || inv.title || 'Client inconnu'}
+                      </div>
+                      <div style={{ fontSize: 11, color: '#7a7a7a', marginTop: 2 }}>
+                        Echeance : {formatDate(inv.dueDate || inv.due_date)}
+                      </div>
+                    </div>
+                    <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: '#1d1d1f' }}>
+                        {formatCurrency(inv.totalTtc || inv.total_ttc)}
+                      </div>
+                      {daysLeft !== null && daysLeft >= 0 && (
+                        <div style={{ fontSize: 11, color: isClose ? '#ff9500' : '#7a7a7a', marginTop: 2, fontWeight: 600 }}>
+                          J-{daysLeft}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  
-                  <div className="text-right">
-                    <span className="text-xs font-black text-slate-700">
-                      {formatCurrency(invoice.totalTtc)}
-                    </span>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
-
       </div>
-
     </div>
   );
 };

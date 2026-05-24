@@ -1,0 +1,572 @@
+
+<h2 class="sr-only">BatiPro ERP complet — pointage journalier personnel temporaire, achats stock, rapports analytiques, et templates facture/devis convertibles</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:13px;color:var(--color-text-primary)}
+.nav{display:grid;grid-template-columns:repeat(4,1fr);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;margin-bottom:14px;background:var(--color-background-primary)}
+.navbtn{padding:8px 4px;text-align:center;font-size:11px;font-weight:500;cursor:pointer;color:var(--color-text-secondary);transition:all .15s;border-right:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;gap:4px}
+.navbtn:last-child{border-right:none}
+.navbtn.on{background:#1C1C1C;color:#fff}
+.navbtn i{font-size:13px}
+.screen{display:none}.screen.on{display:block}
+.topbar{background:#1C1C1C;border-radius:var(--border-radius-lg) var(--border-radius-lg) 0 0;padding:11px 16px;display:flex;align-items:center;gap:8px}
+.tbt{font-size:13px;font-weight:500;color:#fff;flex:1}
+.tbm{font-size:11px;color:rgba(255,255,255,.4)}
+.bto{background:#C85A2A;color:#fff;border:none;padding:5px 11px;border-radius:var(--border-radius-md);font-size:11px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px}
+.btg{background:rgba(255,255,255,.09);color:rgba(255,255,255,.7);border:none;padding:5px 9px;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.outer{border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);overflow:hidden}
+.body{background:var(--color-background-tertiary);padding:12px;display:flex;flex-direction:column;gap:10px}
+.panel{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.ph{padding:9px 12px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:space-between}
+.pt{font-size:12px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:5px}
+.pt i{color:#C85A2A;font-size:14px}
+.lbtn{font-size:11px;color:#C85A2A;cursor:pointer;background:none;border:none;padding:0}
+.kpi4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.kpi3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.kpi{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 12px}
+.kt{border-top:2px solid #C85A2A}.kg{border-top:2px solid #2D8A5E}.kb{border-top:2px solid #2A6CB8}.kr{border-top:2px solid #C84242}.ky{border-top:2px solid #BA7517}
+.kl{font-size:11px;color:var(--color-text-secondary);margin-bottom:3px}
+.kv{font-size:17px;font-weight:500;color:var(--color-text-primary);line-height:1}
+.ks{font-size:10px;color:var(--color-text-secondary);margin-top:2px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.badge{font-size:10px;padding:2px 6px;border-radius:6px;white-space:nowrap}
+.bg{background:#E8F6EE;color:#1A6B3C}.br{background:#FBEAEA;color:#A32D2D}.bb{background:#E8F4FF;color:#1A5C9A}.by{background:#FAEEDA;color:#633806}.bgr{background:#F1EFE8;color:#5F5E5A}.bo{background:#FAECE7;color:#712B13}
+.row{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:0.5px solid var(--color-border-tertiary);font-size:12px}
+.row:last-child{border-bottom:none}
+.row:hover{background:var(--color-background-secondary)}
+.prog{flex:1;height:5px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden}
+.prog-f{height:100%;border-radius:3px}
+</style>
+
+<div class="nav">
+  <div class="navbtn on" onclick="sw('pointage',this)"><i class="ti ti-clock-hour-4" aria-hidden="true"></i>Pointage & Paie</div>
+  <div class="navbtn" onclick="sw('stock',this)"><i class="ti ti-package" aria-hidden="true"></i>Achats & Stock</div>
+  <div class="navbtn" onclick="sw('rapports',this)"><i class="ti ti-chart-bar" aria-hidden="true"></i>Rapports</div>
+  <div class="navbtn" onclick="sw('docs',this)"><i class="ti ti-file-invoice" aria-hidden="true"></i>Documents PDF</div>
+</div>
+
+<!-- ========== POINTAGE & PAIE ========== -->
+<div class="screen on" id="screen-pointage">
+<div class="outer">
+<div class="topbar">
+  <i class="ti ti-clock-hour-4" style="color:#C85A2A;font-size:15px" aria-hidden="true"></i>
+  <span class="tbt">Pointage journalier — Chantier Al Fath · Jeudi 22 mai 2026</span>
+  <span class="tbm" id="date-now"></span>
+  <button class="btg"><i class="ti ti-calendar" aria-hidden="true"></i> Changer date</button>
+  <button class="bto" onclick="validerPointage()"><i class="ti ti-check" aria-hidden="true"></i> Valider & envoyer paie ↗</button>
+</div>
+<div class="body">
+
+  <div class="kpi4">
+    <div class="kpi kt"><div class="kl">Présents aujourd'hui</div><div class="kv" id="kpi-present">10</div><div class="ks">sur 14 inscrits</div></div>
+    <div class="kpi kg"><div class="kl">H. normales</div><div class="kv" id="kpi-hn">80</div><div class="ks">heures cumulées</div></div>
+    <div class="kpi ky"><div class="kl">H. supplémentaires</div><div class="kv" id="kpi-hs">12</div><div class="ks">heures × 125%</div></div>
+    <div class="kpi kb"><div class="kl">Masse journée</div><div class="kv" id="kpi-masse">3 240</div><div class="ks">MAD à comptabiliser</div></div>
+  </div>
+
+  <div class="two">
+    <div class="panel">
+      <div class="ph">
+        <div class="pt"><i class="ti ti-users" aria-hidden="true"></i>Personnel CDI / CDD</div>
+        <span class="badge bo">Permanent</span>
+      </div>
+      <div id="list-cdi"></div>
+    </div>
+    <div class="panel">
+      <div class="ph">
+        <div class="pt"><i class="ti ti-user-plus" aria-hidden="true"></i>Personnel journalier (temporaire)</div>
+        <button class="lbtn" onclick="addJournalier()">+ Ajouter journalier ↗</button>
+      </div>
+      <div id="list-temp"></div>
+      <div style="padding:8px 12px;background:var(--color-background-secondary);border-top:0.5px solid var(--color-border-tertiary)">
+        <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px">Ajouter un journalier non inscrit</div>
+        <div style="display:flex;gap:6px">
+          <input type="text" id="new-name" placeholder="Nom complet" style="flex:1;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:5px 8px;font-size:11px;background:var(--color-background-primary);color:var(--color-text-primary);outline:none">
+          <input type="text" id="new-metier" placeholder="Métier" style="width:100px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:5px 8px;font-size:11px;background:var(--color-background-primary);color:var(--color-text-primary);outline:none">
+          <input type="number" id="new-taux" placeholder="MAD/j" value="280" style="width:70px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:5px 8px;font-size:11px;background:var(--color-background-primary);color:var(--color-text-primary);outline:none">
+          <button onclick="addJournalier()" style="background:#C85A2A;color:#fff;border:none;border-radius:var(--border-radius-md);padding:5px 10px;font-size:11px;cursor:pointer"><i class="ti ti-plus" aria-hidden="true"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="ph">
+      <div class="pt"><i class="ti ti-report" aria-hidden="true"></i>Récapitulatif tâches du jour</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0">
+      ${[
+        ['Maçonnerie & coffrage','MB, KA, YO','8h chacun'],
+        ['Ferraillage RDC','HB, AM','8h + 2h supp'],
+        ['Électricité courants forts','SM, RK','8h chacun'],
+        ['Plomberie sanitaires R+1','FA, OB','6h (demi-journée)'],
+        ['Ravalement façade nord','3 journaliers','8h chacun'],
+        ['Nettoyage & évacuation','2 journaliers','4h chacun'],
+      ].map((t,i)=>`<div style="padding:9px 12px;border-right:${i%3<2?'0.5px solid var(--color-border-tertiary)':'none'};border-bottom:${i<3?'0.5px solid var(--color-border-tertiary)':'none'}">
+        <div style="font-size:11px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px">${t[0]}</div>
+        <div style="font-size:10px;color:var(--color-text-secondary)">${t[1]}</div>
+        <div style="font-size:10px;color:#C85A2A;margin-top:2px">${t[2]}</div>
+      </div>`).join('')}
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="ph">
+      <div class="pt"><i class="ti ti-receipt" aria-hidden="true"></i>Lien comptabilité — paie journalière → bulletin mensuel</div>
+      <span class="badge bg">Synchronisé</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:0;padding:12px">
+      ${['Pointage chef chantier','→','Calcul journée (MAD/j × présence)','→','Cumul mensuel RH','→','Bulletin de paie comptable','→','Virement bancaire'].map((s,i)=>i%2===0?`<div style="flex:1;background:${i===0?'#FAECE7':i===2?'#FDF0EA':i===4?'#E8F4FF':i===6?'#E8F6EE':'#1C1C1C'};color:${i===0?'#712B13':i===2?'#993C1D':i===4?'#1A5C9A':i===6?'#1A6B3C':'#fff'};border-radius:var(--border-radius-md);padding:7px 8px;text-align:center;font-size:10px;font-weight:500">${s}</div>`:`<div style="font-size:14px;color:var(--color-text-secondary);padding:0 4px">${s}</div>`).join('')}
+    </div>
+  </div>
+
+</div></div>
+</div>
+
+<!-- ========== ACHATS & STOCK ========== -->
+<div class="screen" id="screen-stock">
+<div class="outer">
+<div class="topbar">
+  <i class="ti ti-package" style="color:#C85A2A;font-size:15px" aria-hidden="true"></i>
+  <span class="tbt">Achats & Stock matériaux</span>
+  <span class="tbm">Mai 2026 · 3 entrepôts</span>
+  <button class="btg" onclick="sendPrompt('Comment créer un bon de commande fournisseur dans BatiPro ?')"><i class="ti ti-truck" aria-hidden="true"></i> Nouveau BC ↗</button>
+  <button class="bto"><i class="ti ti-plus" aria-hidden="true"></i> Réception</button>
+</div>
+<div class="body">
+  <div class="kpi4">
+    <div class="kpi kt"><div class="kl">Valeur stock</div><div class="kv">487 K</div><div class="ks">MAD total entrepôts</div></div>
+    <div class="kpi kr"><div class="kl">Alertes rupture</div><div class="kv">4</div><div class="ks">produits sous seuil</div></div>
+    <div class="kpi ky"><div class="kl">Commandes en attente</div><div class="kv">7</div><div class="ks">BC fournisseurs</div></div>
+    <div class="kpi kg"><div class="kl">Achats mai</div><div class="kv">312 K</div><div class="ks">MAD décaissés</div></div>
+  </div>
+  <div class="two">
+    <div class="panel">
+      <div class="ph"><div class="pt"><i class="ti ti-list" aria-hidden="true"></i>État du stock — matériaux BTP</div>
+        <div style="display:flex;gap:5px">
+          <span class="badge bo" style="cursor:pointer">Tous</span>
+          <span class="badge bg" style="cursor:pointer">OK</span>
+          <span class="badge br" style="cursor:pointer">Rupture</span>
+        </div>
+      </div>
+      <table style="width:100%;font-size:11px;border-collapse:collapse;table-layout:fixed">
+        <thead><tr style="background:var(--color-background-secondary)">
+          <th style="padding:6px 10px;text-align:left;font-weight:500;color:var(--color-text-secondary);width:32%">Matériau</th>
+          <th style="padding:6px 10px;text-align:left;font-weight:500;color:var(--color-text-secondary);width:15%">Catégorie</th>
+          <th style="padding:6px 10px;text-align:right;font-weight:500;color:var(--color-text-secondary);width:13%">Stock</th>
+          <th style="padding:6px 10px;text-align:right;font-weight:500;color:var(--color-text-secondary);width:13%">Seuil</th>
+          <th style="padding:6px 10px;text-align:left;font-weight:500;color:var(--color-text-secondary);width:27%">Niveau</th>
+        </tr></thead>
+        <tbody>
+          ${[
+            ['Ciment CPJ 45','Gros œuvre',42,'t',20,100,'#2D8A5E'],
+            ['Sable 0/4','Gros œuvre',18,'m³',10,60,'#2D8A5E'],
+            ['Fer HA 12mm','Ferraillage',3.2,'t',5,20,'#C84242'],
+            ['Fer HA 8mm','Ferraillage',1.1,'t',3,15,'#C84242'],
+            ['Parpaings 20×20','Maçonnerie',1200,'u',500,3000,'#2D8A5E'],
+            ['Peinture blanche','Finitions',48,'kg',100,500,'#C84242'],
+            ['Câble 2.5mm²','Électricité',620,'m',200,2000,'#2D8A5E'],
+            ['Tube PVC 40mm','Plomberie',85,'m',50,300,'#2D8A5E'],
+            ['Carrelage 60×60','Finitions',12,'m²',80,400,'#C84242'],
+            ['Placo BA13','Cloisons',36,'m²',20,200,'#2D8A5E'],
+          ].map(r=>`<tr style="border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer" onmouseover="this.style.background='var(--color-background-secondary)'" onmouseout="this.style.background=''">
+            <td style="padding:7px 10px;font-weight:500;color:var(--color-text-primary)">${r[0]}</td>
+            <td style="padding:7px 10px"><span class="badge bo">${r[1]}</span></td>
+            <td style="padding:7px 10px;text-align:right;color:${r[6]};font-weight:500">${r[2]} ${r[3]}</td>
+            <td style="padding:7px 10px;text-align:right;color:var(--color-text-secondary)">${r[4]} ${r[3]}</td>
+            <td style="padding:7px 10px">
+              <div style="display:flex;align-items:center;gap:5px">
+                <div class="prog"><div class="prog-f" style="width:${Math.min(100,Math.round(r[2]/r[5]*100))}%;background:${r[6]}"></div></div>
+                <span style="font-size:10px;color:${r[6]};min-width:28px">${Math.min(100,Math.round(r[2]/r[5]*100))}%</span>
+              </div>
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="panel">
+        <div class="ph"><div class="pt"><i class="ti ti-truck" aria-hidden="true"></i>Bons de commande récents</div></div>
+        ${[
+          {ref:'BC-2026-046',fourn:'Méta-Acier',objet:'Fer HA 12 & 8mm — 10t',montant:'148 000',statut:'En transit',sc:'bb'},
+          {ref:'BC-2026-045',fourn:'CBI Maroc',objet:'Ciment CPJ45 — 20t',montant:'62 000',statut:'Livré',sc:'bg'},
+          {ref:'BC-2026-044',fourn:'Colorker',objet:'Carrelage 60×60 — 200m²',montant:'38 400',statut:'Partiel',sc:'by'},
+          {ref:'BC-2026-043',fourn:'Nexans Maroc',objet:'Câblage 2,5mm² — 500m',montant:'22 000',statut:'Validé',sc:'bo'},
+          {ref:'BC-2026-042',fourn:'StuccoMaroc',objet:'Peinture & enduit',montant:'18 800',statut:'En attente',sc:'bgr'},
+        ].map(b=>`<div class="row" style="cursor:default">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">${b.ref} · ${b.fourn}</div>
+            <div style="font-size:10px;color:var(--color-text-secondary)">${b.objet}</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">${b.montant} MAD</div>
+            <span class="badge ${b.sc}">${b.statut}</span>
+          </div>
+        </div>`).join('')}
+      </div>
+      <div class="panel">
+        <div class="ph"><div class="pt"><i class="ti ti-building-warehouse" aria-hidden="true"></i>Consommation par chantier — mai</div></div>
+        ${[['Al Fath',62],['Aïn Sebaâ',48],['Sidi Maarouf',38],['Mogador',21],['École Maarif',18]].map(c=>`
+        <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;border-bottom:0.5px solid var(--color-border-tertiary)">
+          <span style="font-size:11px;color:var(--color-text-secondary);min-width:100px">${c[0]}</span>
+          <div class="prog"><div class="prog-f" style="width:${c[1]}%;background:#C85A2A"></div></div>
+          <span style="font-size:11px;font-weight:500;color:var(--color-text-primary);min-width:30px;text-align:right">${c[1]}%</span>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>
+</div></div>
+</div>
+
+<!-- ========== RAPPORTS ========== -->
+<div class="screen" id="screen-rapports">
+<div class="outer">
+<div class="topbar">
+  <i class="ti ti-chart-bar" style="color:#C85A2A;font-size:15px" aria-hidden="true"></i>
+  <span class="tbt">Rapports & Analytique direction</span>
+  <span class="tbm">Exercice 2026</span>
+  <button class="btg"><i class="ti ti-calendar" aria-hidden="true"></i> Période</button>
+  <button class="bto" onclick="sendPrompt('Exporte le rapport de rentabilité par chantier en PDF Excel')"><i class="ti ti-download" aria-hidden="true"></i> Export ↗</button>
+</div>
+<div class="body">
+  <div class="kpi4">
+    <div class="kpi kt"><div class="kl">CA réalisé 2026</div><div class="kv">6,2 M</div><div class="ks">MAD · jan–mai</div></div>
+    <div class="kpi kg"><div class="kl">Marge brute</div><div class="kv">28%</div><div class="ks">après MO & matériaux</div></div>
+    <div class="kpi kb"><div class="kl">Chantiers rentables</div><div class="kv">5/7</div><div class="ks">au-dessus de 20% marge</div></div>
+    <div class="kpi kr"><div class="kl">Coût MO / CA</div><div class="kv">38%</div><div class="ks">benchmark secteur: 35%</div></div>
+  </div>
+  <div class="two">
+    <div class="panel">
+      <div class="ph"><div class="pt"><i class="ti ti-chart-bar" aria-hidden="true"></i>Rentabilité par chantier</div></div>
+      <table style="width:100%;font-size:11px;border-collapse:collapse;table-layout:fixed">
+        <thead><tr style="background:var(--color-background-secondary)">
+          <th style="padding:6px 10px;text-align:left;font-weight:500;color:var(--color-text-secondary);width:28%">Chantier</th>
+          <th style="padding:6px 10px;text-align:left;font-weight:500;color:var(--color-text-secondary);width:18%">Type travaux</th>
+          <th style="padding:6px 10px;text-align:right;font-weight:500;color:var(--color-text-secondary);width:16%">CA HT</th>
+          <th style="padding:6px 10px;text-align:right;font-weight:500;color:var(--color-text-secondary);width:14%">Coûts</th>
+          <th style="padding:6px 10px;text-align:right;font-weight:500;color:var(--color-text-secondary);width:12%">Marge</th>
+          <th style="padding:6px 10px;text-align:left;font-weight:500;color:var(--color-text-secondary);width:12%">Perf.</th>
+        </tr></thead>
+        <tbody>
+          ${[
+            ['Al Fath','Gros œuvre','2 400 K','1 680 K','30%','#2D8A5E'],
+            ['Villa Aïn Diab','Finitions','950 K','618 K','35%','#2D8A5E'],
+            ['École Maarif','Élec. & Plomb.','680 K','503 K','26%','#2D8A5E'],
+            ['Sidi Maarouf','Gros œuvre R+5','5 600 K','4 256 K','24%','#2D8A5E'],
+            ['Mogador','Ravalement','3 200 K','2 560 K','20%','#BA7517'],
+            ['Aïn Sebaâ','Structure métal','1 800 K','1 584 K','12%','#C84242'],
+            ['Clinique Agdal','Aménag. int.','420 K','294 K','30%','#2D8A5E'],
+          ].map(r=>`<tr style="border-bottom:0.5px solid var(--color-border-tertiary)">
+            <td style="padding:7px 10px;font-weight:500;color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r[0]}</td>
+            <td style="padding:7px 10px"><span class="badge bo">${r[1]}</span></td>
+            <td style="padding:7px 10px;text-align:right;color:var(--color-text-primary)">${r[2]}</td>
+            <td style="padding:7px 10px;text-align:right;color:#A32D2D">${r[3]}</td>
+            <td style="padding:7px 10px;text-align:right;font-weight:500;color:${r[5]}">${r[4]}</td>
+            <td style="padding:7px 10px"><div class="prog"><div class="prog-f" style="width:${parseInt(r[4])}%;background:${r[5]}"></div></div></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="panel">
+        <div class="ph"><div class="pt"><i class="ti ti-briefcase" aria-hidden="true"></i>CA par type de prestation</div></div>
+        ${[
+          ['Gros œuvre & structure',42,'#C85A2A'],
+          ['Finitions & revêtements',18,'#E8784A'],
+          ['Électricité & courants',14,'#2A6CB8'],
+          ['Plomberie & sanitaire',10,'#2D8A5E'],
+          ['Ravalement & façades',9,'#BA7517'],
+          ['Aménagement intérieur',7,'#7F4ABD'],
+        ].map(t=>`<div style="display:flex;align-items:center;gap:8px;padding:7px 12px;border-bottom:0.5px solid var(--color-border-tertiary)">
+          <div style="width:10px;height:10px;border-radius:2px;background:${t[2]};flex-shrink:0"></div>
+          <span style="font-size:11px;color:var(--color-text-primary);flex:1">${t[0]}</span>
+          <div class="prog"><div class="prog-f" style="width:${t[1]}%;background:${t[2]}"></div></div>
+          <span style="font-size:11px;font-weight:500;color:var(--color-text-primary);min-width:28px">${t[1]}%</span>
+        </div>`).join('')}
+      </div>
+      <div class="panel">
+        <div class="ph"><div class="pt"><i class="ti ti-users" aria-hidden="true"></i>Productivité MO par chantier</div></div>
+        ${[
+          ['Al Fath','2 850 MAD/j·ouv.','bg'],
+          ['Villa Aïn Diab','3 100 MAD/j·ouv.','bg'],
+          ['Aïn Sebaâ','1 920 MAD/j·ouv.','br'],
+          ['École Maarif','2 650 MAD/j·ouv.','bg'],
+          ['Mogador','2 200 MAD/j·ouv.','by'],
+        ].map(p=>`<div class="row">
+          <span style="flex:1;color:var(--color-text-primary)">${p[0]}</span>
+          <span style="font-size:11px;font-weight:500;color:var(--color-text-primary)">${p[1]}</span>
+          <span class="badge ${p[2]}">${p[2]==='bg'?'Bon':'Faible'}</span>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><div class="pt"><i class="ti ti-globe" aria-hidden="true"></i>Répartition géographique — chantiers actifs & pipeline international</div></div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0">
+      ${[
+        {pays:'Maroc',flag:'🇲🇦',chantiers:7,ca:'6,2 M MAD',statut:'Actif'},
+        {pays:'France',flag:'🇫🇷',chantiers:1,ca:'En prospection',statut:'Pipeline'},
+        {pays:'Sénégal',flag:'🇸🇳',chantiers:1,ca:'Devis en cours',statut:'Pipeline'},
+        {pays:'Qatar',flag:'🇶🇦',chantiers:0,ca:'Contacté',statut:'Prospect'},
+        {pays:'Côte d\'Ivoire',flag:'🇨🇮',chantiers:0,ca:'Contacté',statut:'Prospect'},
+      ].map((p,i)=>`<div style="padding:10px;text-align:center;border-right:${i<4?'0.5px solid var(--color-border-tertiary)':'none'}">
+        <div style="font-size:20px;margin-bottom:4px">${p.flag}</div>
+        <div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">${p.pays}</div>
+        <div style="font-size:10px;color:var(--color-text-secondary);margin-top:2px">${p.ca}</div>
+        <span class="badge ${p.statut==='Actif'?'bg':p.statut==='Pipeline'?'bb':'bgr'}" style="margin-top:4px;display:inline-block">${p.statut}</span>
+      </div>`).join('')}
+    </div>
+  </div>
+</div></div>
+</div>
+
+<!-- ========== DOCUMENTS PDF ========== -->
+<div class="screen" id="screen-docs">
+<div class="outer">
+<div class="topbar">
+  <i class="ti ti-file-invoice" style="color:#C85A2A;font-size:15px" aria-hidden="true"></i>
+  <span class="tbt">Templates documents — Facture · Devis · Contrat · Situation</span>
+  <span class="tbm">Convertibles entre eux</span>
+  <button class="btg" onclick="setDocType('devis')"><i class="ti ti-file-text" aria-hidden="true"></i> Devis</button>
+  <button class="btg" onclick="setDocType('facture')"><i class="ti ti-receipt" aria-hidden="true"></i> Facture</button>
+  <button class="btg" onclick="setDocType('situation')"><i class="ti ti-report-money" aria-hidden="true"></i> Situation</button>
+  <button class="bto"><i class="ti ti-download" aria-hidden="true"></i> PDF ↗</button>
+</div>
+<div class="body">
+
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px">
+    <div id="conv-btns"></div>
+  </div>
+
+  <div class="panel" id="doc-preview" style="font-family:var(--font-sans)"></div>
+
+</div></div>
+</div>
+
+<script>
+function sw(id,el){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('screen-'+id).classList.add('on');
+  el.classList.add('on');
+  if(id==='docs') setDocType('facture');
+  if(id==='pointage') initPointage();
+}
+
+// ===== POINTAGE =====
+const CDI_WORKERS = [
+  {id:'mb',name:'M. Bensouda',metier:'Chef de chantier',type:'CDI',tauxJ:365,color:'#1C1C1C'},
+  {id:'ka',name:'K. Azizi',metier:'Maçon confirmé',type:'CDI',tauxJ:200,color:'#C85A2A'},
+  {id:'yo',name:'Y. Ouali',metier:'Coffreur',type:'CDI',tauxJ:185,color:'#2A6CB8'},
+  {id:'hb',name:'H. Belhaj',metier:'Ferrailleur',type:'CDD',tauxJ:169,color:'#2D8A5E'},
+  {id:'sm',name:'S. Mounir',metier:'Électricien',type:'CDI',tauxJ:238,color:'#7F4ABD'},
+  {id:'am',name:'A. Moujane',metier:'Aide-maçon',type:'CDI',tauxJ:107,color:'#888'},
+];
+let TEMP_WORKERS = [
+  {id:'t1',name:'B. Chakir',metier:'Manœuvre',type:'Journalier',tauxJ:220,present:true,hs:0},
+  {id:'t2',name:'R. Houari',metier:'Peintre',type:'Journalier',tauxJ:250,present:true,hs:0},
+  {id:'t3',name:'M. Khalil',metier:'Manœuvre',type:'Journalier',tauxJ:200,present:false,hs:0},
+];
+const presence = {};CDI_WORKERS.forEach(w=>{presence[w.id]={present:w.id!=='yo',hs:w.id==='hb'?2:0};});
+
+function initPointage(){
+  document.getElementById('date-now').textContent = new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  renderCDI();renderTemp();updateKPIs();
+}
+
+function renderCDI(){
+  document.getElementById('list-cdi').innerHTML = CDI_WORKERS.map(w=>{
+    const p = presence[w.id]||{present:true,hs:0};
+    return `<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:0.5px solid var(--color-border-tertiary)">
+      <div style="width:28px;height:28px;border-radius:50%;background:${w.color};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#fff;flex-shrink:0">${w.name.split(' ').map(x=>x[0]).join('')}</div>
+      <div style="flex:1;min-width:0"><div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">${w.name}</div><div style="font-size:10px;color:var(--color-text-secondary)">${w.metier} · ${w.tauxJ} MAD/j</div></div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div onclick="toggleP('${w.id}')" style="width:32px;height:18px;background:${p.present?'#2D8A5E':'var(--color-border-secondary)'};border-radius:9px;cursor:pointer;position:relative;transition:background .2s"><div style="position:absolute;width:12px;height:12px;background:#fff;border-radius:50%;top:3px;${p.present?'right:3px':'left:3px'};transition:all .2s"></div></div>
+        <span style="font-size:10px;color:${p.present?'#1A6B3C':'#888'};min-width:18px">${p.present?'P':'A'}</span>
+        <select onchange="setHS('${w.id}',this.value)" style="font-size:10px;padding:2px 4px;border:0.5px solid var(--color-border-secondary);border-radius:4px;background:var(--color-background-secondary);color:var(--color-text-primary)" aria-label="Heures supplémentaires">
+          ${[0,1,2,3,4].map(h=>`<option value="${h}" ${p.hs===h?'selected':''}>${h}h supp</option>`).join('')}
+        </select>
+        <span style="font-size:10px;font-weight:500;color:var(--color-text-primary);min-width:50px;text-align:right">${p.present?Math.round(w.tauxJ*(1+p.hs*0.125/8)):0} MAD</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderTemp(){
+  document.getElementById('list-temp').innerHTML = TEMP_WORKERS.map(w=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:0.5px solid var(--color-border-tertiary)">
+      <div style="width:28px;height:28px;border-radius:50%;background:#BA7517;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#fff;flex-shrink:0">${w.name.split(' ').map(x=>x[0]).join('')}</div>
+      <div style="flex:1;min-width:0"><div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">${w.name}</div><div style="font-size:10px;color:#BA7517">${w.metier} · Journalier · ${w.tauxJ} MAD/j</div></div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div onclick="toggleTemp('${w.id}')" style="width:32px;height:18px;background:${w.present?'#2D8A5E':'var(--color-border-secondary)'};border-radius:9px;cursor:pointer;position:relative;transition:background .2s"><div style="position:absolute;width:12px;height:12px;background:#fff;border-radius:50%;top:3px;${w.present?'right:3px':'left:3px'};transition:all .2s"></div></div>
+        <span style="font-size:10px;color:${w.present?'#1A6B3C':'#888'};min-width:18px">${w.present?'P':'A'}</span>
+        <span style="font-size:10px;font-weight:500;color:var(--color-text-primary);min-width:50px;text-align:right">${w.present?w.tauxJ:0} MAD</span>
+      </div>
+    </div>`).join('');
+}
+
+function toggleP(id){
+  if(!presence[id]) presence[id]={present:true,hs:0};
+  presence[id].present=!presence[id].present;
+  renderCDI();updateKPIs();
+}
+function setHS(id,v){if(!presence[id])presence[id]={present:true,hs:0};presence[id].hs=parseInt(v);renderCDI();updateKPIs();}
+function toggleTemp(id){const w=TEMP_WORKERS.find(x=>x.id===id);if(w){w.present=!w.present;renderTemp();updateKPIs();}}
+
+function addJournalier(){
+  const name=document.getElementById('new-name').value.trim();
+  const metier=document.getElementById('new-metier').value.trim()||'Manœuvre';
+  const taux=parseInt(document.getElementById('new-taux').value)||250;
+  if(!name)return;
+  TEMP_WORKERS.push({id:'t'+Date.now(),name,metier,type:'Journalier',tauxJ:taux,present:true,hs:0});
+  document.getElementById('new-name').value='';document.getElementById('new-metier').value='';
+  renderTemp();updateKPIs();
+}
+
+function updateKPIs(){
+  let pres=0,hn=0,hs=0,masse=0;
+  CDI_WORKERS.forEach(w=>{const p=presence[w.id]||{present:true,hs:0};if(p.present){pres++;hn+=8;hs+=p.hs;masse+=Math.round(w.tauxJ*(1+p.hs*0.125/8));}});
+  TEMP_WORKERS.forEach(w=>{if(w.present){pres++;hn+=8;masse+=w.tauxJ;}});
+  document.getElementById('kpi-present').textContent=pres;
+  document.getElementById('kpi-hn').textContent=hn;
+  document.getElementById('kpi-hs').textContent=hs;
+  document.getElementById('kpi-masse').textContent=masse.toLocaleString('fr-MA');
+}
+function validerPointage(){const b=document.querySelector('[onclick*="validerPointage"]');b.textContent='✓ Pointage validé & envoyé';b.style.background='#2D8A5E';setTimeout(()=>{b.innerHTML='<i class="ti ti-check"></i> Valider & envoyer paie ↗';b.style.background='#C85A2A';},2200);}
+
+// ===== DOCUMENTS =====
+let currentDocType = 'facture';
+const DOCS = {
+  facture:{
+    label:'Facture',ref:'F-2026-047',date:'22/05/2026',echeance:'21/06/2026',
+    client:{nom:'Immocap SA',adresse:'45 Bd Anfa, Casablanca',ice:'002345678000012',if:'67890123'},
+    objet:'Situation de travaux n°4 — Résidence Al Fath, Hay Riad',
+    lignes:[
+      {desc:'Maçonnerie & coffrage R+2',qte:1,u:'fft',pu:120000,tva:20},
+      {desc:'Ferraillage dalles niveau R+1',qte:48,u:'t',pu:2800,tva:20},
+      {desc:'Enduits façades — 180m²',qte:180,u:'m²',pu:320,tva:20},
+      {desc:'Main-d\'œuvre maçonnerie (26j × 12 ouv.)',qte:312,u:'j',pu:200,tva:20},
+      {desc:'Retenue de garantie (10%)',qte:1,u:'fft',pu:-28800,tva:0},
+    ],
+    convertibles:['devis','situation','contrat'],
+    badge:'bg',badgeLabel:'Émise',
+  },
+  devis:{
+    label:'Devis',ref:'D-2026-089',date:'20/05/2026',echeance:'20/06/2026',
+    client:{nom:'Atlas Hospitality',adresse:'Tour Casablanca, 22ème étage',ice:'003456789000034',if:'78901234'},
+    objet:'Travaux de ravalement et rénovation façades — Hôtel Agadir Palace',
+    lignes:[
+      {desc:'Ravalement façade principale — 420m²',qte:420,u:'m²',pu:650,tva:20},
+      {desc:'Isolation thermique ITE — 280m²',qte:280,u:'m²',pu:480,tva:20},
+      {desc:'Menuiseries aluminium remplacement',qte:36,u:'u',pu:3200,tva:20},
+      {desc:'Échafaudage & sécurité chantier',qte:1,u:'fft',pu:45000,tva:20},
+      {desc:'Direction de travaux & coordination',qte:1,u:'fft',pu:28000,tva:20},
+    ],
+    convertibles:['facture','situation','contrat'],
+    badge:'by',badgeLabel:'En attente',
+  },
+  situation:{
+    label:'Situation de travaux',ref:'SIT-2026-004',date:'01/06/2026',echeance:'01/07/2026',
+    client:{nom:'Immocap SA',adresse:'45 Bd Anfa, Casablanca',ice:'002345678000012',if:'67890123'},
+    objet:'Situation mensuelle n°4 — Résidence Al Fath · Avancement cumulé 72%',
+    lignes:[
+      {desc:'Maçonnerie élévation (60% cumulé)',qte:1,u:'fft',pu:360000,tva:20},
+      {desc:'Planchers & dalles (40% cumulé)',qte:1,u:'fft',pu:168000,tva:20},
+      {desc:'Fondations & béton armé (85% cumulé)',qte:1,u:'fft',pu:408000,tva:20},
+      {desc:'Déduction situation précédente n°3',qte:1,u:'fft',pu:-648000,tva:0},
+    ],
+    convertibles:['facture','devis'],
+    badge:'bb',badgeLabel:'Situation',
+  },
+};
+
+function setDocType(type){
+  currentDocType=type;
+  const doc=DOCS[type];
+  const convBtns=document.getElementById('conv-btns');
+  convBtns.innerHTML=`<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+    <span style="font-size:11px;color:var(--color-text-secondary)">Convertir en :</span>
+    ${doc.convertibles.map(c=>`<button onclick="setDocType('${c}')" style="font-size:11px;padding:4px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);cursor:pointer;color:var(--color-text-primary);display:flex;align-items:center;gap:4px"><i class="ti ti-arrows-exchange" style="font-size:12px" aria-hidden="true"></i>${DOCS[c].label}</button>`).join('')}
+    <span style="font-size:10px;color:var(--color-text-secondary);margin-left:6px">· Toutes les données sont conservées lors de la conversion</span>
+  </div>`;
+  renderDoc(doc);
+}
+
+function renderDoc(doc){
+  const lines=doc.lignes;
+  const subtotal=lines.reduce((s,l)=>s+l.qte*l.pu,0);
+  const tvaAmt=lines.filter(l=>l.tva>0).reduce((s,l)=>s+l.qte*l.pu*l.tva/100,0);
+  const total=subtotal+tvaAmt;
+  const fmt=n=>Math.abs(Math.round(n)).toLocaleString('fr-MA');
+  document.getElementById('doc-preview').innerHTML=`
+  <div style="padding:0">
+    <div style="background:#1C1C1C;padding:14px 20px;display:flex;align-items:flex-start;justify-content:space-between;border-radius:var(--border-radius-lg) var(--border-radius-lg) 0 0">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:36px;height:36px;background:#C85A2A;border-radius:8px;display:flex;align-items:center;justify-content:center"><i class="ti ti-building" style="color:#fff;font-size:18px" aria-hidden="true"></i></div>
+        <div><div style="font-size:15px;font-weight:500;color:#fff">BatiPro Travaux SARL</div><div style="font-size:10px;color:rgba(255,255,255,.45)">ICE : 001234567000089 · IF : 45678901 · RC : Casa-2018-B-12456</div></div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:18px;font-weight:500;color:#C85A2A">${doc.label.toUpperCase()}</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.6)">${doc.ref}</div>
+        <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:${doc.badge==='bg'?'#2D8A5E':doc.badge==='by'?'#BA7517':'#2A6CB8'};color:#fff;margin-top:4px;display:inline-block">${doc.badgeLabel}</span>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-bottom:0.5px solid var(--color-border-tertiary)">
+      <div style="padding:12px 16px;border-right:0.5px solid var(--color-border-tertiary)">
+        <div style="font-size:10px;color:var(--color-text-secondary);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em">Client / Maître d'ouvrage</div>
+        <div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">${doc.client.nom}</div>
+        <div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px">${doc.client.adresse}</div>
+        <div style="font-size:10px;color:var(--color-text-secondary);margin-top:4px">ICE : ${doc.client.ice}<br>IF : ${doc.client.if}</div>
+      </div>
+      <div style="padding:12px 16px;border-right:0.5px solid var(--color-border-tertiary)">
+        <div style="font-size:10px;color:var(--color-text-secondary);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em">Objet</div>
+        <div style="font-size:11px;color:var(--color-text-primary);line-height:1.5">${doc.objet}</div>
+      </div>
+      <div style="padding:12px 16px">
+        <div style="font-size:10px;color:var(--color-text-secondary);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em">Dates</div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span style="color:var(--color-text-secondary)">Date émission</span><span style="font-weight:500;color:var(--color-text-primary)">${doc.date}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:var(--color-text-secondary)">Échéance</span><span style="font-weight:500;color:#C85A2A">${doc.echeance}</span></div>
+      </div>
+    </div>
+    <table style="width:100%;font-size:11px;border-collapse:collapse;table-layout:fixed">
+      <thead><tr style="background:var(--color-background-secondary)">
+        <th style="padding:7px 16px;text-align:left;font-weight:500;color:var(--color-text-secondary);width:44%">Description</th>
+        <th style="padding:7px 8px;text-align:center;font-weight:500;color:var(--color-text-secondary);width:8%">Qté</th>
+        <th style="padding:7px 8px;text-align:center;font-weight:500;color:var(--color-text-secondary);width:8%">U.</th>
+        <th style="padding:7px 8px;text-align:right;font-weight:500;color:var(--color-text-secondary);width:15%">P.U. (MAD)</th>
+        <th style="padding:7px 8px;text-align:center;font-weight:500;color:var(--color-text-secondary);width:8%">TVA</th>
+        <th style="padding:7px 16px;text-align:right;font-weight:500;color:var(--color-text-secondary);width:17%">Total HT</th>
+      </tr></thead>
+      <tbody>
+        ${lines.map((l,i)=>{const tot=l.qte*l.pu;return`<tr style="border-bottom:0.5px solid var(--color-border-tertiary);background:${i%2===0?'':'var(--color-background-secondary)'}">
+          <td style="padding:8px 16px;color:var(--color-text-primary);font-weight:${l.pu<0?'500':'400'}">${l.desc}</td>
+          <td style="padding:8px;text-align:center;color:var(--color-text-secondary)">${l.qte}</td>
+          <td style="padding:8px;text-align:center;color:var(--color-text-secondary)">${l.u}</td>
+          <td style="padding:8px;text-align:right;color:var(--color-text-primary)">${Math.abs(l.pu).toLocaleString('fr-MA')}</td>
+          <td style="padding:8px;text-align:center;color:var(--color-text-secondary)">${l.tva}%</td>
+          <td style="padding:8px 16px;text-align:right;font-weight:500;color:${tot<0?'#A32D2D':'var(--color-text-primary)'}">${tot<0?'-':'+'}${fmt(Math.abs(tot))}</td>
+        </tr>`}).join('')}
+      </tbody>
+    </table>
+    <div style="display:flex;justify-content:flex-end;padding:12px 16px;border-top:0.5px solid var(--color-border-tertiary)">
+      <div style="min-width:240px">
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px"><span style="color:var(--color-text-secondary)">Total HT</span><span style="font-weight:500;color:var(--color-text-primary)">${fmt(subtotal)} MAD</span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px"><span style="color:var(--color-text-secondary)">TVA 20%</span><span style="font-weight:500;color:var(--color-text-primary)">${fmt(tvaAmt)} MAD</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 12px;margin-top:6px;background:#1C1C1C;border-radius:var(--border-radius-md)">
+          <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.8)">Total TTC</span>
+          <span style="font-size:18px;font-weight:500;color:#C85A2A">${fmt(total)} MAD</span>
+        </div>
+      </div>
+    </div>
+    <div style="padding:10px 16px;border-top:0.5px solid var(--color-border-tertiary);font-size:10px;color:var(--color-text-secondary);line-height:1.6">
+      <strong style="color:var(--color-text-primary)">BatiPro Travaux SARL</strong> · 123 Bd Zerktouni, 4ème étage, Casablanca 20100 · +212 5 22 45 67 89 · contact@batipro.ma<br>
+      ICE : 001234567000089 · IF : 45678901 · RC : Casa-2018-B-12456 · CNSS : 8804521<br>
+      Paiement à 60 jours date de facture. Tout retard entraîne des pénalités de 1,5%/mois. Retenue de garantie libérée à la réception définitive.
+    </div>
+  </div>`;
+}
+
+initPointage();
+setDocType('facture');
+</script>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
@@ -36,7 +36,7 @@ const QuoteList = () => {
       await api.delete(`/api/quotes/${id}`);
     },
     onSuccess: () => {
-      showToast('Devis supprimé avec succès.');
+      showToast('Devis supprimÃ© avec succÃ¨s.');
       queryClient.invalidateQueries(['quotesList']);
       setIsDeleteOpen(false);
     },
@@ -52,7 +52,7 @@ const QuoteList = () => {
   if (error) {
     return (
       <div className="p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700 font-medium">
-        ⚠️ Erreur lors du chargement des devis : {error.message}.
+        âš ï¸ Erreur lors du chargement des devis : {error.message}.
       </div>
     );
   }
@@ -84,15 +84,15 @@ const QuoteList = () => {
 
   const handleExportPdf = (quote, e) => {
     e.stopPropagation();
-    showToast(`Génération du PDF pour le devis ${quote.quoteNumber}...`);
+    showToast(`GÃ©nÃ©ration du PDF pour le devis ${quote.quoteNumber}...`);
     setTimeout(() => {
-      showToast(`PDF téléchargé avec succès pour le devis ${quote.quoteNumber}.`);
+      showToast(`PDF tÃ©lÃ©chargÃ© avec succÃ¨s pour le devis ${quote.quoteNumber}.`);
     }, 1500);
   };
 
   const columns = [
     {
-      header: 'Numéro',
+      header: 'NumÃ©ro',
       accessor: 'quoteNumber',
       cell: (row) => (
         <span className="font-extrabold text-blue-600 text-xs">
@@ -111,11 +111,11 @@ const QuoteList = () => {
       ),
     },
     {
-      header: 'Date de validité',
+      header: 'Date de validitÃ©',
       accessor: 'validUntil',
       cell: (row) => (
         <span className="text-xs text-slate-500 font-semibold">
-          {row.validUntil ? new Date(row.validUntil).toLocaleDateString('fr-FR') : 'Non spécifiée'}
+          {row.validUntil ? new Date(row.validUntil).toLocaleDateString('fr-FR') : 'Non spÃ©cifiÃ©e'}
         </span>
       ),
     },
@@ -143,28 +143,28 @@ const QuoteList = () => {
             className="p-1.5 rounded-lg border border-slate-100 hover:bg-slate-50 text-slate-500 cursor-pointer transition-colors"
             title="Voir"
           >
-            👁️
+            ðŸ‘ï¸
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); navigate(`/dashboard/quotes/${row.id}/edit`); }}
             className="p-1.5 rounded-lg border border-slate-100 hover:bg-slate-50 text-slate-500 cursor-pointer transition-colors"
-            title="Éditer"
+            title="Ã‰diter"
           >
-            ✏️
+            âœï¸
           </button>
           <button
             onClick={(e) => handleExportPdf(row, e)}
             className="p-1.5 rounded-lg border border-slate-100 hover:bg-slate-50 text-slate-500 cursor-pointer transition-colors"
             title="Exporter PDF"
           >
-            📁
+            ðŸ“
           </button>
           <button
             onClick={(e) => handleDeleteClick(row, e)}
             className="p-1.5 rounded-lg border border-red-100 hover:bg-red-50 text-red-500 cursor-pointer transition-colors"
             title="Supprimer"
           >
-            🗑️
+            ðŸ—‘ï¸
           </button>
         </div>
       ),
@@ -179,12 +179,12 @@ const QuoteList = () => {
         actions={
           <button
             onClick={() => navigate('/dashboard/quotes/new')}
-            className="py-2.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 transition-all cursor-pointer flex items-center space-x-2"
+            className="py-2.5 px-5 rounded-xl bg-[#C85A2A] hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 transition-all cursor-pointer flex items-center space-x-2"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            <span>Créer un Devis</span>
+            <span>CrÃ©er un Devis</span>
           </button>
         }
       />
@@ -199,10 +199,10 @@ const QuoteList = () => {
           </div>
           <input
             type="text"
-            placeholder="Rechercher par numéro, client ou titre..."
+            placeholder="Rechercher par numÃ©ro, client ou titre..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="block w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-400 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            className="block w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-400 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] focus:border-transparent transition-all"
           />
         </div>
 
@@ -210,13 +210,13 @@ const QuoteList = () => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all cursor-pointer"
+            className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] focus:border-transparent transition-all cursor-pointer"
           >
             <option value="">Tous les Statuts</option>
             <option value="Brouillon">Brouillon</option>
-            <option value="Envoyé">Envoyé</option>
-            <option value="Accepté">Accepté</option>
-            <option value="Refusé">Refusé</option>
+            <option value="EnvoyÃ©">EnvoyÃ©</option>
+            <option value="AcceptÃ©">AcceptÃ©</option>
+            <option value="RefusÃ©">RefusÃ©</option>
           </select>
         </div>
 
@@ -225,7 +225,7 @@ const QuoteList = () => {
             onClick={() => { setSearch(''); setStatusFilter(''); }}
             className="text-xs font-bold text-slate-500 hover:text-blue-500 cursor-pointer py-2.5 transition-colors"
           >
-            Réinitialiser
+            RÃ©initialiser
           </button>
         )}
       </div>
@@ -235,8 +235,8 @@ const QuoteList = () => {
         columns={columns}
         data={filteredQuotes}
         onRowClick={(quote) => navigate(`/dashboard/quotes/${quote.id}`)}
-        emptyTitle="Aucun devis trouvé"
-        emptyDescription="Aucun document de devis ne correspond à vos filtres actuels."
+        emptyTitle="Aucun devis trouvÃ©"
+        emptyDescription="Aucun document de devis ne correspond Ã  vos filtres actuels."
         paginationMeta={{
           currentPage: meta.current_page || 1,
           lastPage: meta.last_page || 1,
@@ -250,7 +250,7 @@ const QuoteList = () => {
       <ConfirmDialog
         isOpen={isDeleteOpen}
         title="Supprimer le devis ?"
-        message={`Êtes-vous sûr de vouloir supprimer définitivement le devis ${deleteTarget?.quoteNumber} ? Cette action est irréversible.`}
+        message={`ÃŠtes-vous sÃ»r de vouloir supprimer dÃ©finitivement le devis ${deleteTarget?.quoteNumber} ? Cette action est irrÃ©versible.`}
         confirmText="Supprimer"
         cancelText="Annuler"
         type="danger"

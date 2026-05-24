@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../services/api';
@@ -22,7 +22,7 @@ const ProjectForm = () => {
   const [description, setDescription] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('Casablanca');
-  const [status, setStatus] = useState('Planifié');
+  const [status, setStatus] = useState('PlanifiÃ©');
   const [budget, setBudget] = useState('0');
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
   const [endDatePlanned, setEndDatePlanned] = useState('');
@@ -73,8 +73,8 @@ const ProjectForm = () => {
       setBudget(String(quote.totalHt || '0'));
       
       const itemsList = quote.items || [];
-      const generatedDesc = `Projet créé à partir du devis n° ${quote.quoteNumber}.\n\nPrestations prévues :\n` + 
-        itemsList.map(it => `- [${it.section || 'Général'}] ${it.description} (${it.quantity} ${it.unit} x ${it.unitPriceHt} DH)`).join('\n');
+      const generatedDesc = `Projet crÃ©Ã© Ã  partir du devis nÂ° ${quote.quoteNumber}.\n\nPrestations prÃ©vues :\n` + 
+        itemsList.map(it => `- [${it.section || 'GÃ©nÃ©ral'}] ${it.description} (${it.quantity} ${it.unit} x ${it.unitPriceHt} DH)`).join('\n');
       setDescription(generatedDesc);
       
       if (quote.account?.address) {
@@ -83,10 +83,10 @@ const ProjectForm = () => {
       if (quote.account?.city) {
         setCity(quote.account.city);
       }
-      showToast('Détails du devis pré-remplis avec succès.');
+      showToast('DÃ©tails du devis prÃ©-remplis avec succÃ¨s.');
     },
     onError: (err) => {
-      showToast(`Impossible de charger le devis de référence : ${err.message}`, 'error');
+      showToast(`Impossible de charger le devis de rÃ©fÃ©rence : ${err.message}`, 'error');
     }
   });
 
@@ -103,7 +103,7 @@ const ProjectForm = () => {
       setDescription(proj.description || '');
       setAddress(proj.address || '');
       setCity(proj.city || 'Casablanca');
-      setStatus(proj.status || 'Planifié');
+      setStatus(proj.status || 'PlanifiÃ©');
       setBudget(String(proj.budget || '0'));
       if (proj.startDate) setStartDate(proj.startDate.split('T')[0]);
       if (proj.endDatePlanned) setEndDatePlanned(proj.endDatePlanned.split('T')[0]);
@@ -113,7 +113,7 @@ const ProjectForm = () => {
       setProjectManagerId(proj.projectManagerId || proj.manager?.id || '');
     },
     onError: (err) => {
-      showToast(`Impossible de charger les détails du projet : ${err.message}`, 'error');
+      showToast(`Impossible de charger les dÃ©tails du projet : ${err.message}`, 'error');
     }
   });
 
@@ -127,7 +127,7 @@ const ProjectForm = () => {
       }
     },
     onSuccess: () => {
-      showToast(`Chantier ${isEdit ? 'mis à jour' : 'créé'} avec succès !`);
+      showToast(`Chantier ${isEdit ? 'mis Ã  jour' : 'crÃ©Ã©'} avec succÃ¨s !`);
       queryClient.invalidateQueries(['projectsList']);
       if (isEdit) {
         queryClient.invalidateQueries(['projectDetail', id]);
@@ -144,11 +144,11 @@ const ProjectForm = () => {
     e.preventDefault();
 
     if (!quoteId) {
-      showToast('Le devis de référence est obligatoire.', 'error');
+      showToast('Le devis de rÃ©fÃ©rence est obligatoire.', 'error');
       return;
     }
     if (!accountId) {
-      showToast('Le compte client associé est obligatoire.', 'error');
+      showToast('Le compte client associÃ© est obligatoire.', 'error');
       return;
     }
     if (!projectManagerId) {
@@ -160,11 +160,11 @@ const ProjectForm = () => {
       return;
     }
     if (!startDate) {
-      showToast('La date de démarrage est obligatoire.', 'error');
+      showToast('La date de dÃ©marrage est obligatoire.', 'error');
       return;
     }
     if (!endDatePlanned) {
-      showToast('La date de fin prévisionnelle est obligatoire.', 'error');
+      showToast('La date de fin prÃ©visionnelle est obligatoire.', 'error');
       return;
     }
 
@@ -193,7 +193,7 @@ const ProjectForm = () => {
   // Map options for selects
   const quoteOptions = (quotesData || []).map(q => ({
     value: q.id,
-    label: `${q.quoteNumber} — ${q.title}`
+    label: `${q.quoteNumber} â€” ${q.title}`
   }));
 
   const accountOptions = (accountsData || []).map(acc => ({
@@ -204,7 +204,7 @@ const ProjectForm = () => {
   // Filter project managers (role code 'chef_chantier' or similar, or just any user)
   const managerOptions = (usersData || []).map(usr => ({
     value: usr.id,
-    label: `👤 ${usr.name} (${usr.role?.name || 'Collaborateur'})`
+    label: `ðŸ‘¤ ${usr.name} (${usr.role?.name || 'Collaborateur'})`
   }));
 
   const formatCurrency = (val) => {
@@ -218,9 +218,9 @@ const ProjectForm = () => {
       <PageHeader
         title={isEdit ? `Modification Chantier : ${title}` : 'Nouveau Chantier (Projet)'}
         breadcrumb={[
-          { label: 'Opérations' },
+          { label: 'OpÃ©rations' },
           { label: 'Chantiers', link: '/dashboard/projects' },
-          { label: isEdit ? 'Édition' : 'Nouveau' }
+          { label: isEdit ? 'Ã‰dition' : 'Nouveau' }
         ]}
       />
 
@@ -242,18 +242,18 @@ const ProjectForm = () => {
                     placeholder="Ex: Chantier Plomberie et Climatisation Anfa"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-semibold"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all font-semibold"
                   />
                 </div>
 
                 <div className="space-y-2">
                   <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Descriptif Technique & Plan de charge</label>
                   <textarea
-                    placeholder="Saisir la description des travaux, les jalons clés ou les contraintes techniques..."
+                    placeholder="Saisir la description des travaux, les jalons clÃ©s ou les contraintes techniques..."
                     rows="6"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all"
                   />
                 </div>
 
@@ -265,7 +265,7 @@ const ProjectForm = () => {
                       placeholder="Ex: Angle Boulevard Anfa et Rue Ali"
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
-                      className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                      className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all"
                     />
                   </div>
 
@@ -276,7 +276,7 @@ const ProjectForm = () => {
                       placeholder="Casablanca"
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
-                      className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                      className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all"
                     />
                   </div>
                 </div>
@@ -291,7 +291,7 @@ const ProjectForm = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Devis de référence (Obligatoire)</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Devis de rÃ©fÃ©rence (Obligatoire)</label>
                   <AutocompleteSelect
                     options={quoteOptions}
                     value={quoteId}
@@ -307,27 +307,27 @@ const ProjectForm = () => {
                         }
                       }
                     }}
-                    placeholder="Sélectionner le devis d'origine..."
+                    placeholder="SÃ©lectionner le devis d'origine..."
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Client associé (Compte)</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Client associÃ© (Compte)</label>
                   <AutocompleteSelect
                     options={accountOptions}
                     value={accountId}
                     onChange={setAccountId}
-                    placeholder="Sélectionner le client..."
+                    placeholder="SÃ©lectionner le client..."
                   />
                 </div>
 
                 <div className="space-y-2 sm:col-span-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Conducteur de travaux (Chef de chantier assigné)</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Conducteur de travaux (Chef de chantier assignÃ©)</label>
                   <AutocompleteSelect
                     options={managerOptions}
                     value={projectManagerId}
                     onChange={setProjectManagerId}
-                    placeholder="Désigner le responsable terrain..."
+                    placeholder="DÃ©signer le responsable terrain..."
                   />
                 </div>
               </div>
@@ -347,17 +347,17 @@ const ProjectForm = () => {
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer font-bold"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all cursor-pointer font-bold"
                   >
-                    <option value="À commencer">À commencer</option>
+                    <option value="Ã€ commencer">Ã€ commencer</option>
                     <option value="En cours">En cours</option>
                     <option value="Suspendu">Suspendu</option>
-                    <option value="Terminé">Terminé</option>
+                    <option value="TerminÃ©">TerminÃ©</option>
                   </select>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Enveloppe budgétaire (HT)</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Enveloppe budgÃ©taire (HT)</label>
                   <div className="relative">
                     <input
                       type="number"
@@ -365,7 +365,7 @@ const ProjectForm = () => {
                       min="0"
                       value={budget}
                       onChange={(e) => setBudget(e.target.value)}
-                      className="block w-full pl-4 pr-12 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs font-black focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                      className="block w-full pl-4 pr-12 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs font-black focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all"
                     />
                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-extrabold text-[10px]">DH</span>
                   </div>
@@ -378,29 +378,29 @@ const ProjectForm = () => {
                     required
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer font-bold"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all cursor-pointer font-bold"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Échéance de réception planifiée</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Ã‰chÃ©ance de rÃ©ception planifiÃ©e</label>
                   <input
                     type="date"
                     required
                     value={endDatePlanned}
                     onChange={(e) => setEndDatePlanned(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-850 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer font-bold"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-850 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all cursor-pointer font-bold"
                   />
                 </div>
 
                 {isEdit && (
                   <div className="space-y-2">
-                    <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Date de réception définitive (Effective)</label>
+                    <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Date de rÃ©ception dÃ©finitive (Effective)</label>
                     <input
                       type="date"
                       value={endDateActual}
                       onChange={(e) => setEndDateActual(e.target.value)}
-                      className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-850 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer font-bold"
+                      className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-850 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all cursor-pointer font-bold"
                     />
                   </div>
                 )}
@@ -417,7 +417,7 @@ const ProjectForm = () => {
                 <button
                   type="submit"
                   disabled={saveMutation.isLoading}
-                  className="w-full py-3 px-5 rounded-xl bg-blue-600 hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 transition-all cursor-pointer"
+                  className="w-full py-3 px-5 rounded-xl bg-[#C85A2A] hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 transition-all cursor-pointer"
                 >
                   {saveMutation.isLoading ? 'Enregistrement...' : isEdit ? 'Sauvegarder les modifications' : 'Lancer le Chantier'}
                 </button>

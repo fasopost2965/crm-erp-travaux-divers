@@ -88,6 +88,13 @@ class DatabaseSeeder extends Seeder
             'role_id' => $adminRole->id,
         ]);
 
+        $directeur = User::create([
+            'name' => 'Mohammed Benali',
+            'email' => 'directeur@travaux.ma',
+            'password' => Hash::make('password'),
+            'role_id' => $directorRole->id,
+        ]);
+
         $commercial = User::create([
             'name' => 'Youssef Benjelloun',
             'email' => 'commercial@travaux.ma',
@@ -100,6 +107,13 @@ class DatabaseSeeder extends Seeder
             'email' => 'khalid@travaux.ma',
             'password' => Hash::make('password'),
             'role_id' => $pmRole->id,
+        ]);
+
+        $finance = User::create([
+            'name' => 'Fatima Ziani',
+            'email' => 'finance@travaux.ma',
+            'password' => Hash::make('password'),
+            'role_id' => $financeRole->id,
         ]);
 
         $worker1 = User::create([

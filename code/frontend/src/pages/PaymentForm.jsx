@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
@@ -42,7 +42,7 @@ const PaymentForm = () => {
       return await api.post(`/api/invoices/${invoiceId}/payments`, payload);
     },
     onSuccess: () => {
-      showToast('Règlement enregistré avec succès !');
+      showToast('RÃ¨glement enregistrÃ© avec succÃ¨s !');
       // Invalidate caches
       queryClient.invalidateQueries(['invoiceDetail', invoiceId]);
       queryClient.invalidateQueries(['invoices']);
@@ -54,7 +54,7 @@ const PaymentForm = () => {
     },
     onError: (err) => {
       const errMsg = err.response?.data?.message || err.message;
-      showToast(`Erreur lors de l'enregistrement du règlement : ${errMsg}`, 'error');
+      showToast(`Erreur lors de l'enregistrement du rÃ¨glement : ${errMsg}`, 'error');
     }
   });
 
@@ -63,17 +63,17 @@ const PaymentForm = () => {
 
     const parsedAmount = parseFloat(amount);
     if (isNaN(parsedAmount) || parsedAmount <= 0) {
-      showToast('Le montant du règlement doit être supérieur à 0.', 'error');
+      showToast('Le montant du rÃ¨glement doit Ãªtre supÃ©rieur Ã  0.', 'error');
       return;
     }
 
     if (!paymentDate) {
-      showToast('Veuillez spécifier la date de paiement.', 'error');
+      showToast('Veuillez spÃ©cifier la date de paiement.', 'error');
       return;
     }
 
     if (!paymentMethod) {
-      showToast('Veuillez choisir un mode de règlement.', 'error');
+      showToast('Veuillez choisir un mode de rÃ¨glement.', 'error');
       return;
     }
 
@@ -96,7 +96,7 @@ const PaymentForm = () => {
   if (invoiceError) {
     return (
       <div className="p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700 font-medium">
-        ⚠️ Impossible de charger la facture pour ce règlement : {invoiceError.message}.
+        âš ï¸ Impossible de charger la facture pour ce rÃ¨glement : {invoiceError.message}.
       </div>
     );
   }
@@ -112,11 +112,11 @@ const PaymentForm = () => {
   return (
     <div className="max-w-xl mx-auto space-y-6 font-sans">
       <PageHeader
-        title="💳 Enregistrer un Règlement"
+        title="ðŸ’³ Enregistrer un RÃ¨glement"
         breadcrumb={[
           { label: 'Finances', link: '/dashboard/invoices' },
           { label: invoice.invoiceNumber, link: `/dashboard/invoices/${invoiceId}` },
-          { label: 'Règlement' }
+          { label: 'RÃ¨glement' }
         ]}
       />
 
@@ -141,18 +141,18 @@ const PaymentForm = () => {
             <p className="text-sm font-black text-slate-800">{formatCurrency(invoice.totalTtc)}</p>
           </div>
           <div className="space-y-1">
-            <span className="text-[10px] text-emerald-500 font-bold uppercase">Déjà réglé</span>
+            <span className="text-[10px] text-emerald-500 font-bold uppercase">DÃ©jÃ  rÃ©glÃ©</span>
             <p className="text-sm font-black text-emerald-600">{formatCurrency(invoice.amountPaid)}</p>
           </div>
           <div className="space-y-1">
-            <span className="text-[10px] text-rose-500 font-bold uppercase">Reste à payer</span>
+            <span className="text-[10px] text-rose-500 font-bold uppercase">Reste Ã  payer</span>
             <p className="text-sm font-black text-rose-600">{formatCurrency(amountRemaining)}</p>
           </div>
         </div>
 
         {amountRemaining <= 0 ? (
           <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-150 text-emerald-700 text-xs font-bold text-center">
-            🎉 Cette facture a déjà été intégralement réglée.
+            ðŸŽ‰ Cette facture a dÃ©jÃ  Ã©tÃ© intÃ©gralement rÃ©glÃ©e.
           </div>
         ) : null}
 
@@ -160,7 +160,7 @@ const PaymentForm = () => {
           {/* Montant */}
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">
-              Montant du règlement (DH)
+              Montant du rÃ¨glement (DH)
             </label>
             <div className="relative">
               <input
@@ -171,33 +171,33 @@ const PaymentForm = () => {
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 disabled={amountRemaining <= 0}
-                className="block w-full pl-4 pr-16 py-3 rounded-xl bg-slate-50 border border-slate-100 text-slate-900 font-extrabold text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                className="block w-full pl-4 pr-16 py-3 rounded-xl bg-slate-50 border border-slate-100 text-slate-900 font-extrabold text-sm focus:outline-none focus:ring-2 focus:ring-[#C85A2A] disabled:opacity-50"
                 placeholder="0.00"
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-extrabold text-xs">DH TTC</span>
             </div>
             {parseFloat(amount) > amountRemaining ? (
               <p className="text-[10px] text-amber-500 font-bold">
-                ⚠️ Attention: Le montant saisi dépasse le reste à payer de la facture ({formatCurrency(amountRemaining)}).
+                âš ï¸ Attention: Le montant saisi dÃ©passe le reste Ã  payer de la facture ({formatCurrency(amountRemaining)}).
               </p>
             ) : null}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {/* Mode de règlement */}
+            {/* Mode de rÃ¨glement */}
             <div className="space-y-2">
               <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">
-                Mode de règlement
+                Mode de rÃ¨glement
               </label>
               <select
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value)}
                 disabled={amountRemaining <= 0}
-                className="block w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer font-bold disabled:opacity-50"
+                className="block w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#C85A2A] cursor-pointer font-bold disabled:opacity-50"
               >
                 <option value="Virement">Virement bancaire</option>
-                <option value="Chèque">Chèque</option>
-                <option value="Espèces">Espèces</option>
+                <option value="ChÃ¨que">ChÃ¨que</option>
+                <option value="EspÃ¨ces">EspÃ¨ces</option>
                 <option value="Effet">Effet de commerce</option>
                 <option value="Carte bancaire">Carte bancaire</option>
               </select>
@@ -206,7 +206,7 @@ const PaymentForm = () => {
             {/* Date de paiement */}
             <div className="space-y-2">
               <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">
-                Date de réception
+                Date de rÃ©ception
               </label>
               <input
                 type="date"
@@ -214,33 +214,33 @@ const PaymentForm = () => {
                 value={paymentDate}
                 onChange={(e) => setPaymentDate(e.target.value)}
                 disabled={amountRemaining <= 0}
-                className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer disabled:opacity-50"
+                className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#C85A2A] cursor-pointer disabled:opacity-50"
               />
             </div>
           </div>
 
           {/* Reference & Banque (conditional but simple visual groups) */}
-          {['Virement', 'Chèque', 'Effet', 'Carte bancaire'].includes(paymentMethod) && (
+          {['Virement', 'ChÃ¨que', 'Effet', 'Carte bancaire'].includes(paymentMethod) && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 animate-fadeIn">
-              {/* Référence */}
+              {/* RÃ©fÃ©rence */}
               <div className="space-y-2">
                 <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">
-                  Numéro de référence / Chèque
+                  NumÃ©ro de rÃ©fÃ©rence / ChÃ¨que
                 </label>
                 <input
                   type="text"
                   value={reference}
                   onChange={(e) => setReference(e.target.value)}
                   disabled={amountRemaining <= 0}
-                  placeholder={paymentMethod === 'Chèque' ? 'Ex: CHQ-8472910' : 'Ex: VIR-948172635'}
-                  className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                  placeholder={paymentMethod === 'ChÃ¨que' ? 'Ex: CHQ-8472910' : 'Ex: VIR-948172635'}
+                  className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#C85A2A] disabled:opacity-50"
                 />
               </div>
 
               {/* Banque */}
               <div className="space-y-2">
                 <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">
-                  Banque émettrice
+                  Banque Ã©mettrice
                 </label>
                 <input
                   type="text"
@@ -248,7 +248,7 @@ const PaymentForm = () => {
                   onChange={(e) => setBank(e.target.value)}
                   disabled={amountRemaining <= 0}
                   placeholder="Ex: Attijariwafa Bank, BCP, BMCE..."
-                  className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                  className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#C85A2A] disabled:opacity-50"
                 />
               </div>
             </div>
@@ -260,12 +260,12 @@ const PaymentForm = () => {
               Notes de transaction
             </label>
             <textarea
-              placeholder="Renseigner ici toute note relative au règlement (ex: règlement partiel de situation, acompte, retenue de garantie...)"
+              placeholder="Renseigner ici toute note relative au rÃ¨glement (ex: rÃ¨glement partiel de situation, acompte, retenue de garantie...)"
               rows="3"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               disabled={amountRemaining <= 0}
-              className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+              className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#C85A2A] disabled:opacity-50"
             />
           </div>
 
@@ -280,9 +280,9 @@ const PaymentForm = () => {
             <button
               type="submit"
               disabled={paymentMutation.isLoading || amountRemaining <= 0}
-              className="flex-1 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-550 text-white font-bold tracking-wide shadow-md shadow-blue-900/10 transition-colors cursor-pointer disabled:opacity-55 disabled:cursor-not-allowed"
+              className="flex-1 py-3 px-4 rounded-xl bg-[#C85A2A] hover:bg-blue-550 text-white font-bold tracking-wide shadow-md shadow-blue-900/10 transition-colors cursor-pointer disabled:opacity-55 disabled:cursor-not-allowed"
             >
-              {paymentMutation.isLoading ? 'Enregistrement...' : 'Enregistrer le règlement'}
+              {paymentMutation.isLoading ? 'Enregistrement...' : 'Enregistrer le rÃ¨glement'}
             </button>
           </div>
         </form>

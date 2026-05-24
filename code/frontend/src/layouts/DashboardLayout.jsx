@@ -2,266 +2,243 @@ import React, { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+const IC = ({ d, size = 16 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+    <path d={d} />
+  </svg>
+);
+
+const ICONS = {
+  dashboard: 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z',
+  accounts: 'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75',
+  contact: 'M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8',
+  leads: 'M22 12h-4l-3 9L9 3l-3 9H2',
+  opportunity: 'M18 20V10M12 20V4M6 20v-6',
+  quote: 'M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8',
+  project: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4',
+  pointage: 'M12 2a10 10 0 100 20A10 10 0 0012 2M12 6v6l4 2',
+  situations: 'M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11',
+  invoice: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
+  tresorerie: 'M3 3h18v4H3zM3 10h18v4H3zM3 17h18v4H3z',
+  parametres: 'M12 15a3 3 0 100-6 3 3 0 000 6zM19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z',
+  reports: 'M12 20V10M18 20V4M6 20v-6',
+  logout: 'M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9',
+  menu: 'M3 12h18M3 6h18M3 18h18',
+};
+
+const NavSection = ({ label, children, show }) => {
+  if (!show) return null;
+  return (
+    <div style={{ marginBottom: 4 }}>
+      <div style={{ padding: '10px 14px 4px', fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.28)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+        {label}
+      </div>
+      {children}
+    </div>
+  );
+};
+
+const NavItem = ({ to, icon, label, active }) => (
+  <Link
+    to={to}
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: 9,
+      padding: '8px 14px',
+      margin: '1px 6px',
+      borderRadius: 6,
+      fontSize: 13,
+      fontWeight: active ? 500 : 400,
+      color: active ? '#E8784A' : 'rgba(255,255,255,0.55)',
+      background: active ? 'rgba(200,90,42,0.18)' : 'transparent',
+      textDecoration: 'none',
+      transition: 'all 0.12s',
+    }}
+    onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = 'rgba(255,255,255,0.85)'; } }}
+    onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.55)'; } }}
+  >
+    <span style={{ opacity: active ? 1 : 0.7, flexShrink: 0 }}>
+      <IC d={ICONS[icon]} size={15} />
+    </span>
+    {label}
+  </Link>
+);
+
 const DashboardLayout = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const role = user?.role?.slug;
 
-  // Déterminer la route du Dashboard principal selon le rôle de l'utilisateur
-  const getDashboardHomePath = () => {
+  const getDashboardPath = () => {
     switch (role) {
-      case 'directeur':
-      case 'admin':
-      case 'super_admin':
-        return '/dashboard/director';
-      case 'commercial':
-        return '/dashboard/commercial';
-      case 'chef_chantier':
-        return '/dashboard/project-manager';
-      case 'finance':
-        return '/dashboard/finance';
-      default:
-        return '/dashboard';
+      case 'directeur': case 'admin': case 'super_admin': return '/dashboard/director';
+      case 'commercial': return '/dashboard/commercial';
+      case 'chef_chantier': return '/dashboard/project-manager';
+      case 'finance': return '/dashboard/finance';
+      default: return '/dashboard';
     }
   };
 
-  // Liste globale des liens de navigation configurée dynamiquement selon le rôle (RBAC)
-  const navItems = [
-    {
-      label: 'Tableau de bord',
-      path: getDashboardHomePath(),
-      icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z" />
-        </svg>
-      ),
-      allowedRoles: ['directeur', 'admin', 'super_admin', 'commercial', 'chef_chantier', 'finance']
-    },
-    {
-      label: 'Clients & CRM',
-      path: '/dashboard/accounts',
-      icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
-      ),
-      allowedRoles: ['directeur', 'admin', 'super_admin', 'commercial']
-    },
-    {
-      label: 'Devis',
-      path: '/dashboard/quotes',
-      icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-      ),
-      allowedRoles: ['directeur', 'admin', 'super_admin', 'commercial']
-    },
-    {
-      label: 'Chantiers & Projets',
-      path: '/dashboard/projects',
-      icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-        </svg>
-      ),
-      allowedRoles: ['directeur', 'admin', 'super_admin', 'chef_chantier']
-    },
-    {
-      label: 'Factures & Paiements',
-      path: '/dashboard/invoices',
-      icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      ),
-      allowedRoles: ['directeur', 'admin', 'super_admin', 'finance']
-    },
-    {
-      label: 'Saisie d\'Heures',
-      path: '/dashboard/projects',
-      icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      ),
-      allowedRoles: ['chef_chantier']
-    },
-    {
-      label: 'Rapports & Audit',
-      path: '#', // Structure
-      icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-        </svg>
-      ),
-      allowedRoles: ['directeur', 'admin', 'super_admin']
-    },
-    {
-      label: 'Paramètres',
-      path: '#', // Structure
-      icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-      ),
-      allowedRoles: ['admin', 'super_admin']
-    }
-  ];
+  const isActive = (path) => {
+    if (path === getDashboardPath()) return location.pathname === path;
+    return location.pathname.startsWith(path);
+  };
 
-  // Filtrer les onglets de navigation par rôle
-  const filteredNavItems = navItems.filter((item) =>
-    item.allowedRoles.includes(role)
+  const has = (...roles) => roles.includes(role);
+  const isCRM = has('directeur', 'admin', 'super_admin', 'commercial');
+  const isChantier = has('directeur', 'admin', 'super_admin', 'chef_chantier');
+  const isFinance = has('directeur', 'admin', 'super_admin', 'finance');
+  const isAdmin = has('admin', 'super_admin', 'directeur');
+
+  const userInitial = user?.name ? user.name.charAt(0).toUpperCase() : 'U';
+
+  const SidebarContent = () => (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: '#1C1C1C' }}>
+      {/* Logo */}
+      <div style={{ padding: '16px 14px 14px', borderBottom: '0.5px solid rgba(255,255,255,0.08)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+          <div style={{ width: 30, height: 30, background: '#C85A2A', borderRadius: 7, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>A</span>
+          </div>
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#fff', lineHeight: 1.2 }}>Atlas Works</div>
+            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.04em' }}>ERP · BTP Maroc</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <div style={{ flex: 1, overflowY: 'auto', padding: '8px 0' }}>
+        <NavSection label="Tableau de bord" show>
+          <NavItem to={getDashboardPath()} icon="dashboard" label="Tableau de bord" active={isActive(getDashboardPath())} />
+        </NavSection>
+
+        <NavSection label="Commercial" show={isCRM}>
+          <NavItem to="/dashboard/accounts" icon="accounts" label="Clients & CRM" active={isActive('/dashboard/accounts')} />
+          <NavItem to="/dashboard/contacts" icon="contact" label="Contacts" active={isActive('/dashboard/contacts')} />
+          <NavItem to="/dashboard/leads" icon="leads" label="Leads" active={isActive('/dashboard/leads')} />
+          <NavItem to="/dashboard/opportunities" icon="opportunity" label="Opportunités" active={isActive('/dashboard/opportunities')} />
+          <NavItem to="/dashboard/quotes" icon="quote" label="Devis" active={isActive('/dashboard/quotes')} />
+        </NavSection>
+
+        <NavSection label="Chantiers" show={isChantier || isFinance}>
+          {isChantier && <NavItem to="/dashboard/projects" icon="project" label="Projets & Chantiers" active={isActive('/dashboard/projects')} />}
+          {isChantier && <NavItem to="/dashboard/pointage" icon="pointage" label="Pointage journalier" active={isActive('/dashboard/pointage')} />}
+          {(isAdmin || isFinance) && <NavItem to="/dashboard/situations" icon="situations" label="Situations de travaux" active={isActive('/dashboard/situations')} />}
+        </NavSection>
+
+        <NavSection label="Finance" show={isFinance}>
+          <NavItem to="/dashboard/invoices" icon="invoice" label="Factures & Règlements" active={isActive('/dashboard/invoices')} />
+          <NavItem to="/dashboard/tresorerie" icon="tresorerie" label="Trésorerie" active={isActive('/dashboard/tresorerie')} />
+        </NavSection>
+
+        <NavSection label="Général" show>
+          {isAdmin && <NavItem to="/dashboard/parametres" icon="parametres" label="Paramètres" active={isActive('/dashboard/parametres')} />}
+        </NavSection>
+      </div>
+
+      {/* User footer */}
+      <div style={{ borderTop: '0.5px solid rgba(255,255,255,0.08)', padding: '10px 12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#C85A2A', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 600, color: '#fff', flexShrink: 0 }}>
+            {userInitial}
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.name}</div>
+            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>{user?.role?.name}</div>
+          </div>
+          <button
+            onClick={() => { logout(); navigate('/login'); }}
+            style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', padding: 4, borderRadius: 4 }}
+            title="Déconnexion"
+          >
+            <IC d={ICONS.logout} size={14} />
+          </button>
+        </div>
+      </div>
+    </div>
   );
 
-  const primaryNav = filteredNavItems.filter((item) => !['Rapports & Audit', 'Paramètres'].includes(item.label));
-  const secondaryNav = filteredNavItems.filter((item) => ['Rapports & Audit', 'Paramètres'].includes(item.label));
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row font-sans">
-      <aside className="hidden md:flex flex-col w-64 shrink-0 bg-white text-slate-900 border-r border-slate-200 relative z-30">
-        <div className="h-16 px-6 flex items-center space-x-3 border-b border-slate-200">
-          <div className="w-11 h-11 rounded-3xl flex items-center justify-center text-white font-black text-lg shadow-lg" style={{ backgroundColor: 'var(--color-primary)' }}>
-            A
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-slate-900">Atlas Works</p>
-            <p className="text-xs text-slate-500">Portail BTP</p>
-          </div>
-        </div>
-
-        <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-slate-400 mb-3">Menu</p>
-            <div className="space-y-2">
-              {primaryNav.map((item, index) => {
-                const isActive = location.pathname === item.path;
-                return (
-                  <Link
-                    key={index}
-                    to={item.path}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all ${
-                      isActive
-                        ? 'text-white shadow-sm'
-                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                    }`}
-                    style={isActive ? { backgroundColor: 'var(--color-primary)' } : undefined}
-                  >
-                    <span className={isActive ? 'text-white' : 'text-slate-500'}>
-                      {item.icon}
-                    </span>
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-slate-400 mb-3">Général</p>
-            <div className="space-y-2">
-              {secondaryNav.map((item, index) => {
-                const isActive = location.pathname === item.path;
-                return (
-                  <Link
-                    key={index}
-                    to={item.path}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all ${
-                      isActive
-                        ? 'text-white shadow-sm'
-                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                    }`}
-                    style={isActive ? { backgroundColor: 'var(--color-primary)' } : undefined}
-                  >
-                    <span className={isActive ? 'text-white' : 'text-slate-500'}>
-                      {item.icon}
-                    </span>
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        <div className="border-t border-slate-200 px-4 py-5">
-          <div className="rounded-3xl bg-slate-50 p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl text-white flex items-center justify-center font-black" style={{ backgroundColor: 'var(--color-primary)' }}>
-                {user?.name ? user.name.charAt(0) : 'U'}
-              </div>
-              <div className="min-w-0">
-                <p className="text-sm font-semibold text-slate-900 truncate">{user?.name}</p>
-                <p className="text-[11px] text-slate-500 truncate">{user?.role?.name}</p>
-              </div>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="mt-4 w-full rounded-2xl bg-slate-900 text-white py-2 text-xs font-semibold hover:bg-slate-800 transition"
-            >
-              Déconnexion
-            </button>
-          </div>
-        </div>
+    <div style={{ minHeight: '100vh', background: '#F4F4F5', display: 'flex', fontFamily: 'Inter, system-ui, sans-serif' }}>
+      {/* Desktop sidebar */}
+      <aside style={{ width: 200, flexShrink: 0, position: 'sticky', top: 0, height: '100vh', flexDirection: 'column' }} className="hidden md:flex">
+        <SidebarContent />
       </aside>
 
-      <div className="flex-1 flex flex-col min-w-0 pb-16 md:pb-0">
-        <header className="h-16 px-4 md:px-8 bg-white border-b border-slate-200 flex items-center justify-between sticky top-0 z-20">
-          <div className="flex items-center gap-4">
-            <div className="md:hidden flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl flex items-center justify-center text-white font-black" style={{ backgroundColor: 'var(--color-primary)' }}>A</div>
-              <span className="text-slate-900 font-bold">Atlas Works</span>
-            </div>
-            <div className="hidden lg:flex items-center bg-slate-100 rounded-full px-3 py-2 gap-3 shadow-sm">
-              <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 18.5a7.5 7.5 0 006.15-3.85z" />
-              </svg>
-              <input
-                type="search"
-                placeholder="Rechercher"
-                className="bg-transparent border-none outline-none text-sm text-slate-700 placeholder-slate-400 w-52"
-              />
-            </div>
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div
+          style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex' }}
+          onClick={() => setMobileOpen(false)}
+        >
+          <div style={{ width: 200, height: '100%' }} onClick={e => e.stopPropagation()}>
+            <SidebarContent />
           </div>
+          <div style={{ flex: 1, background: 'rgba(0,0,0,0.5)' }} />
+        </div>
+      )}
 
-          <div className="flex items-center gap-3">
-            <button className="p-2 rounded-2xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors">
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-18 8h18V8H3v8z" />
-              </svg>
-            </button>
-            <button className="p-2 rounded-2xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors relative">
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
-              <span className="absolute top-1 right-1 inline-flex h-2.5 w-2.5 rounded-full border border-white" style={{ backgroundColor: 'var(--color-accent)' }}></span>
-            </button>
-            <div className="hidden sm:flex items-center gap-3 rounded-full bg-slate-100 px-3 py-2">
-              <div className="w-9 h-9 rounded-full bg-slate-200 text-slate-700 font-bold flex items-center justify-center">
-                {user?.name ? user.name.charAt(0) : 'U'}
+      {/* Main content */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        {/* Topbar */}
+        <header style={{ height: 44, background: '#fff', borderBottom: '0.5px solid #E4E4E7', display: 'flex', alignItems: 'center', padding: '0 16px', gap: 12, position: 'sticky', top: 0, zIndex: 20 }}>
+          <button
+            className="md:hidden"
+            onClick={() => setMobileOpen(true)}
+            style={{ background: 'none', border: 'none', color: '#71717A', cursor: 'pointer', padding: 4 }}
+          >
+            <IC d={ICONS.menu} size={18} />
+          </button>
+          <div className="md:hidden" style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+            <div style={{ width: 22, height: 22, background: '#C85A2A', borderRadius: 5, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: 10, fontWeight: 700, color: '#fff' }}>A</span>
+            </div>
+            <span style={{ fontSize: 13, fontWeight: 600, color: '#18181B' }}>Atlas Works</span>
+          </div>
+          <div style={{ flex: 1 }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#F4F4F5', borderRadius: 6, padding: '4px 10px' }}>
+              <div style={{ width: 24, height: 24, borderRadius: '50%', background: '#C85A2A', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 600, color: '#fff', flexShrink: 0 }}>
+                {userInitial}
               </div>
-              <div className="text-left leading-none">
-                <p className="text-sm font-semibold text-slate-900">{user?.name}</p>
-                <p className="text-xs text-slate-500">{user?.role?.name}</p>
+              <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
+                <span style={{ fontSize: 12, fontWeight: 500, color: '#18181B' }}>{user?.name}</span>
+                <span style={{ fontSize: 10, color: '#71717A' }}>{user?.role?.name}</span>
               </div>
             </div>
           </div>
         </header>
 
-        <main className="flex-1 p-4 md:p-8 overflow-y-auto">
-          <div className="max-w-7xl mx-auto">
+        <main style={{ flex: 1, padding: '16px 20px', overflowY: 'auto' }}>
+          <div style={{ maxWidth: 1280, margin: '0 auto' }}>
             <Outlet />
           </div>
         </main>
       </div>
+
+      {/* Mobile bottom nav */}
+      <nav className="md:hidden" style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#1C1C1C', borderTop: '0.5px solid rgba(255,255,255,0.1)', display: 'flex', zIndex: 30 }}>
+        {[
+          { to: getDashboardPath(), icon: 'dashboard', label: 'Accueil' },
+          ...(isCRM ? [{ to: '/dashboard/accounts', icon: 'accounts', label: 'CRM' }] : []),
+          ...(isChantier ? [{ to: '/dashboard/projects', icon: 'project', label: 'Chantiers' }] : []),
+          ...(isFinance ? [{ to: '/dashboard/invoices', icon: 'invoice', label: 'Finance' }] : []),
+          ...(isAdmin ? [{ to: '/dashboard/parametres', icon: 'parametres', label: 'Réglages' }] : []),
+        ].slice(0, 5).map((item, i) => {
+          const active = isActive(item.to);
+          return (
+            <Link key={i} to={item.to} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '8px 4px', color: active ? '#E8784A' : 'rgba(255,255,255,0.45)', textDecoration: 'none', fontSize: 10, gap: 3 }}>
+              <IC d={ICONS[item.icon]} size={18} />
+              {item.label}
+            </Link>
+          );
+        })}
+      </nav>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
@@ -67,7 +67,7 @@ const WorkLogForm = () => {
       return await api.post(`/api/projects/${projectId}/work-logs`, payload);
     },
     onSuccess: () => {
-      showToast('Pointage enregistré avec succès !');
+      showToast('Pointage enregistrÃ© avec succÃ¨s !');
       queryClient.invalidateQueries(['projectWorkLogs', projectId]);
       queryClient.invalidateQueries(['projectDetail', projectId]);
       navigate(`/dashboard/projects/${projectId}`);
@@ -82,11 +82,11 @@ const WorkLogForm = () => {
     e.preventDefault();
 
     if (!hours || parseFloat(hours) <= 0) {
-      showToast('Le nombre d\'heures doit être positif.', 'error');
+      showToast('Le nombre d\'heures doit Ãªtre positif.', 'error');
       return;
     }
     if (!workDate) {
-      showToast('Veuillez spécifier la date.', 'error');
+      showToast('Veuillez spÃ©cifier la date.', 'error');
       return;
     }
 
@@ -110,7 +110,7 @@ const WorkLogForm = () => {
   if (projectError) {
     return (
       <div className="p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700 font-medium">
-        ⚠️ Impossible d'ouvrir la saisie d'heures pour ce chantier : {projectError.message}.
+        âš ï¸ Impossible d'ouvrir la saisie d'heures pour ce chantier : {projectError.message}.
       </div>
     );
   }
@@ -118,14 +118,14 @@ const WorkLogForm = () => {
   const gpsLabel = {
     idle: null,
     loading: <span className="text-[10px] text-blue-500 font-semibold animate-pulse">Localisation en cours...</span>,
-    ok: <span className="text-[10px] text-emerald-600 font-semibold">✓ GPS capté ({locationLat?.toFixed(4)}, {locationLng?.toFixed(4)})</span>,
-    denied: <span className="text-[10px] text-amber-500 font-semibold">Localisation refusée — pointage sans GPS</span>,
+    ok: <span className="text-[10px] text-emerald-600 font-semibold">âœ“ GPS captÃ© ({locationLat?.toFixed(4)}, {locationLng?.toFixed(4)})</span>,
+    denied: <span className="text-[10px] text-amber-500 font-semibold">Localisation refusÃ©e â€” pointage sans GPS</span>,
   }[gpsStatus];
 
   return (
     <div className="max-w-xl mx-auto space-y-6 font-sans">
       <PageHeader
-        title="⏱️ Pointer des heures"
+        title="â±ï¸ Pointer des heures"
         breadcrumb={[
           { label: 'Chantiers', link: '/dashboard/projects' },
           { label: project.title, link: `/dashboard/projects/${projectId}` },
@@ -138,7 +138,7 @@ const WorkLogForm = () => {
         <div className="p-4 rounded-2xl bg-blue-50 border border-blue-100 space-y-1">
           <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest block">Chantier</span>
           <span className="text-sm font-black text-slate-850 block">{project.title}</span>
-          <span className="text-[10px] text-slate-400 font-semibold block">📍 {project.address}, {project.city}</span>
+          <span className="text-[10px] text-slate-400 font-semibold block">ðŸ“ {project.address}, {project.city}</span>
         </div>
 
         {/* GPS status */}
@@ -151,17 +151,17 @@ const WorkLogForm = () => {
           {/* Task */}
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">
-              Tâche associée (Recommandé)
+              TÃ¢che associÃ©e (RecommandÃ©)
             </label>
             <select
               value={taskId}
               onChange={(e) => setTaskId(e.target.value)}
-              className="block w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer font-bold"
+              className="block w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#C85A2A] cursor-pointer font-bold"
             >
-              <option value="">Sélectionner une tâche en cours...</option>
+              <option value="">SÃ©lectionner une tÃ¢che en cours...</option>
               {tasks.map(t => (
                 <option key={t.id} value={t.id}>
-                  {t.title} ({t.status} — Priorité : {t.priority})
+                  {t.title} ({t.status} â€” PrioritÃ© : {t.priority})
                 </option>
               ))}
             </select>
@@ -177,19 +177,19 @@ const WorkLogForm = () => {
               required
               value={workDate}
               onChange={(e) => setWorkDate(e.target.value)}
-              className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+              className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#C85A2A] cursor-pointer"
             />
           </div>
 
           {/* Start / End time */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Heure début</label>
+              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Heure dÃ©but</label>
               <input
                 type="time"
                 value={startTime}
                 onChange={(e) => setStartTime(e.target.value)}
-                className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#C85A2A]"
               />
             </div>
             <div className="space-y-2">
@@ -198,7 +198,7 @@ const WorkLogForm = () => {
                 type="time"
                 value={endTime}
                 onChange={(e) => setEndTime(e.target.value)}
-                className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#C85A2A]"
               />
             </div>
           </div>
@@ -206,9 +206,9 @@ const WorkLogForm = () => {
           {/* Hours worked */}
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">
-              Heures travaillées
+              Heures travaillÃ©es
               {startTime && endTime && (
-                <span className="ml-2 text-blue-500 normal-case font-normal">(calculé depuis les horaires)</span>
+                <span className="ml-2 text-blue-500 normal-case font-normal">(calculÃ© depuis les horaires)</span>
               )}
             </label>
             <div className="relative">
@@ -220,7 +220,7 @@ const WorkLogForm = () => {
                 required
                 value={hours}
                 onChange={(e) => setHours(e.target.value)}
-                className="block w-full pl-4 pr-12 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 font-extrabold focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="block w-full pl-4 pr-12 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 font-extrabold focus:outline-none focus:ring-2 focus:ring-[#C85A2A]"
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-extrabold text-[10px]">HRS</span>
             </div>
@@ -233,7 +233,7 @@ const WorkLogForm = () => {
               {[
                 { value: 'draft', label: 'Brouillon' },
                 { value: 'submitted', label: 'Soumis' },
-                { value: 'validated', label: 'Validé' },
+                { value: 'validated', label: 'ValidÃ©' },
               ].map(({ value, label }) => (
                 <button
                   key={value}
@@ -241,7 +241,7 @@ const WorkLogForm = () => {
                   onClick={() => setStatus(value)}
                   className={`py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wide border transition-colors cursor-pointer ${
                     status === value
-                      ? 'bg-blue-600 text-white border-blue-600'
+                      ? 'bg-[#C85A2A] text-white border-blue-600'
                       : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
                   }`}
                 >
@@ -257,11 +257,11 @@ const WorkLogForm = () => {
               Observations / Rapport technique
             </label>
             <textarea
-              placeholder="Décrire succinctement les travaux réalisés, les fournitures consommées, ou les éventuels points de blocage..."
+              placeholder="DÃ©crire succinctement les travaux rÃ©alisÃ©s, les fournitures consommÃ©es, ou les Ã©ventuels points de blocage..."
               rows="4"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#C85A2A]"
             />
           </div>
 
@@ -277,7 +277,7 @@ const WorkLogForm = () => {
             <button
               type="submit"
               disabled={logMutation.isLoading}
-              className="flex-1 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-550 text-white font-bold tracking-wide shadow-md shadow-blue-900/10 transition-colors cursor-pointer disabled:opacity-60"
+              className="flex-1 py-3 px-4 rounded-xl bg-[#C85A2A] hover:bg-blue-550 text-white font-bold tracking-wide shadow-md shadow-blue-900/10 transition-colors cursor-pointer disabled:opacity-60"
             >
               {logMutation.isLoading
                 ? 'Envoi en cours...'

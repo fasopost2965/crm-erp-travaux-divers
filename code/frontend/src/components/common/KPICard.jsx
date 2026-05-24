@@ -27,7 +27,7 @@ const KPICard = ({
         <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
           {title}
         </span>
-        <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+        <div className="w-10 h-10 rounded-xl bg-[#FDF0EA] text-[#C85A2A] flex items-center justify-center group-hover:bg-[#FADDCC] transition-colors">
           {icon}
         </div>
       </div>

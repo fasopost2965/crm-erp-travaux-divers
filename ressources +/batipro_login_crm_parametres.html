@@ -1,0 +1,685 @@
+
+<h2 class="sr-only">BatiPro ERP — trois écrans interactifs : page de connexion multi-rôle, module clients CRM pipeline, et module paramètres complet</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:13px;color:var(--color-text-primary)}
+
+.nav-pills{display:flex;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;margin-bottom:16px;background:var(--color-background-primary)}
+.pill{flex:1;padding:9px 0;text-align:center;font-size:12px;font-weight:500;cursor:pointer;color:var(--color-text-secondary);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:5px;border-right:0.5px solid var(--color-border-tertiary)}
+.pill:last-child{border-right:none}
+.pill.on{background:#1C1C1C;color:#fff}
+.pill i{font-size:14px}
+
+.screen{display:none}.screen.on{display:block}
+
+/* ===== LOGIN ===== */
+.login-wrap{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:32px 20px;display:flex;flex-direction:column;align-items:center;min-height:520px;justify-content:center}
+.login-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:28px 28px;width:100%;max-width:380px}
+.login-logo{display:flex;align-items:center;gap:10px;margin-bottom:24px;justify-content:center}
+.logo-sq{width:36px;height:36px;background:#C85A2A;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.login-brand{font-size:20px;font-weight:500;color:var(--color-text-primary)}
+.login-sub-brand{font-size:11px;color:var(--color-text-secondary);letter-spacing:.06em;text-align:center;margin-bottom:20px;margin-top:-16px}
+.login-title{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.login-sub{font-size:12px;color:var(--color-text-secondary);margin-bottom:20px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:5px;letter-spacing:.03em}
+.field input{width:100%;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:9px 12px;font-size:13px;background:var(--color-background-primary);color:var(--color-text-primary);outline:none}
+.field input:focus{border-color:#C85A2A;box-shadow:0 0 0 2px rgba(200,90,42,.12)}
+.pw-wrap{position:relative}.pw-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--color-text-secondary);cursor:pointer;font-size:15px}
+.role-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:16px}
+.role-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:8px 6px;text-align:center;cursor:pointer;transition:all .15s}
+.role-card:hover{background:var(--color-background-secondary)}
+.role-card.on{border-color:#C85A2A;background:#FDF0EA}
+.role-card i{font-size:18px;color:var(--color-text-secondary);display:block;margin-bottom:4px}
+.role-card.on i{color:#C85A2A}
+.role-card .rl{font-size:11px;color:var(--color-text-secondary)}
+.role-card.on .rl{color:#993C1D;font-weight:500}
+.login-btn{width:100%;padding:10px;background:#C85A2A;color:#fff;border:none;border-radius:var(--border-radius-md);font-size:13px;font-weight:500;cursor:pointer;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity .15s}
+.login-btn:hover{opacity:.9}
+.login-footer{margin-top:14px;text-align:center;font-size:11px;color:var(--color-text-secondary)}
+.login-footer a{color:#C85A2A;cursor:pointer}
+.divider{display:flex;align-items:center;gap:8px;margin:14px 0;color:var(--color-text-secondary);font-size:11px}
+.divider::before,.divider::after{content:'';flex:1;height:0.5px;background:var(--color-border-tertiary)}
+.sso-btn{width:100%;padding:8px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px}
+.alert-success{background:#E8F6EE;border:0.5px solid #9FE1CB;border-radius:var(--border-radius-md);padding:8px 12px;font-size:12px;color:#1A6B3C;margin-bottom:14px;display:none;align-items:center;gap:6px}
+
+/* ===== CRM CLIENTS ===== */
+.crm-wrap{border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);overflow:hidden}
+.crm-topbar{background:#1C1C1C;padding:11px 18px;display:flex;align-items:center;gap:10px}
+.crm-title{font-size:14px;font-weight:500;color:#fff;flex:1}
+.btn-o{background:#C85A2A;color:#fff;border:none;padding:6px 12px;border-radius:var(--border-radius-md);font-size:11px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:5px}
+.btn-g{background:rgba(255,255,255,.09);color:rgba(255,255,255,.7);border:none;padding:6px 10px;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.crm-body{background:var(--color-background-tertiary);padding:14px;display:flex;flex-direction:column;gap:12px}
+.kpi4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.kpi{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:11px 13px}
+.kt{border-top:2px solid #C85A2A}.kg{border-top:2px solid #2D8A5E}.kb{border-top:2px solid #2A6CB8}.kr{border-top:2px solid #BA7517}
+.kl{font-size:11px;color:var(--color-text-secondary);margin-bottom:4px}
+.kv{font-size:18px;font-weight:500;color:var(--color-text-primary);line-height:1}
+.ks{font-size:10px;color:var(--color-text-secondary);margin-top:2px}
+.pipeline-wrap{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.pipeline-head{padding:10px 14px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:space-between}
+.ph-title{font-size:13px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:6px}
+.ph-title i{color:#C85A2A}
+.pipeline-cols{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:0.5px solid var(--color-border-tertiary)}
+.pipe-col{border-right:0.5px solid var(--color-border-tertiary);padding:10px 8px;min-height:200px}
+.pipe-col:last-child{border-right:none}
+.pipe-col-head{font-size:11px;font-weight:500;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
+.pipe-count{font-size:10px;padding:1px 5px;border-radius:8px}
+.deal-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:8px;margin-bottom:6px;cursor:pointer;transition:background .1s;background:var(--color-background-primary)}
+.deal-card:hover{background:var(--color-background-secondary)}
+.deal-name{font-size:11px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.deal-client{font-size:10px;color:var(--color-text-secondary);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.deal-val{font-size:11px;font-weight:500}
+.deal-prio{width:6px;height:6px;border-radius:50%;float:right;margin-top:2px}
+.crm-two{display:grid;grid-template-columns:1.2fr 1fr;gap:10px}
+.panel{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.ph{padding:10px 14px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:space-between}
+.pt{font-size:13px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:6px}
+.pt i{color:#C85A2A}
+.client-row{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer;transition:background .1s}
+.client-row:hover{background:var(--color-background-secondary)}
+.client-row:last-child{border-bottom:none}
+.cav{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#fff;flex-shrink:0}
+.cname{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.cmeta{font-size:10px;color:var(--color-text-secondary)}
+.ctag{font-size:10px;padding:2px 6px;border-radius:6px;white-space:nowrap;margin-left:auto}
+.act-row{display:flex;gap:8px;padding:8px 12px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.act-row:last-child{border-bottom:none}
+.act-icon{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.act-text{font-size:11px;color:var(--color-text-primary);line-height:1.4}
+.act-time{font-size:10px;color:var(--color-text-secondary);margin-top:2px}
+
+/* ===== SETTINGS ===== */
+.settings-wrap{border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);overflow:hidden;display:flex;min-height:600px}
+.settings-nav{width:190px;background:var(--color-background-primary);border-right:0.5px solid var(--color-border-tertiary);flex-shrink:0;padding:14px 0}
+.sn-section{padding:4px 14px 2px;font-size:10px;color:var(--color-text-secondary);letter-spacing:.07em;text-transform:uppercase;margin-top:10px}
+.sn-section:first-child{margin-top:0}
+.sn-item{display:flex;align-items:center;gap:8px;padding:8px 14px;cursor:pointer;font-size:12px;color:var(--color-text-secondary);border-radius:0;transition:all .1s;margin:1px 6px;border-radius:6px}
+.sn-item:hover{background:var(--color-background-secondary);color:var(--color-text-primary)}
+.sn-item.on{background:#FDF0EA;color:#993C1D;font-weight:500}
+.sn-item.on i{color:#C85A2A}
+.sn-item i{font-size:15px;width:16px}
+.settings-body{flex:1;overflow-y:auto;background:var(--color-background-tertiary)}
+.settings-topbar{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:11px 18px;display:flex;align-items:center;justify-content:space-between}
+.settings-page-title{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.save-btn{background:#C85A2A;color:#fff;border:none;padding:6px 14px;border-radius:var(--border-radius-md);font-size:12px;cursor:pointer}
+.settings-content{padding:16px}
+.s-section{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:12px;overflow:hidden}
+.s-section-head{padding:10px 14px;border-bottom:0.5px solid var(--color-border-tertiary);font-size:12px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:6px}
+.s-section-head i{color:#C85A2A;font-size:14px}
+.s-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px 14px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.s-row:last-child{border-bottom:none}
+.s-row.full{grid-template-columns:1fr}
+.s-field label{display:block;font-size:11px;color:var(--color-text-secondary);margin-bottom:4px}
+.s-field input,.s-field select,.s-field textarea{width:100%;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:7px 10px;font-size:12px;background:var(--color-background-primary);color:var(--color-text-primary);outline:none}
+.s-field input:focus,.s-field select:focus{border-color:#C85A2A}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.toggle-row:last-child{border-bottom:none}
+.toggle-info{flex:1}
+.toggle-label{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.toggle-sub{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.toggle{width:36px;height:20px;background:var(--color-border-secondary);border-radius:10px;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.toggle.on{background:#C85A2A}
+.toggle::after{content:'';position:absolute;width:14px;height:14px;background:#fff;border-radius:50%;top:3px;left:3px;transition:left .2s}
+.toggle.on::after{left:19px}
+.user-row{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.user-row:last-child{border-bottom:none}
+.u-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:#fff;flex-shrink:0}
+.u-name{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.u-role{font-size:10px;color:var(--color-text-secondary)}
+.u-badge{font-size:10px;padding:2px 7px;border-radius:8px;margin-left:auto}
+.u-edit{margin-left:8px;color:var(--color-text-secondary);cursor:pointer;font-size:14px}
+.cnss-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px 14px}
+.cnss-field{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px}
+.cnss-label{font-size:11px;color:var(--color-text-secondary);margin-bottom:4px}
+.cnss-val{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.cnss-sub{font-size:10px;color:var(--color-text-secondary);margin-top:2px}
+</style>
+
+<div class="nav-pills">
+  <div class="pill on" onclick="showScreen('login',this)"><i class="ti ti-lock" aria-hidden="true"></i>Page de connexion</div>
+  <div class="pill" onclick="showScreen('crm',this)"><i class="ti ti-users" aria-hidden="true"></i>Clients & CRM</div>
+  <div class="pill" onclick="showScreen('settings',this)"><i class="ti ti-settings" aria-hidden="true"></i>Paramètres</div>
+</div>
+
+<!-- ========== LOGIN ========== -->
+<div class="screen on" id="screen-login">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="logo-sq"><i class="ti ti-building" style="color:#fff;font-size:18px" aria-hidden="true"></i></div>
+        <span class="login-brand">BatiPro</span>
+      </div>
+      <div class="login-sub-brand">PLATEFORME ERP TRAVAUX MAROC</div>
+
+      <div class="alert-success" id="login-alert">
+        <i class="ti ti-check" aria-hidden="true"></i> Connexion réussie — redirection…
+      </div>
+
+      <div style="margin-bottom:14px">
+        <div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:6px;letter-spacing:.03em">Se connecter en tant que</div>
+        <div class="role-grid">
+          <div class="role-card on" onclick="selectRole(this)" data-role="directeur">
+            <i class="ti ti-crown" aria-hidden="true"></i>
+            <div class="rl">Directeur</div>
+          </div>
+          <div class="role-card" onclick="selectRole(this)" data-role="chef">
+            <i class="ti ti-helmet" aria-hidden="true"></i>
+            <div class="rl">Chef chantier</div>
+          </div>
+          <div class="role-card" onclick="selectRole(this)" data-role="comptable">
+            <i class="ti ti-calculator" aria-hidden="true"></i>
+            <div class="rl">Comptable</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="email-in">Adresse e-mail</label>
+        <input type="email" id="email-in" value="k.alaoui@batipro.ma" placeholder="vous@batipro.ma">
+      </div>
+      <div class="field">
+        <label for="pw-in">Mot de passe</label>
+        <div class="pw-wrap">
+          <input type="password" id="pw-in" value="••••••••">
+          <i class="ti ti-eye pw-eye" onclick="togglePw()" aria-label="Afficher le mot de passe" role="button" tabindex="0"></i>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-secondary);cursor:pointer">
+          <input type="checkbox" checked style="accent-color:#C85A2A"> Se souvenir de moi
+        </label>
+        <a style="font-size:12px;color:#C85A2A;cursor:pointer">Mot de passe oublié ?</a>
+      </div>
+      <button class="login-btn" onclick="doLogin()">
+        <i class="ti ti-login" aria-hidden="true"></i> Se connecter
+      </button>
+      <div class="divider">ou</div>
+      <button class="sso-btn">
+        <i class="ti ti-brand-google" style="color:#C84242;font-size:15px" aria-hidden="true"></i>
+        Continuer avec Google Workspace
+      </button>
+      <div class="login-footer" style="margin-top:14px">
+        Première connexion ? <a onclick="sendPrompt('Comment configurer BatiPro pour la première fois ?')">Créer un compte ↗</a>
+      </div>
+    </div>
+
+    <div style="margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;max-width:380px">
+      <div style="background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px;text-align:center">
+        <i class="ti ti-crown" style="color:#C85A2A;font-size:16px;display:block;margin-bottom:4px" aria-hidden="true"></i>
+        <div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Directeur</div>
+        <div style="font-size:10px;color:var(--color-text-secondary);margin-top:2px">Accès complet</div>
+      </div>
+      <div style="background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px;text-align:center">
+        <i class="ti ti-helmet" style="color:#2A6CB8;font-size:16px;display:block;margin-bottom:4px" aria-hidden="true"></i>
+        <div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Chef chantier</div>
+        <div style="font-size:10px;color:var(--color-text-secondary);margin-top:2px">Chantiers + journal</div>
+      </div>
+      <div style="background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px;text-align:center">
+        <i class="ti ti-calculator" style="color:#2D8A5E;font-size:16px;display:block;margin-bottom:4px" aria-hidden="true"></i>
+        <div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Comptable</div>
+        <div style="font-size:10px;color:var(--color-text-secondary);margin-top:2px">Finance + paie</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== CRM ========== -->
+<div class="screen" id="screen-crm">
+  <div class="crm-wrap">
+    <div class="crm-topbar">
+      <i class="ti ti-users" style="color:#C85A2A;font-size:16px" aria-hidden="true"></i>
+      <span class="crm-title">Clients & Prospects — Pipeline commercial</span>
+      <button class="btn-g"><i class="ti ti-search" aria-hidden="true"></i></button>
+      <button class="btn-g" onclick="sendPrompt('Comment importer une liste de clients depuis Excel dans BatiPro ?')"><i class="ti ti-upload" aria-hidden="true"></i> Import ↗</button>
+      <button class="btn-o" onclick="sendPrompt('Comment créer un nouveau prospect dans le CRM BatiPro ?')"><i class="ti ti-plus" aria-hidden="true"></i> Nouveau ↗</button>
+    </div>
+    <div class="crm-body">
+      <div class="kpi4">
+        <div class="kpi kt"><div class="kl">Clients actifs</div><div class="kv">23</div><div class="ks">dont 7 chantiers ouverts</div></div>
+        <div class="kpi kg"><div class="kl">CA clients (ytd)</div><div class="kv">4,2 M</div><div class="ks">MAD · jan–mai 2026</div></div>
+        <div class="kpi kb"><div class="kl">Devis en cours</div><div class="kv">8</div><div class="ks">Total : 3,8 M MAD</div></div>
+        <div class="kpi kr"><div class="kl">Taux conversion</div><div class="kv">62%</div><div class="ks">devis → contrat signés</div></div>
+      </div>
+
+      <div class="pipeline-wrap">
+        <div class="pipeline-head">
+          <div class="ph-title"><i class="ti ti-layout-kanban" aria-hidden="true"></i>Pipeline commercial — kanban</div>
+          <span style="font-size:11px;color:var(--color-text-secondary)">Glisser-déposer dans le vrai produit</span>
+        </div>
+        <div class="pipeline-cols">
+          <div class="pipe-col">
+            <div class="pipe-col-head" style="color:#888">
+              Prospect <span class="pipe-count" style="background:#F1EFE8;color:#5F5E5A">3</span>
+            </div>
+            <div class="deal-card">
+              <div class="deal-prio" style="background:#888"></div>
+              <div class="deal-name">Résidence Bouregreg</div>
+              <div class="deal-client">Promo Rabat Dev.</div>
+              <div class="deal-val" style="color:#888">~1 200 K MAD</div>
+            </div>
+            <div class="deal-card">
+              <div class="deal-prio" style="background:#BA7517"></div>
+              <div class="deal-name">Clinique Anfa</div>
+              <div class="deal-client">Groupe Santé Plus</div>
+              <div class="deal-val" style="color:#888">~480 K MAD</div>
+            </div>
+            <div class="deal-card">
+              <div class="deal-prio" style="background:#888"></div>
+              <div class="deal-name">École privée Berrechid</div>
+              <div class="deal-client">Fam. Benjelloun</div>
+              <div class="deal-val" style="color:#888">~320 K MAD</div>
+            </div>
+          </div>
+          <div class="pipe-col">
+            <div class="pipe-col-head" style="color:#BA7517">
+              Devis envoyé <span class="pipe-count" style="background:#FAEEDA;color:#633806">2</span>
+            </div>
+            <div class="deal-card">
+              <div class="deal-prio" style="background:#C85A2A"></div>
+              <div class="deal-name">Villa Mohammedia</div>
+              <div class="deal-client">M. Lahlou</div>
+              <div class="deal-val" style="color:#C85A2A">860 K MAD</div>
+            </div>
+            <div class="deal-card">
+              <div class="deal-prio" style="background:#888"></div>
+              <div class="deal-name">Entrepôt Tanger Med</div>
+              <div class="deal-client">LogiTex SA</div>
+              <div class="deal-val" style="color:#C85A2A">2 100 K MAD</div>
+            </div>
+          </div>
+          <div class="pipe-col">
+            <div class="pipe-col-head" style="color:#2A6CB8">
+              Négociation <span class="pipe-count" style="background:#E6F1FB;color:#0C447C">2</span>
+            </div>
+            <div class="deal-card">
+              <div class="deal-prio" style="background:#C84242"></div>
+              <div class="deal-name">Hôtel Agadir Palace</div>
+              <div class="deal-client">Atlas Hospitality</div>
+              <div class="deal-val" style="color:#2A6CB8">4 800 K MAD</div>
+            </div>
+            <div class="deal-card">
+              <div class="deal-prio" style="background:#BA7517"></div>
+              <div class="deal-name">Imm. R+8 Maarif</div>
+              <div class="deal-client">Invest Casa</div>
+              <div class="deal-val" style="color:#2A6CB8">3 200 K MAD</div>
+            </div>
+          </div>
+          <div class="pipe-col">
+            <div class="pipe-col-head" style="color:#1A6B3C">
+              Contrat signé <span class="pipe-count" style="background:#E8F6EE;color:#27500A">2</span>
+            </div>
+            <div class="deal-card">
+              <div class="deal-prio" style="background:#2D8A5E"></div>
+              <div class="deal-name">Résidence Al Fath</div>
+              <div class="deal-client">Immocap SA</div>
+              <div class="deal-val" style="color:#1A6B3C">2 400 K MAD</div>
+            </div>
+            <div class="deal-card">
+              <div class="deal-prio" style="background:#2D8A5E"></div>
+              <div class="deal-name">Immeuble Sidi Maarouf</div>
+              <div class="deal-client">Promoteur STAR</div>
+              <div class="deal-val" style="color:#1A6B3C">5 600 K MAD</div>
+            </div>
+          </div>
+          <div class="pipe-col">
+            <div class="pipe-col-head" style="color:#888">
+              Perdu/annulé <span class="pipe-count" style="background:#FBEAEA;color:#791F1F">1</span>
+            </div>
+            <div class="deal-card" style="opacity:.6">
+              <div class="deal-prio" style="background:#C84242"></div>
+              <div class="deal-name">Parking souterrain</div>
+              <div class="deal-client">Mairie Casablanca</div>
+              <div class="deal-val" style="color:#888">1 100 K MAD</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="crm-two">
+        <div class="panel">
+          <div class="ph"><div class="pt"><i class="ti ti-building" aria-hidden="true"></i>Clients récents</div><span style="font-size:11px;color:#C85A2A;cursor:pointer">Voir tout</span></div>
+          <div class="client-row">
+            <div class="cav" style="background:#C85A2A">IM</div>
+            <div><div class="cname">Immocap SA</div><div class="cmeta">Promoteur · 3 chantiers</div></div>
+            <span class="ctag" style="background:#E8F6EE;color:#1A6B3C">Client actif</span>
+          </div>
+          <div class="client-row">
+            <div class="cav" style="background:#2A6CB8">AH</div>
+            <div><div class="cname">Atlas Hospitality</div><div class="cmeta">Hôtellerie · En négociation</div></div>
+            <span class="ctag" style="background:#FAEEDA;color:#633806">Prospect chaud</span>
+          </div>
+          <div class="client-row">
+            <div class="cav" style="background:#2D8A5E">LM</div>
+            <div><div class="cname">LogiMaroc</div><div class="cmeta">Logistique · 1 chantier</div></div>
+            <span class="ctag" style="background:#E8F6EE;color:#1A6B3C">Client actif</span>
+          </div>
+          <div class="client-row">
+            <div class="cav" style="background:#7F4ABD">GE</div>
+            <div><div class="cname">Groupe Éducatif AL</div><div class="cmeta">Éducation · 1 chantier</div></div>
+            <span class="ctag" style="background:#E8F6EE;color:#1A6B3C">Client actif</span>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt"><i class="ti ti-history" aria-hidden="true"></i>Activité récente</div></div>
+          <div class="act-row">
+            <div class="act-icon" style="background:#E8F6EE"><i class="ti ti-phone" style="color:#1A6B3C" aria-hidden="true"></i></div>
+            <div><div class="act-text">Appel qualif. — Atlas Hospitality</div><div class="act-time">Aujourd'hui, 10h14 · K. Alaoui</div></div>
+          </div>
+          <div class="act-row">
+            <div class="act-icon" style="background:#E8F4FF"><i class="ti ti-mail" style="color:#1A5C9A" aria-hidden="true"></i></div>
+            <div><div class="act-text">Devis D-2026-089 envoyé à LogiTex</div><div class="act-time">Hier, 16h30 · Système</div></div>
+          </div>
+          <div class="act-row">
+            <div class="act-icon" style="background:#FAEEDA"><i class="ti ti-calendar" style="color:#633806" aria-hidden="true"></i></div>
+            <div><div class="act-text">RDV visite site — Villa Mohammedia</div><div class="act-time">20/05 · M. Lahlou</div></div>
+          </div>
+          <div class="act-row">
+            <div class="act-icon" style="background:#EDE8FD"><i class="ti ti-file-check" style="color:#3C3489" aria-hidden="true"></i></div>
+            <div><div class="act-text">Contrat signé — Imm. Sidi Maarouf</div><div class="act-time">18/05 · Promoteur STAR</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SETTINGS ========== -->
+<div class="screen" id="screen-settings">
+  <div class="settings-wrap">
+    <div class="settings-nav">
+      <div class="sn-section">Entreprise</div>
+      <div class="sn-item on" onclick="setSettingsPage('societe',this)"><i class="ti ti-building" aria-hidden="true"></i>Ma société</div>
+      <div class="sn-item" onclick="setSettingsPage('utilisateurs',this)"><i class="ti ti-users" aria-hidden="true"></i>Utilisateurs</div>
+      <div class="sn-item" onclick="setSettingsPage('roles',this)"><i class="ti ti-shield" aria-hidden="true"></i>Rôles & accès</div>
+      <div class="sn-section">Finance & Fiscal</div>
+      <div class="sn-item" onclick="setSettingsPage('tva',this)"><i class="ti ti-percentage" aria-hidden="true"></i>TVA & taxes</div>
+      <div class="sn-item" onclick="setSettingsPage('cnss',this)"><i class="ti ti-building-bank" aria-hidden="true"></i>Barèmes CNSS</div>
+      <div class="sn-item" onclick="setSettingsPage('facturation',this)"><i class="ti ti-receipt" aria-hidden="true"></i>Facturation</div>
+      <div class="sn-section">Système</div>
+      <div class="sn-item" onclick="setSettingsPage('notifications',this)"><i class="ti ti-bell" aria-hidden="true"></i>Notifications</div>
+      <div class="sn-item" onclick="setSettingsPage('integrations',this)"><i class="ti ti-plug" aria-hidden="true"></i>Intégrations</div>
+      <div class="sn-item" onclick="setSettingsPage('sauvegarde',this)"><i class="ti ti-database" aria-hidden="true"></i>Sauvegarde</div>
+      <div class="sn-section">Apparence</div>
+      <div class="sn-item" onclick="setSettingsPage('langue',this)"><i class="ti ti-language" aria-hidden="true"></i>Langue & région</div>
+    </div>
+
+    <div class="settings-body">
+      <div class="settings-topbar">
+        <span class="settings-page-title" id="settings-page-title">Ma société</span>
+        <button class="save-btn" onclick="showSaved()"><i class="ti ti-device-floppy" style="font-size:13px;margin-right:4px" aria-hidden="true"></i>Enregistrer</button>
+      </div>
+      <div class="settings-content" id="settings-content"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showScreen(id, el){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));
+  document.getElementById('screen-'+id).classList.add('on');
+  el.classList.add('on');
+  if(id==='settings') renderSettings('societe');
+}
+
+function selectRole(el){
+  document.querySelectorAll('.role-card').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+}
+
+function togglePw(){
+  const inp=document.getElementById('pw-in');
+  inp.type = inp.type==='password'?'text':'password';
+}
+
+function doLogin(){
+  const al=document.getElementById('login-alert');
+  al.style.display='flex';
+  setTimeout(()=>{al.style.display='none';},2500);
+}
+
+const SETTINGS_PAGES = {
+  societe:{title:'Ma société'},
+  utilisateurs:{title:'Utilisateurs'},
+  roles:{title:'Rôles & accès'},
+  tva:{title:'TVA & taxes'},
+  cnss:{title:'Barèmes CNSS / IGR'},
+  facturation:{title:'Facturation'},
+  notifications:{title:'Notifications'},
+  integrations:{title:'Intégrations'},
+  sauvegarde:{title:'Sauvegarde & données'},
+  langue:{title:'Langue & région'},
+};
+
+let currentSettingsPage = 'societe';
+
+function setSettingsPage(page, el){
+  currentSettingsPage = page;
+  document.querySelectorAll('.sn-item').forEach(x=>x.classList.remove('on'));
+  el.classList.add('on');
+  renderSettings(page);
+}
+
+function showSaved(){
+  const btn = document.querySelector('.save-btn');
+  btn.textContent='✓ Enregistré';
+  btn.style.background='#2D8A5E';
+  setTimeout(()=>{btn.innerHTML='<i class="ti ti-device-floppy" style="font-size:13px;margin-right:4px"></i>Enregistrer';btn.style.background='#C85A2A';},1800);
+}
+
+function renderSettings(page){
+  document.getElementById('settings-page-title').textContent = SETTINGS_PAGES[page].title;
+  const c = document.getElementById('settings-content');
+
+  if(page==='societe') c.innerHTML=`
+    <div class="s-section">
+      <div class="s-section-head"><i class="ti ti-building" aria-hidden="true"></i>Informations générales</div>
+      <div class="s-row">
+        <div class="s-field"><label>Raison sociale</label><input value="BatiPro Travaux SARL"></div>
+        <div class="s-field"><label>Forme juridique</label><select><option>SARL</option><option>SA</option><option>Auto-entrepreneur</option></select></div>
+      </div>
+      <div class="s-row">
+        <div class="s-field"><label>ICE (Identifiant Commun de l'Entreprise)</label><input value="001234567000089" placeholder="15 chiffres"></div>
+        <div class="s-field"><label>IF (Identifiant Fiscal)</label><input value="45678901"></div>
+      </div>
+      <div class="s-row">
+        <div class="s-field"><label>RC (Registre de Commerce)</label><input value="Casa-2018-B-12456"></div>
+        <div class="s-field"><label>CNSS (n° affilié employeur)</label><input value="8804521"></div>
+      </div>
+      <div class="s-row full">
+        <div class="s-field"><label>Adresse du siège social</label><input value="123 Bd Zerktouni, 4ème étage, Casablanca 20100"></div>
+      </div>
+      <div class="s-row">
+        <div class="s-field"><label>Téléphone</label><input value="+212 5 22 45 67 89"></div>
+        <div class="s-field"><label>E-mail professionnel</label><input value="contact@batipro.ma"></div>
+      </div>
+    </div>
+    <div class="s-section">
+      <div class="s-section-head"><i class="ti ti-photo" aria-hidden="true"></i>Logo & identité</div>
+      <div style="padding:12px 14px;display:flex;align-items:center;gap:14px">
+        <div style="width:60px;height:60px;background:#1C1C1C;border-radius:10px;display:flex;align-items:center;justify-content:center">
+          <i class="ti ti-building" style="color:#C85A2A;font-size:28px" aria-hidden="true"></i>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Logo actuel</div>
+          <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:8px">PNG ou SVG, fond transparent recommandé</div>
+          <button style="font-size:11px;padding:5px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);cursor:pointer;color:var(--color-text-primary)"><i class="ti ti-upload" style="font-size:12px" aria-hidden="true"></i> Changer le logo</button>
+        </div>
+      </div>
+    </div>`;
+
+  else if(page==='utilisateurs') c.innerHTML=`
+    <div class="s-section">
+      <div class="s-section-head" style="justify-content:space-between"><span style="display:flex;align-items:center;gap:6px"><i class="ti ti-users" aria-hidden="true"></i>Comptes utilisateurs (6)</span>
+        <button class="save-btn" style="font-size:11px;padding:4px 10px">+ Inviter</button>
+      </div>
+      ${[
+        {init:'KA',color:'#C85A2A',name:'Karim Alaoui',email:'k.alaoui@batipro.ma',role:'Directeur',badge:'bg:#1C1C1C;color:#fff'},
+        {init:'MB',color:'#2A6CB8',name:'M. Bensouda',email:'m.bensouda@batipro.ma',role:'Chef chantier',badge:'bg:#E8F4FF;color:#1A5C9A'},
+        {init:'HB',color:'#2D8A5E',name:'H. Belhaj',email:'h.belhaj@batipro.ma',role:'Chef chantier',badge:'bg:#E8F4FF;color:#1A5C9A'},
+        {init:'FA',color:'#7F4ABD',name:'F. Amrani',email:'f.amrani@batipro.ma',role:'Comptable',badge:'bg:#EDE8FD;color:#3C3489'},
+        {init:'RA',color:'#BA7517',name:'R. Azzouzi',email:'r.azzouzi@batipro.ma',role:'Commercial',badge:'bg:#FAEEDA;color:#633806'},
+        {init:'SA',color:'#993556',name:'S. Ait Brahim',email:'s.aitbrahim@batipro.ma',role:'RH',badge:'bg:#FBEAF0;color:#72243E'},
+      ].map(u=>`<div class="user-row">
+        <div class="u-av" style="background:${u.color}">${u.init}</div>
+        <div style="flex:1;min-width:0">
+          <div class="u-name">${u.name}</div>
+          <div class="u-role">${u.email}</div>
+        </div>
+        <span class="u-badge" style="background:${u.badge.split(';')[0].replace('bg:','')};color:${u.badge.split(';')[1].replace('color:','')}">${u.role}</span>
+        <i class="ti ti-edit u-edit" aria-hidden="true"></i>
+      </div>`).join('')}
+    </div>`;
+
+  else if(page==='cnss') c.innerHTML=`
+    <div class="s-section">
+      <div class="s-section-head"><i class="ti ti-building-bank" aria-hidden="true"></i>Taux CNSS en vigueur — secteur BTP</div>
+      <div class="cnss-grid">
+        <div class="cnss-field"><div class="cnss-label">AMO salariale</div><div class="cnss-val">2,26 %</div><div class="cnss-sub">Sans plafond</div></div>
+        <div class="cnss-field"><div class="cnss-label">Retraite salariale</div><div class="cnss-val">1,96 %</div><div class="cnss-sub">Plafond 6 000 MAD</div></div>
+        <div class="cnss-field"><div class="cnss-label">Alloc. fam. salariale</div><div class="cnss-val">0,26 %</div><div class="cnss-sub">Plafond 6 000 MAD</div></div>
+        <div class="cnss-field" style="border-top:2px solid #C84242"><div class="cnss-label">AMO patronale</div><div class="cnss-val">3,50 %</div><div class="cnss-sub">Sans plafond</div></div>
+        <div class="cnss-field" style="border-top:2px solid #C84242"><div class="cnss-label">Retraite patronale</div><div class="cnss-val">7,93 %</div><div class="cnss-sub">Plafond 6 000 MAD</div></div>
+        <div class="cnss-field" style="border-top:2px solid #C84242"><div class="cnss-label">AT — BTP (spécifique)</div><div class="cnss-val">3,26 %</div><div class="cnss-sub">Sans plafond</div></div>
+      </div>
+      <div style="padding:10px 14px;background:#FDF0EA;border-top:0.5px solid var(--color-border-tertiary);font-size:11px;color:#993C1D;display:flex;align-items:center;gap:6px">
+        <i class="ti ti-lock" aria-hidden="true"></i> Ces taux sont verrouillés (source DGI/CNSS). Modifiables uniquement par un administrateur sur autorisation de l'Inspection du travail.
+      </div>
+    </div>
+    <div class="s-section">
+      <div class="s-section-head"><i class="ti ti-percentage" aria-hidden="true"></i>Paramètres IGR</div>
+      <div class="s-row">
+        <div class="s-field"><label>Déduction frais professionnels</label><input value="20 %" readonly style="background:var(--color-background-secondary)"></div>
+        <div class="s-field"><label>Plafond annuel frais pro</label><input value="30 000 MAD" readonly style="background:var(--color-background-secondary)"></div>
+      </div>
+      <div class="s-row">
+        <div class="s-field"><label>Déduction par charge de famille</label><input value="360 MAD / an"></div>
+        <div class="s-field"><label>Nombre max de charges</label><input value="6 personnes"></div>
+      </div>
+    </div>`;
+
+  else if(page==='notifications') c.innerHTML=`
+    <div class="s-section">
+      <div class="s-section-head"><i class="ti ti-bell" aria-hidden="true"></i>Alertes chantiers</div>
+      ${[
+        {label:'Retard de chantier détecté',sub:'Alerte si avancement < planning prévu',on:true},
+        {label:'Dépassement de budget',sub:'Si dépenses > 90% du budget contractuel',on:true},
+        {label:'Journal non rempli',sub:'Rappel quotidien au chef de chantier',on:false},
+      ].map(t=>toggle(t)).join('')}
+    </div>
+    <div class="s-section">
+      <div class="s-section-head"><i class="ti ti-cash" aria-hidden="true"></i>Alertes trésorerie</div>
+      ${[
+        {label:'Facture impayée +30 jours',sub:'Relance automatique par e-mail',on:true},
+        {label:'Facture impayée +60 jours',sub:'Alerte direction + relance recommandée',on:true},
+        {label:'Solde bancaire bas',sub:'Alerte si solde < 50 000 MAD',on:false},
+      ].map(t=>toggle(t)).join('')}
+    </div>
+    <div class="s-section">
+      <div class="s-section-head"><i class="ti ti-users" aria-hidden="true"></i>Alertes RH</div>
+      ${[
+        {label:'Rappel déclaration CNSS',sub:'J-5 avant la date limite mensuelle',on:true},
+        {label:'Contrat CDD expirant',sub:'Alerte 30 jours avant fin de contrat',on:true},
+        {label:'Absence non justifiée',sub:'Si ouvrier absent sans saisie de motif',on:false},
+      ].map(t=>toggle(t)).join('')}
+    </div>`;
+
+  else if(page==='tva') c.innerHTML=`
+    <div class="s-section">
+      <div class="s-section-head"><i class="ti ti-percentage" aria-hidden="true"></i>Taux de TVA applicables — Maroc</div>
+      ${[
+        {label:'TVA travaux BTP (taux normal)',taux:'20%',note:'Applicable sur toutes prestations de construction',lock:true},
+        {label:'TVA matériaux de construction',taux:'20%',note:'Ciment, acier, bois, peinture…',lock:true},
+        {label:'TVA location engins',taux:'20%',note:'Grues, nacelles, bétonnières…',lock:true},
+        {label:'TVA restauration / divers',taux:'10%',note:'Repas chantier, hébergement déplacement',lock:false},
+      ].map(tv=>`<div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-label">${tv.label}</div>
+          <div class="toggle-sub">${tv.note}</div>
+        </div>
+        <span style="font-size:14px;font-weight:500;color:#C85A2A;min-width:40px;text-align:right;margin-right:12px">${tv.taux}</span>
+        ${tv.lock?`<i class="ti ti-lock" style="font-size:15px;color:var(--color-text-secondary)" aria-hidden="true"></i>`:`<div class="toggle on" onclick="this.classList.toggle('on')"></div>`}
+      </div>`).join('')}
+    </div>`;
+
+  else if(page==='facturation') c.innerHTML=`
+    <div class="s-section">
+      <div class="s-section-head"><i class="ti ti-receipt" aria-hidden="true"></i>Numérotation des documents</div>
+      <div class="s-row">
+        <div class="s-field"><label>Préfixe factures</label><input value="F-{ANNÉE}-"></div>
+        <div class="s-field"><label>Prochain numéro</label><input value="048" type="number"></div>
+      </div>
+      <div class="s-row">
+        <div class="s-field"><label>Préfixe devis</label><input value="D-{ANNÉE}-"></div>
+        <div class="s-field"><label>Préfixe bons de commande</label><input value="BC-"></div>
+      </div>
+    </div>
+    <div class="s-section">
+      <div class="s-section-head"><i class="ti ti-building" aria-hidden="true"></i>Mentions légales sur factures</div>
+      <div class="s-row full">
+        <div class="s-field"><label>Pied de page facture</label>
+          <textarea style="width:100%;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:7px 10px;font-size:12px;background:var(--color-background-primary);color:var(--color-text-primary);height:70px;resize:vertical;outline:none">ICE : 001234567000089 · IF : 45678901 · RC : Casa-2018-B-12456 · CNSS : 8804521
+Paiement à 30 jours date de facture. Tout retard entraîne des pénalités de 1,5%/mois.</textarea>
+        </div>
+      </div>
+      <div class="s-row">
+        <div class="s-field"><label>Retenue de garantie par défaut</label><input value="10 %"></div>
+        <div class="s-field"><label>Délai de paiement standard</label><select><option>30 jours</option><option selected>60 jours</option><option>90 jours</option></select></div>
+      </div>
+    </div>`;
+
+  else if(page==='langue') c.innerHTML=`
+    <div class="s-section">
+      <div class="s-section-head"><i class="ti ti-language" aria-hidden="true"></i>Langue & localisation</div>
+      <div class="s-row">
+        <div class="s-field"><label>Langue de l'interface</label>
+          <select>
+            <option selected>Français</option>
+            <option>العربية (Arabe)</option>
+            <option>English</option>
+          </select>
+        </div>
+        <div class="s-field"><label>Devise</label>
+          <select><option selected>MAD — Dirham marocain</option><option>EUR — Euro</option><option>USD — Dollar</option></select>
+        </div>
+      </div>
+      <div class="s-row">
+        <div class="s-field"><label>Format de date</label>
+          <select><option selected>JJ/MM/AAAA</option><option>MM/JJ/AAAA</option><option>AAAA-MM-JJ</option></select>
+        </div>
+        <div class="s-field"><label>Fuseau horaire</label>
+          <select><option selected>Africa/Casablanca (UTC+1)</option></select>
+        </div>
+      </div>
+      <div class="s-row">
+        <div class="s-field"><label>Sens de lecture</label>
+          <select><option selected>Gauche à droite (LTR)</option><option>Droite à gauche (RTL — Arabe)</option></select>
+        </div>
+        <div class="s-field"><label>Séparateur décimal</label>
+          <select><option selected>Virgule (1 234,56)</option><option>Point (1,234.56)</option></select>
+        </div>
+      </div>
+    </div>`;
+
+  else c.innerHTML=`<div style="padding:28px;text-align:center;color:var(--color-text-secondary)">
+    <i class="ti ti-settings" style="font-size:32px;display:block;margin-bottom:10px;color:var(--color-border-secondary)" aria-hidden="true"></i>
+    <div style="font-size:13px;font-weight:500;margin-bottom:4px">${SETTINGS_PAGES[page].title}</div>
+    <div style="font-size:12px">Section en cours de développement</div>
+    <button onclick="sendPrompt('Quelles options sont disponibles dans ${SETTINGS_PAGES[page].title} pour BatiPro ?')" style="margin-top:12px;font-size:12px;padding:7px 14px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);cursor:pointer;color:var(--color-text-primary)">En savoir plus ↗</button>
+  </div>`;
+}
+
+function toggle(t){
+  const id='tg-'+Math.random().toString(36).slice(2,7);
+  return `<div class="toggle-row">
+    <div class="toggle-info">
+      <div class="toggle-label">${t.label}</div>
+      <div class="toggle-sub">${t.sub}</div>
+    </div>
+    <div class="toggle${t.on?' on':''}" id="${id}" onclick="document.getElementById('${id}').classList.toggle('on')"></div>
+  </div>`;
+}
+
+renderSettings('societe');
+</script>

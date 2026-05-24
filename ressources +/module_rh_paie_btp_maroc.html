@@ -1,0 +1,502 @@
+
+<h2 class="sr-only">Module RH et paie BTP Maroc — liste des ouvriers, simulateur de bulletin de paie avec calcul CNSS et IGR, récapitulatif mensuel</h2>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:13px}
+
+.wrap{border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);overflow:hidden;background:var(--color-background-tertiary)}
+
+.topbar{background:#1C1C1C;padding:11px 18px;display:flex;align-items:center;gap:10px}
+.tb-title{font-size:14px;font-weight:500;color:#fff;flex:1}
+.tb-meta{font-size:11px;color:rgba(255,255,255,.4)}
+.btn-o{background:#C85A2A;color:#fff;border:none;padding:6px 12px;border-radius:var(--border-radius-md);font-size:11px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:5px}
+.btn-g{background:rgba(255,255,255,.09);color:rgba(255,255,255,.7);border:none;padding:6px 11px;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px}
+
+.tabs-bar{display:flex;background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:0 14px}
+.tab{padding:9px 13px;font-size:12px;color:var(--color-text-secondary);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-0.5px;white-space:nowrap}
+.tab.on{color:#C85A2A;border-bottom-color:#C85A2A;font-weight:500}
+
+.body{padding:14px}
+
+.kpi4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.kpi{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:11px 13px}
+.kpi-t{border-top:2px solid #C85A2A}.kpi-g{border-top:2px solid #2D8A5E}.kpi-b{border-top:2px solid #2A6CB8}.kpi-r{border-top:2px solid #C84242}
+.kl{font-size:11px;color:var(--color-text-secondary);margin-bottom:4px}
+.kv{font-size:19px;font-weight:500;color:var(--color-text-primary);line-height:1}
+.ks{font-size:10px;color:var(--color-text-secondary);margin-top:2px}
+
+.panel{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:12px;overflow:hidden}
+.ph{padding:10px 14px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:space-between}
+.pt{font-size:13px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:6px}
+.pt i{color:#C85A2A}
+.lbtn{font-size:11px;color:#C85A2A;cursor:pointer;background:none;border:none;padding:0}
+
+.emp-row{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer;transition:background .1s}
+.emp-row:hover{background:var(--color-background-secondary)}
+.emp-row.on{background:#FDF0EA;border-left:3px solid #C85A2A}
+.emp-row:last-child{border-bottom:none}
+.av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:#fff;flex-shrink:0}
+.emp-info{flex:1;min-width:0}
+.en{font-size:12px;font-weight:500;color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.em{font-size:11px;color:var(--color-text-secondary)}
+.emp-sal{text-align:right;font-size:12px;font-weight:500;color:var(--color-text-primary);white-space:nowrap}
+.emp-net{font-size:10px;color:var(--color-text-secondary);text-align:right}
+
+.badge{font-size:10px;padding:2px 7px;border-radius:8px}
+.b-cdi{background:#E8F6EE;color:#1A6B3C}
+.b-cdd{background:#E8F4FF;color:#1A5C9A}
+.b-int{background:#FFF3E0;color:#8A5000}
+.b-macon{background:#FAECE7;color:#712B13}
+.b-elec{background:#EDE8FD;color:#3C3489}
+.b-plomb{background:#E1F5EE;color:#085041}
+.b-chef{background:#1C1C1C;color:#fff}
+
+.main-layout{display:grid;grid-template-columns:220px 1fr;gap:12px}
+.emp-list{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.emp-list-head{padding:10px 12px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;gap:6px}
+.elt{font-size:12px;font-weight:500;color:var(--color-text-primary);flex:1}
+
+.detail-panel{display:flex;flex-direction:column;gap:12px}
+
+.bulletin{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.bull-head{background:#1C1C1C;padding:12px 16px;display:flex;align-items:flex-start;justify-content:space-between}
+.bull-emp-name{font-size:13px;font-weight:500;color:#fff}
+.bull-emp-sub{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
+.bull-period{text-align:right}
+.bull-period-label{font-size:10px;color:rgba(255,255,255,.4)}
+.bull-period-val{font-size:12px;color:#E8784A;font-weight:500}
+
+.bull-body{padding:14px 16px}
+.section-label{font-size:10px;font-weight:500;color:var(--color-text-secondary);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;margin-top:12px}
+.section-label:first-child{margin-top:0}
+
+.line-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.line-row:last-child{border-bottom:none}
+.line-label{font-size:12px;color:var(--color-text-secondary);display:flex;align-items:center;gap:6px}
+.line-label i{font-size:13px}
+.line-val{font-size:12px;font-weight:500;color:var(--color-text-primary);text-align:right}
+.line-val.deduct{color:#A32D2D}
+.line-val.gain{color:#1A6B3C}
+
+.subtotal-row{display:flex;justify-content:space-between;padding:6px 0;border-top:0.5px solid var(--color-border-secondary)}
+.subtotal-label{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.subtotal-val{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+
+.net-box{background:#1C1C1C;border-radius:var(--border-radius-md);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+.net-label{font-size:12px;color:rgba(255,255,255,.6)}
+.net-val{font-size:22px;font-weight:500;color:#E8784A}
+.net-sub{font-size:10px;color:rgba(255,255,255,.4);margin-top:1px}
+
+.slider-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.slider-label{font-size:12px;color:var(--color-text-secondary);min-width:110px}
+.slider-val{font-size:12px;font-weight:500;color:var(--color-text-primary);min-width:70px;text-align:right}
+
+.igr-table{width:100%;font-size:11px;border-collapse:collapse;table-layout:fixed;margin-top:6px}
+.igr-table th{padding:5px 10px;background:var(--color-background-secondary);color:var(--color-text-secondary);font-weight:500;text-align:left;border-bottom:0.5px solid var(--color-border-tertiary)}
+.igr-table td{padding:5px 10px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+.igr-table tr.active-band td{background:#FDF0EA;color:#712B13;font-weight:500}
+
+.recap-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.recap-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:11px 13px}
+.rc-l{font-size:11px;color:var(--color-text-secondary);margin-bottom:4px}
+.rc-v{font-size:15px;font-weight:500;color:var(--color-text-primary)}
+.rc-s{font-size:10px;color:var(--color-text-secondary);margin-top:2px}
+
+.prog-wrap{width:100%;height:5px;background:var(--color-background-primary);border-radius:3px;overflow:hidden;margin-top:6px}
+.prog-fill{height:100%;border-radius:3px}
+</style>
+
+<div class="wrap">
+  <div class="topbar">
+    <i class="ti ti-id-badge" style="color:#C85A2A;font-size:16px" aria-hidden="true"></i>
+    <span class="tb-title">RH & Paie — BatiPro</span>
+    <span class="tb-meta">Mai 2026 · 34 employés</span>
+    <button class="btn-g"><i class="ti ti-download" aria-hidden="true"></i> Déclaration CNSS</button>
+    <button class="btn-o" onclick="sendPrompt('Comment ajouter un nouvel ouvrier dans le module RH ?')"><i class="ti ti-plus" aria-hidden="true"></i> Nouveau ↗</button>
+  </div>
+
+  <div class="tabs-bar">
+    <div class="tab on" onclick="switchTab('fiches',this)">Fiches & bulletins</div>
+    <div class="tab" onclick="switchTab('simulateur',this)">Simulateur de paie</div>
+    <div class="tab" onclick="switchTab('recap',this)">Récap mensuel</div>
+    <div class="tab" onclick="switchTab('igr',this)">Barème IGR</div>
+  </div>
+
+  <div class="body">
+    <div id="tab-fiches">
+      <div class="kpi4">
+        <div class="kpi kpi-t"><div class="kl">Masse salariale brute</div><div class="kv">312 K</div><div class="ks">MAD · mai 2026</div></div>
+        <div class="kpi kpi-g"><div class="kl">Net à payer total</div><div class="kv">264 K</div><div class="ks">MAD · tous employés</div></div>
+        <div class="kpi kpi-b"><div class="kl">Charges patronales CNSS</div><div class="kv">54 K</div><div class="ks">MAD · 21,09%</div></div>
+        <div class="kpi kpi-r"><div class="kl">IGR retenu total</div><div class="kv">18 K</div><div class="ks">MAD versé à la DGI</div></div>
+      </div>
+
+      <div class="main-layout">
+        <div class="emp-list">
+          <div class="emp-list-head">
+            <i class="ti ti-users" style="color:#C85A2A;font-size:14px" aria-hidden="true"></i>
+            <span class="elt">Équipe (6 affichés)</span>
+          </div>
+          <div id="emp-list-body"></div>
+        </div>
+
+        <div class="detail-panel" id="detail-panel"></div>
+      </div>
+    </div>
+
+    <div id="tab-simulateur" style="display:none">
+      <div class="panel">
+        <div class="ph"><div class="pt"><i class="ti ti-calculator" aria-hidden="true"></i>Simulateur bulletin de paie — barème BTP Maroc</div></div>
+        <div style="padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div>
+            <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:12px">Paramètres</div>
+            <div class="slider-row">
+              <label class="slider-label" for="sl-salbase">Salaire de base</label>
+              <input type="range" id="sl-salbase" min="2776" max="15000" value="6000" step="100" oninput="calcSim()" style="flex:1">
+              <span class="slider-val" id="out-salbase">6 000 MAD</span>
+            </div>
+            <div class="slider-row">
+              <label class="slider-label" for="sl-jours">Jours travaillés</label>
+              <input type="range" id="sl-jours" min="10" max="26" value="26" step="1" oninput="calcSim()" style="flex:1">
+              <span class="slider-val" id="out-jours">26 j</span>
+            </div>
+            <div class="slider-row">
+              <label class="slider-label" for="sl-hsupp">Heures supplémentaires</label>
+              <input type="range" id="sl-hsupp" min="0" max="40" value="8" step="1" oninput="calcSim()" style="flex:1">
+              <span class="slider-val" id="out-hsupp">8 h</span>
+            </div>
+            <div class="slider-row">
+              <label class="slider-label" for="sl-anciennete">Ancienneté</label>
+              <input type="range" id="sl-anciennete" min="0" max="25" value="3" step="1" oninput="calcSim()" style="flex:1">
+              <span class="slider-val" id="out-anciennete">3 ans</span>
+            </div>
+            <div class="slider-row">
+              <label class="slider-label" for="sl-charges">Charges famille</label>
+              <input type="range" id="sl-charges" min="0" max="6" value="2" step="1" oninput="calcSim()" style="flex:1">
+              <span class="slider-val" id="out-charges">2 personnes</span>
+            </div>
+          </div>
+          <div id="sim-result"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-recap" style="display:none">
+      <div class="kpi4" style="margin-bottom:14px">
+        <div class="kpi kpi-t"><div class="kl">Brut total</div><div class="kv">312 K</div><div class="ks">MAD</div></div>
+        <div class="kpi kpi-r"><div class="kl">CNSS salariale</div><div class="kv">13,8 K</div><div class="ks">4,48% du brut</div></div>
+        <div class="kpi kpi-b"><div class="kl">CNSS patronale</div><div class="kv">54 K</div><div class="ks">21,09% du brut</div></div>
+        <div class="kpi kpi-g"><div class="kl">Net versé</div><div class="kv">264 K</div><div class="ks">MAD virements</div></div>
+      </div>
+      <div class="panel">
+        <div class="ph"><div class="pt"><i class="ti ti-table" aria-hidden="true"></i>Récapitulatif paie — mai 2026</div>
+          <button class="lbtn" onclick="sendPrompt('Génère le fichier de virement bancaire pour la paie de mai 2026')">Fichier virement ↗</button>
+        </div>
+        <table style="width:100%;font-size:12px;border-collapse:collapse;table-layout:fixed">
+          <thead><tr style="background:var(--color-background-secondary)">
+            <th style="padding:7px 12px;text-align:left;font-weight:500;color:var(--color-text-secondary);width:22%">Employé</th>
+            <th style="padding:7px 12px;text-align:left;font-weight:500;color:var(--color-text-secondary);width:14%">Poste</th>
+            <th style="padding:7px 12px;text-align:right;font-weight:500;color:var(--color-text-secondary);width:13%">Brut</th>
+            <th style="padding:7px 12px;text-align:right;font-weight:500;color:var(--color-text-secondary);width:11%">CNSS sal.</th>
+            <th style="padding:7px 12px;text-align:right;font-weight:500;color:var(--color-text-secondary);width:10%">IGR</th>
+            <th style="padding:7px 12px;text-align:right;font-weight:500;color:var(--color-text-secondary);width:12%">Net</th>
+            <th style="padding:7px 12px;text-align:center;font-weight:500;color:var(--color-text-secondary);width:11%">Statut</th>
+            <th style="padding:7px 12px;width:7%"></th>
+          </tr></thead>
+          <tbody id="recap-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="tab-igr" style="display:none">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="panel">
+          <div class="ph"><div class="pt"><i class="ti ti-percentage" aria-hidden="true"></i>Barème IGR 2026 (art. 73 CGI)</div></div>
+          <div style="padding:12px 14px">
+            <table class="igr-table">
+              <thead><tr><th>Tranche annuelle (MAD)</th><th style="text-align:right">Taux</th><th style="text-align:right">Déduct.</th></tr></thead>
+              <tbody>
+                <tr><td>0 — 30 000</td><td style="text-align:right">0%</td><td style="text-align:right">0</td></tr>
+                <tr><td>30 001 — 50 000</td><td style="text-align:right">10%</td><td style="text-align:right">3 000</td></tr>
+                <tr><td>50 001 — 60 000</td><td style="text-align:right">20%</td><td style="text-align:right">8 000</td></tr>
+                <tr><td>60 001 — 80 000</td><td style="text-align:right">30%</td><td style="text-align:right">14 000</td></tr>
+                <tr><td>80 001 — 180 000</td><td style="text-align:right">34%</td><td style="text-align:right">17 200</td></tr>
+                <tr><td>Au-delà de 180 000</td><td style="text-align:right">38%</td><td style="text-align:right">24 400</td></tr>
+              </tbody>
+            </table>
+            <div style="margin-top:10px;font-size:11px;color:var(--color-text-secondary);line-height:1.6">
+              Déduction charges famille : <strong style="color:var(--color-text-primary)">360 MAD/an</strong> par personne à charge (max 6).<br>
+              Frais professionnels déductibles : <strong style="color:var(--color-text-primary)">20%</strong> du brut imposable (plafond 30 000 MAD/an).
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt"><i class="ti ti-building-bank" aria-hidden="true"></i>Cotisations CNSS 2026</div></div>
+          <div style="padding:12px 14px">
+            <div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Part salariale</div>
+            <table class="igr-table" style="margin-bottom:14px">
+              <thead><tr><th>Branche</th><th style="text-align:right">Taux</th><th style="text-align:right">Plafond/mois</th></tr></thead>
+              <tbody>
+                <tr><td>Assurance maladie (AMO)</td><td style="text-align:right">2,26%</td><td style="text-align:right">illimité</td></tr>
+                <tr><td>Retraite + invalidité</td><td style="text-align:right">1,96%</td><td style="text-align:right">6 000 MAD</td></tr>
+                <tr><td>Allocations familiales</td><td style="text-align:right">0,26%</td><td style="text-align:right">6 000 MAD</td></tr>
+                <tr style="font-weight:500"><td>Total salarié</td><td style="text-align:right">4,48%</td><td style="text-align:right"></td></tr>
+              </tbody>
+            </table>
+            <div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Part patronale</div>
+            <table class="igr-table">
+              <thead><tr><th>Branche</th><th style="text-align:right">Taux</th><th style="text-align:right">Plafond/mois</th></tr></thead>
+              <tbody>
+                <tr><td>Assurance maladie (AMO)</td><td style="text-align:right">3,50%</td><td style="text-align:right">illimité</td></tr>
+                <tr><td>Retraite + invalidité</td><td style="text-align:right">7,93%</td><td style="text-align:right">6 000 MAD</td></tr>
+                <tr><td>Allocations familiales</td><td style="text-align:right">6,40%</td><td style="text-align:right">6 000 MAD</td></tr>
+                <tr><td>Accidents du travail (BTP)</td><td style="text-align:right">3,26%</td><td style="text-align:right">illimité</td></tr>
+                <tr style="font-weight:500"><td>Total patronal</td><td style="text-align:right">21,09%</td><td style="text-align:right"></td></tr>
+              </tbody>
+            </table>
+            <div style="margin-top:10px;padding:8px 10px;background:#FBEAEA;border-radius:var(--border-radius-md);font-size:11px;color:#A32D2D">
+              <i class="ti ti-alert-circle" style="font-size:13px;vertical-align:-2px;margin-right:4px" aria-hidden="true"></i>
+              Le taux AT (3,26%) est spécifique au secteur BTP — plus élevé que le taux général industrie (1,5%).
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SMIG = 2776;
+
+const employes = [
+  {id:0,init:'MB',nom:'M. Bensouda',poste:'Chef de chantier',contrat:'CDI',cat:'chef',color:'#1C1C1C',salBase:9500,anciennete:8,joursBase:26,hSupp:10,charges:3,chantier:'Al Fath'},
+  {id:1,init:'KA',nom:'K. Azizi',poste:'Maçon confirmé',contrat:'CDI',cat:'macon',color:'#C85A2A',salBase:5200,anciennete:5,joursBase:26,hSupp:6,charges:2,chantier:'Al Fath'},
+  {id:2,init:'YO',nom:'Y. Ouali',poste:'Coffreur',contrat:'CDI',cat:'macon',color:'#C85A2A',salBase:4800,anciennete:2,joursBase:24,hSupp:4,charges:1,chantier:'Aïn Sebaâ'},
+  {id:3,init:'HB',nom:'H. Belhaj',poste:'Ferrailleur',contrat:'CDD',cat:'macon',color:'#2A6CB8',salBase:4400,anciennete:0,joursBase:22,hSupp:0,charges:0,chantier:'Mogador'},
+  {id:4,init:'SM',nom:'S. Mounir',poste:'Électricien',contrat:'CDI',cat:'elec',color:'#7F4ABD',salBase:6200,anciennete:4,joursBase:26,hSupp:8,charges:2,chantier:'École Maarif'},
+  {id:5,init:'RC',nom:'R. Chraibi',poste:'Chef de projet',contrat:'CDI',cat:'chef',color:'#1C1C1C',salBase:12000,anciennete:12,joursBase:26,hSupp:0,charges:4,chantier:'Villa Aïn Diab'},
+];
+
+let currentEmp = 0;
+
+function calcPaie(e) {
+  const tauxJour = e.salBase / 26;
+  const brut_base = Math.round(tauxJour * e.joursBase);
+  const tauxAnc = e.anciennete >= 25 ? 0.25 : e.anciennete >= 20 ? 0.20 : e.anciennete >= 15 ? 0.15 : e.anciennete >= 10 ? 0.10 : e.anciennete >= 5 ? 0.05 : 0.02 * e.anciennete;
+  const prime_anc = Math.round(brut_base * tauxAnc);
+  const tauxHS = e.joursBase >= 26 ? 1.25 : 1.25;
+  const txHoraire = e.salBase / 191;
+  const prime_hs = Math.round(e.hSupp * txHoraire * tauxHS);
+  const brut_total = brut_base + prime_anc + prime_hs;
+
+  const plafonCNSS = 6000;
+  const baseCNSS_ret = Math.min(brut_total, plafonCNSS);
+  const cnss_sal_amo = Math.round(brut_total * 0.0226);
+  const cnss_sal_ret = Math.round(baseCNSS_ret * 0.0196);
+  const cnss_sal_af = Math.round(baseCNSS_ret * 0.0026);
+  const cnss_sal = cnss_sal_amo + cnss_sal_ret + cnss_sal_af;
+
+  const cnss_pat_amo = Math.round(brut_total * 0.035);
+  const cnss_pat_ret = Math.round(baseCNSS_ret * 0.0793);
+  const cnss_pat_af = Math.round(baseCNSS_ret * 0.064);
+  const cnss_pat_at = Math.round(brut_total * 0.0326);
+  const cnss_pat = cnss_pat_amo + cnss_pat_ret + cnss_pat_af + cnss_pat_at;
+
+  const brut_imposable = brut_total - cnss_sal;
+  const frais_pro = Math.min(Math.round(brut_imposable * 0.20), 2500);
+  const deduct_charges = e.charges * 30;
+  const base_igr_mensuel = Math.max(0, brut_imposable - frais_pro - deduct_charges);
+  const base_igr_annuel = base_igr_mensuel * 12;
+
+  let igr_annuel = 0;
+  if (base_igr_annuel <= 30000) igr_annuel = 0;
+  else if (base_igr_annuel <= 50000) igr_annuel = (base_igr_annuel - 30000) * 0.10;
+  else if (base_igr_annuel <= 60000) igr_annuel = 2000 + (base_igr_annuel - 50000) * 0.20;
+  else if (base_igr_annuel <= 80000) igr_annuel = 4000 + (base_igr_annuel - 60000) * 0.30;
+  else if (base_igr_annuel <= 180000) igr_annuel = 10000 + (base_igr_annuel - 80000) * 0.34;
+  else igr_annuel = 44000 + (base_igr_annuel - 180000) * 0.38;
+
+  const igr = Math.max(0, Math.round(igr_annuel / 12));
+  const net = brut_total - cnss_sal - igr;
+
+  return {brut_base,prime_anc,prime_hs,brut_total,cnss_sal,cnss_sal_amo,cnss_sal_ret,cnss_sal_af,cnss_pat,frais_pro,deduct_charges,base_igr_mensuel,igr,net,tauxAnc};
+}
+
+function fmt(n){return Math.round(n).toLocaleString('fr-MA')}
+
+function renderList() {
+  document.getElementById('emp-list-body').innerHTML = employes.map(e => {
+    const p = calcPaie(e);
+    const catBadge = e.cat==='chef'?'b-chef':e.cat==='elec'?'b-elec':e.cat==='plomb'?'b-plomb':'b-macon';
+    const catLabel = e.cat==='chef'?'Direction':e.cat==='elec'?'Électricité':e.cat==='plomb'?'Plomberie':'Maçonnerie';
+    return `<div class="emp-row${e.id===currentEmp?' on':''}" onclick="selectEmp(${e.id})">
+      <div class="av" style="background:${e.color}">${e.init}</div>
+      <div class="emp-info">
+        <div class="en">${e.nom}</div>
+        <div class="em">${e.poste}</div>
+      </div>
+      <div>
+        <div class="emp-sal">${fmt(p.brut_total)}</div>
+        <div class="emp-net">Net ${fmt(p.net)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function selectEmp(id) {
+  currentEmp = id;
+  renderList();
+  renderBulletin();
+}
+
+function renderBulletin() {
+  const e = employes[currentEmp];
+  const p = calcPaie(e);
+  const catBadge = e.cat==='chef'?'b-chef':e.cat==='elec'?'b-elec':'b-macon';
+  const contratBadge = e.contrat==='CDI'?'b-cdi':'b-cdd';
+
+  document.getElementById('detail-panel').innerHTML = `
+  <div class="bulletin">
+    <div class="bull-head">
+      <div>
+        <div class="bull-emp-name">${e.nom} &nbsp;<span class="badge ${contratBadge}" style="font-size:10px">${e.contrat}</span></div>
+        <div class="bull-emp-sub">${e.poste} · ${e.chantier} · Ancienneté ${e.anciennete} ans</div>
+      </div>
+      <div class="bull-period">
+        <div class="bull-period-label">Période</div>
+        <div class="bull-period-val">Mai 2026</div>
+      </div>
+    </div>
+    <div class="bull-body">
+      <div class="section-label">Éléments de rémunération</div>
+      <div class="line-row">
+        <span class="line-label"><i class="ti ti-currency-dirham" aria-hidden="true"></i>Salaire de base (${e.joursBase}j × ${fmt(e.salBase/26)} MAD/j)</span>
+        <span class="line-val gain">+ ${fmt(p.brut_base)}</span>
+      </div>
+      <div class="line-row">
+        <span class="line-label"><i class="ti ti-clock-hour-4" aria-hidden="true"></i>Prime ancienneté (${Math.round(p.tauxAnc*100)}% — ${e.anciennete} ans)</span>
+        <span class="line-val gain">+ ${fmt(p.prime_anc)}</span>
+      </div>
+      <div class="line-row">
+        <span class="line-label"><i class="ti ti-clock" aria-hidden="true"></i>Heures supplémentaires (${e.hSupp}h × 125%)</span>
+        <span class="line-val gain">+ ${fmt(p.prime_hs)}</span>
+      </div>
+      <div class="subtotal-row">
+        <span class="subtotal-label">Salaire brut</span>
+        <span class="subtotal-val">${fmt(p.brut_total)} MAD</span>
+      </div>
+
+      <div class="section-label">Retenues salariales</div>
+      <div class="line-row">
+        <span class="line-label"><i class="ti ti-building-bank" aria-hidden="true"></i>CNSS — AMO (2,26% × brut)</span>
+        <span class="line-val deduct">- ${fmt(p.cnss_sal_amo)}</span>
+      </div>
+      <div class="line-row">
+        <span class="line-label"><i class="ti ti-building-bank" aria-hidden="true"></i>CNSS — Retraite (1,96% × plaf. 6 000)</span>
+        <span class="line-val deduct">- ${fmt(p.cnss_sal_ret)}</span>
+      </div>
+      <div class="line-row">
+        <span class="line-label"><i class="ti ti-building-bank" aria-hidden="true"></i>CNSS — Alloc. familiales (0,26%)</span>
+        <span class="line-val deduct">- ${fmt(p.cnss_sal_af)}</span>
+      </div>
+      <div class="line-row">
+        <span class="line-label"><i class="ti ti-percentage" aria-hidden="true"></i>IGR retenu à la source (base imposable ${fmt(p.base_igr_mensuel)} MAD)</span>
+        <span class="line-val deduct">- ${fmt(p.igr)}</span>
+      </div>
+
+      <div class="net-box">
+        <div>
+          <div class="net-label">Net à payer</div>
+          <div class="net-sub">Charges patronales CNSS : ${fmt(p.cnss_pat)} MAD</div>
+        </div>
+        <div style="text-align:right">
+          <div class="net-val">${fmt(p.net)} MAD</div>
+          <button onclick="sendPrompt('Génère le bulletin de paie PDF pour ${e.nom} — mai 2026')" style="margin-top:6px;font-size:10px;padding:4px 10px;background:rgba(255,255,255,.12);color:rgba(255,255,255,.8);border:none;border-radius:6px;cursor:pointer"><i class="ti ti-file-text" style="font-size:11px" aria-hidden="true"></i> PDF ↗</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderRecap() {
+  document.getElementById('recap-body').innerHTML = employes.map(e => {
+    const p = calcPaie(e);
+    const paid = e.id < 4;
+    return `<tr style="border-bottom:0.5px solid var(--color-border-tertiary)">
+      <td style="padding:7px 12px;display:flex;align-items:center;gap:7px">
+        <div style="width:24px;height:24px;border-radius:50%;background:${e.color};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;color:#fff;flex-shrink:0">${e.init}</div>
+        <span style="color:var(--color-text-primary)">${e.nom}</span>
+      </td>
+      <td style="padding:7px 12px;color:var(--color-text-secondary)">${e.poste.split(' ')[0]}</td>
+      <td style="padding:7px 12px;text-align:right;font-weight:500;color:var(--color-text-primary)">${fmt(p.brut_total)}</td>
+      <td style="padding:7px 12px;text-align:right;color:#A32D2D">${fmt(p.cnss_sal)}</td>
+      <td style="padding:7px 12px;text-align:right;color:#A32D2D">${fmt(p.igr)}</td>
+      <td style="padding:7px 12px;text-align:right;font-weight:500;color:#1A6B3C">${fmt(p.net)}</td>
+      <td style="padding:7px 12px;text-align:center"><span class="badge ${paid?'b-payee':'b-attente'}" style="background:${paid?'#E8F6EE':'#FFF3E0'};color:${paid?'#1A6B3C':'#8A5000'}">${paid?'Versé':'En attente'}</span></td>
+      <td style="padding:7px 12px;text-align:center"><i class="ti ti-download" style="font-size:14px;color:var(--color-text-secondary);cursor:pointer" aria-hidden="true"></i></td>
+    </tr>`;
+  }).join('');
+}
+
+function switchTab(name, el) {
+  ['fiches','simulateur','recap','igr'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = t===name?'block':'none';
+  });
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+  if(name==='recap') renderRecap();
+  if(name==='simulateur') calcSim();
+}
+
+function calcSim() {
+  const salBase = parseInt(document.getElementById('sl-salbase').value);
+  const jours = parseInt(document.getElementById('sl-jours').value);
+  const hSupp = parseInt(document.getElementById('sl-hsupp').value);
+  const anc = parseInt(document.getElementById('sl-anciennete').value);
+  const charges = parseInt(document.getElementById('sl-charges').value);
+
+  document.getElementById('out-salbase').textContent = salBase.toLocaleString('fr-MA') + ' MAD';
+  document.getElementById('out-jours').textContent = jours + ' j';
+  document.getElementById('out-hsupp').textContent = hSupp + ' h';
+  document.getElementById('out-anciennete').textContent = anc + ' ans';
+  document.getElementById('out-charges').textContent = charges + ' pers.';
+
+  const e = {salBase,joursBase:jours,hSupp,anciennete:anc,charges};
+  const p = calcPaie(e);
+
+  const pctNet = Math.round(p.net / p.brut_total * 100);
+  const pctCNSS = Math.round(p.cnss_sal / p.brut_total * 100);
+  const pctIGR = Math.round(p.igr / p.brut_total * 100);
+
+  document.getElementById('sim-result').innerHTML = `
+    <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:12px">Résultat calculé</div>
+    <div class="recap-grid" style="margin-bottom:10px">
+      <div class="recap-card"><div class="rc-l">Salaire brut</div><div class="rc-v">${fmt(p.brut_total)}</div><div class="rc-s">MAD</div></div>
+      <div class="recap-card" style="border-top:2px solid #2D8A5E"><div class="rc-l">Net à payer</div><div class="rc-v" style="color:#1A6B3C">${fmt(p.net)}</div><div class="rc-s">MAD · ${pctNet}% du brut</div></div>
+    </div>
+    <div class="recap-card" style="margin-bottom:8px">
+      <div class="rc-l">Décomposition du brut</div>
+      <div style="margin-top:8px;display:flex;gap:0;height:16px;border-radius:4px;overflow:hidden">
+        <div style="width:${pctNet}%;background:#2D8A5E" title="Net ${pctNet}%"></div>
+        <div style="width:${pctCNSS}%;background:#C84242" title="CNSS ${pctCNSS}%"></div>
+        <div style="width:${pctIGR}%;background:#C85A2A" title="IGR ${pctIGR}%"></div>
+      </div>
+      <div style="display:flex;gap:12px;margin-top:6px;font-size:10px;color:var(--color-text-secondary)">
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;background:#2D8A5E;border-radius:2px;display:inline-block"></span>Net ${pctNet}%</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;background:#C84242;border-radius:2px;display:inline-block"></span>CNSS ${pctCNSS}%</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;background:#C85A2A;border-radius:2px;display:inline-block"></span>IGR ${pctIGR}%</span>
+      </div>
+    </div>
+    <div style="font-size:11px;display:grid;gap:5px">
+      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--color-border-tertiary)"><span style="color:var(--color-text-secondary)">Prime ancienneté (${Math.round(p.tauxAnc*100)}%)</span><span style="color:var(--color-text-primary);font-weight:500">${fmt(p.prime_anc)} MAD</span></div>
+      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--color-border-tertiary)"><span style="color:var(--color-text-secondary)">Heures supp. (${hSupp}h)</span><span style="color:var(--color-text-primary);font-weight:500">${fmt(p.prime_hs)} MAD</span></div>
+      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--color-border-tertiary)"><span style="color:var(--color-text-secondary)">CNSS salariale</span><span style="color:#A32D2D;font-weight:500">- ${fmt(p.cnss_sal)} MAD</span></div>
+      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--color-border-tertiary)"><span style="color:var(--color-text-secondary)">IGR retenu</span><span style="color:#A32D2D;font-weight:500">- ${fmt(p.igr)} MAD</span></div>
+      <div style="display:flex;justify-content:space-between;padding:4px 0"><span style="color:var(--color-text-secondary)">Coût total employeur</span><span style="color:var(--color-text-primary);font-weight:500">${fmt(p.brut_total + p.cnss_pat)} MAD</span></div>
+    </div>`;
+}
+
+renderList();
+renderBulletin();
+</script>

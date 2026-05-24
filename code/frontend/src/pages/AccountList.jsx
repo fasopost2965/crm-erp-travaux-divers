@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
@@ -12,7 +12,7 @@ const AccountList = () => {
   const [search, setSearch] = useState('');
   const [cityFilter, setCityFilter] = useState('');
 
-  // Récupérer la liste des comptes clients via React Query depuis l'API Laravel paginée
+  // RÃ©cupÃ©rer la liste des comptes clients via React Query depuis l'API Laravel paginÃ©e
   const { data: responseData, isLoading, error } = useQuery({
     queryKey: ['accountsList', page],
     queryFn: async () => {
@@ -24,13 +24,13 @@ const AccountList = () => {
   });
 
   if (isLoading) {
-    return <LoadingSpinner fullPage message="Chargement du répertoire client..." />;
+    return <LoadingSpinner fullPage message="Chargement du rÃ©pertoire client..." />;
   }
 
   if (error) {
     return (
       <div className="p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700 font-medium">
-        ⚠️ Erreur lors du chargement des clients : {error.message}.
+        âš ï¸ Erreur lors du chargement des clients : {error.message}.
       </div>
     );
   }
@@ -38,7 +38,7 @@ const AccountList = () => {
   const rawAccounts = responseData?.data || [];
   const meta = responseData?.meta || { current_page: 1, last_page: 1, per_page: 10, total: rawAccounts.length };
 
-  // Filtrage local pour la recherche réactive
+  // Filtrage local pour la recherche rÃ©active
   const filteredAccounts = rawAccounts.filter((acc) => {
     const matchesSearch = acc.name.toLowerCase().includes(search.toLowerCase()) || 
                           (acc.email && acc.email.toLowerCase().includes(search.toLowerCase()));
@@ -61,7 +61,7 @@ const AccountList = () => {
           </div>
           <div className="min-w-0">
             <p className="font-bold text-slate-850 truncate">{row.name}</p>
-            <p className="text-[10px] text-slate-400 font-semibold">{row.email || 'Pas d\'email renseigné'}</p>
+            <p className="text-[10px] text-slate-400 font-semibold">{row.email || 'Pas d\'email renseignÃ©'}</p>
           </div>
         </div>
       )
@@ -71,7 +71,7 @@ const AccountList = () => {
       accessor: 'city',
       cell: (row) => (
         <span className="inline-flex items-center text-xs font-semibold text-slate-600 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-100">
-          📍 {row.city}
+          ðŸ“ {row.city}
         </span>
       )
     },
@@ -80,25 +80,25 @@ const AccountList = () => {
       accessor: 'contacts',
       cell: (row) => (
         <span className="text-xs font-bold text-slate-700">
-          👥 {row.contacts?.length || 0} contact(s)
+          ðŸ‘¥ {row.contacts?.length || 0} contact(s)
         </span>
       )
     },
     {
-      header: 'Opportunités',
+      header: 'OpportunitÃ©s',
       accessor: 'opportunities',
       cell: (row) => (
         <span className="text-xs font-bold text-blue-650">
-          💼 {row.opportunities?.length || 0} opportunité(s)
+          ðŸ’¼ {row.opportunities?.length || 0} opportunitÃ©(s)
         </span>
       )
     },
     {
-      header: 'Date de Création',
+      header: 'Date de CrÃ©ation',
       accessor: 'createdAt',
       cell: (row) => (
         <span className="text-xs text-slate-400">
-          {row.createdAt ? new Date(row.createdAt).toLocaleDateString('fr-FR') : 'Non spécifiée'}
+          {row.createdAt ? new Date(row.createdAt).toLocaleDateString('fr-FR') : 'Non spÃ©cifiÃ©e'}
         </span>
       )
     }
@@ -117,14 +117,17 @@ const AccountList = () => {
       
       {/* Page Header */}
       <PageHeader 
-        title="Répertoire Client (CRM)" 
+        title="RÃ©pertoire Client (CRM)" 
         breadcrumb={[{ label: "CRM" }, { label: "Clients" }]}
         actions={
-          <button className="py-2.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 hover:shadow-blue-500/15 transition-all cursor-pointer flex items-center space-x-2">
+          <button
+            onClick={() => navigate('/dashboard/accounts/new')}
+            className="py-2.5 px-5 rounded-xl bg-[#C85A2A] hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 hover:shadow-blue-500/15 transition-all cursor-pointer flex items-center space-x-2"
+          >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            <span>Créer un Client</span>
+            <span>CrÃ©er un Client</span>
           </button>
         }
       />
@@ -141,10 +144,10 @@ const AccountList = () => {
           </div>
           <input
             type="text"
-            placeholder="Rechercher par nom de société ou email..."
+            placeholder="Rechercher par nom de sociÃ©tÃ© ou email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="block w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-450 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            className="block w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-450 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] focus:border-transparent transition-all"
           />
         </div>
 
@@ -153,7 +156,7 @@ const AccountList = () => {
           <select
             value={cityFilter}
             onChange={(e) => setCityFilter(e.target.value)}
-            className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all cursor-pointer"
+            className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] focus:border-transparent transition-all cursor-pointer"
           >
             <option value="">Toutes les Villes</option>
             {cities.map((city, idx) => (
@@ -168,7 +171,7 @@ const AccountList = () => {
             onClick={() => { setSearch(''); setCityFilter(''); }}
             className="text-xs font-bold text-slate-500 hover:text-blue-500 cursor-pointer self-start md:self-auto py-2.5 transition-colors"
           >
-            Réinitialiser
+            RÃ©initialiser
           </button>
         )}
       </div>
@@ -178,8 +181,8 @@ const AccountList = () => {
         columns={columns}
         data={filteredAccounts}
         onRowClick={handleRowClick}
-        emptyTitle="Aucun client trouvé"
-        emptyDescription="Aucun compte client ne correspond à votre recherche ou filtre."
+        emptyTitle="Aucun client trouvÃ©"
+        emptyDescription="Aucun compte client ne correspond Ã  votre recherche ou filtre."
         paginationMeta={
           meta && {
             currentPage: meta.current_page || 1,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
@@ -34,7 +34,7 @@ const ProjectList = () => {
       await api.delete(`/api/projects/${id}`);
     },
     onSuccess: () => {
-      showToast('Projet supprimé avec succès.');
+      showToast('Projet supprimÃ© avec succÃ¨s.');
       queryClient.invalidateQueries(['projectsList']);
       setIsDeleteOpen(false);
     },
@@ -48,7 +48,7 @@ const ProjectList = () => {
   if (error) {
     return (
       <div className="p-6 bg-red-50 border border-red-200 rounded-2xl text-red-700 font-medium text-sm">
-        ⚠️ Erreur lors du chargement des chantiers : {error.message}
+        âš ï¸ Erreur lors du chargement des chantiers : {error.message}
       </div>
     );
   }
@@ -90,7 +90,7 @@ const ProjectList = () => {
         <div>
           <p className="font-semibold text-slate-900 text-sm">{row.title}</p>
           <p className="text-xs text-slate-400 mt-0.5">
-            📍 {row.city || 'Non spécifié'}{row.address ? ` — ${row.address}` : ''}
+            ðŸ“ {row.city || 'Non spÃ©cifiÃ©'}{row.address ? ` â€” ${row.address}` : ''}
           </p>
         </div>
       ),
@@ -100,7 +100,7 @@ const ProjectList = () => {
       accessor: 'account.name',
       cell: (row) => (
         <span className="text-sm text-slate-700 font-medium">
-          {row.account?.name || <span className="text-slate-400">—</span>}
+          {row.account?.name || <span className="text-slate-400">â€”</span>}
         </span>
       ),
     },
@@ -112,7 +112,7 @@ const ProjectList = () => {
           <div className="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600">
             {row.manager?.name ? row.manager.name.charAt(0) : '?'}
           </div>
-          <span className="text-sm text-slate-700">{row.manager?.name || <span className="text-slate-400">Non assigné</span>}</span>
+          <span className="text-sm text-slate-700">{row.manager?.name || <span className="text-slate-400">Non assignÃ©</span>}</span>
         </div>
       ),
     },
@@ -121,8 +121,8 @@ const ProjectList = () => {
       accessor: 'startDate',
       cell: (row) => (
         <div className="text-xs text-slate-500 space-y-0.5">
-          <p>Début : {row.startDate ? new Date(row.startDate).toLocaleDateString('fr-FR') : '—'}</p>
-          <p className="text-rose-500">Fin : {row.endDatePlanned ? new Date(row.endDatePlanned).toLocaleDateString('fr-FR') : '—'}</p>
+          <p>DÃ©but : {row.startDate ? new Date(row.startDate).toLocaleDateString('fr-FR') : 'â€”'}</p>
+          <p className="text-rose-500">Fin : {row.endDatePlanned ? new Date(row.endDatePlanned).toLocaleDateString('fr-FR') : 'â€”'}</p>
         </div>
       ),
     },
@@ -148,21 +148,21 @@ const ProjectList = () => {
             className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-500 transition-colors"
             title="Voir"
           >
-            👁️
+            ðŸ‘ï¸
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); navigate(`/dashboard/projects/${row.id}/edit`); }}
             className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-500 transition-colors"
-            title="Éditer"
+            title="Ã‰diter"
           >
-            ✏️
+            âœï¸
           </button>
           <button
             onClick={(e) => handleDeleteClick(row, e)}
             className="p-1.5 rounded-lg border border-red-100 hover:bg-red-50 text-red-500 transition-colors"
             title="Supprimer"
           >
-            🗑️
+            ðŸ—‘ï¸
           </button>
         </div>
       ),
@@ -177,7 +177,7 @@ const ProjectList = () => {
         actions={
           <button
             onClick={() => navigate('/dashboard/projects/new')}
-            className="flex items-center gap-2 py-2.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-sm transition-colors"
+            className="flex items-center gap-2 py-2.5 px-5 rounded-xl bg-[#C85A2A] hover:bg-[#A8481F] text-white font-semibold text-sm shadow-sm transition-colors"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -197,20 +197,20 @@ const ProjectList = () => {
             placeholder="Rechercher par titre, client ou ville..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="block w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            className="block w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#C85A2A] focus:border-transparent transition-all"
           />
         </div>
 
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="w-full md:w-48 px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          className="w-full md:w-48 px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-[#C85A2A] focus:border-transparent transition-all"
         >
           <option value="">Tous les statuts</option>
-          <option value="Planifié">Planifié</option>
+          <option value="PlanifiÃ©">PlanifiÃ©</option>
           <option value="En cours">En cours</option>
           <option value="Suspendu">Suspendu</option>
-          <option value="Terminé">Terminé</option>
+          <option value="TerminÃ©">TerminÃ©</option>
         </select>
 
         {(search || statusFilter) && (
@@ -218,7 +218,7 @@ const ProjectList = () => {
             onClick={() => { setSearch(''); setStatusFilter(''); }}
             className="text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors whitespace-nowrap"
           >
-            Réinitialiser
+            RÃ©initialiser
           </button>
         )}
       </div>
@@ -227,8 +227,8 @@ const ProjectList = () => {
         columns={columns}
         data={filteredProjects}
         onRowClick={(project) => navigate(`/dashboard/projects/${project.id}`)}
-        emptyTitle="Aucun projet trouvé"
-        emptyDescription="Aucun chantier ne correspond à ce filtre. Créez un nouveau projet pour commencer."
+        emptyTitle="Aucun projet trouvÃ©"
+        emptyDescription="Aucun chantier ne correspond Ã  ce filtre. CrÃ©ez un nouveau projet pour commencer."
         paginationMeta={{
           currentPage: meta.current_page || 1,
           lastPage: meta.last_page || 1,
@@ -241,7 +241,7 @@ const ProjectList = () => {
       <ConfirmDialog
         isOpen={isDeleteOpen}
         title="Supprimer le projet ?"
-        message={`Êtes-vous sûr de vouloir supprimer définitivement le chantier "${deleteTarget?.title}" ? Cette action supprimera également les heures pointées et tâches associées.`}
+        message={`ÃŠtes-vous sÃ»r de vouloir supprimer dÃ©finitivement le chantier "${deleteTarget?.title}" ? Cette action supprimera Ã©galement les heures pointÃ©es et tÃ¢ches associÃ©es.`}
         confirmText="Supprimer"
         cancelText="Annuler"
         type="danger"

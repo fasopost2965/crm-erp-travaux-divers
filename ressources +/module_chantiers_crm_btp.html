@@ -1,0 +1,347 @@
+
+<h2 class="sr-only">Module chantiers — liste interactive avec fiche détail, timeline, équipe et journal de chantier</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{display:flex;height:680px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);overflow:hidden;background:var(--color-background-tertiary);font-family:var(--font-sans)}
+
+.list-col{width:240px;background:var(--color-background-primary);border-right:0.5px solid var(--color-border-tertiary);display:flex;flex-direction:column;flex-shrink:0}
+.list-head{padding:12px 14px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;gap:8px}
+.list-head-title{font-size:13px;font-weight:500;color:var(--color-text-primary);flex:1}
+.add-btn{width:24px;height:24px;border-radius:6px;background:#C85A2A;border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px}
+.search-wrap{padding:8px 10px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.search-wrap input{width:100%;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:5px 9px 5px 28px;font-size:12px;background:var(--color-background-secondary);color:var(--color-text-primary);outline:none}
+.search-icon{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--color-text-secondary);font-size:13px;pointer-events:none}
+.search-rel{position:relative}
+.filters{display:flex;gap:4px;padding:8px 10px;border-bottom:0.5px solid var(--color-border-tertiary);flex-wrap:wrap}
+.fil{font-size:11px;padding:3px 8px;border-radius:10px;border:0.5px solid var(--color-border-tertiary);cursor:pointer;color:var(--color-text-secondary);background:var(--color-background-primary)}
+.fil.on{background:#C85A2A;color:#fff;border-color:#C85A2A}
+.ch-list{flex:1;overflow-y:auto}
+.ch-item{padding:10px 12px;border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer;transition:background 0.1s}
+.ch-item:hover{background:var(--color-background-secondary)}
+.ch-item.active{background:#FDF0EA;border-left:3px solid #C85A2A}
+.ch-name{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ch-loc{font-size:11px;color:var(--color-text-secondary);display:flex;align-items:center;gap:3px;margin-bottom:5px}
+.ch-row{display:flex;align-items:center;gap:6px}
+.status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dot-green{background:#2D8A5E}.dot-orange{background:#C85A2A}.dot-gray{background:#888}.dot-red{background:#C84242}
+.status-label{font-size:10px}
+.sl-green{color:#1A6B3C}.sl-orange{color:#993C1D}.sl-gray{color:#555}.sl-red{color:#A32D2D}
+.pct-bar{flex:1;height:4px;background:var(--color-background-secondary);border-radius:2px;overflow:hidden}
+.pct-fill{height:100%;border-radius:2px}
+.pct-txt{font-size:10px;color:var(--color-text-secondary);min-width:24px;text-align:right}
+
+.detail-col{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.det-header{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:12px 18px}
+.det-title-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.det-title{font-size:16px;font-weight:500;color:var(--color-text-primary);flex:1}
+.status-badge{font-size:11px;padding:3px 10px;border-radius:10px;white-space:nowrap}
+.badge-retard{background:#FBEAEA;color:#A32D2D}
+.badge-cours{background:#E8F6EE;color:#1A6B3C}
+.badge-pause{background:#F5F5F0;color:#555}
+.badge-termine{background:#E6F1FB;color:#1A5C9A}
+.det-meta{display:flex;gap:16px;flex-wrap:wrap}
+.meta-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-secondary)}
+.meta-item i{font-size:14px;color:#C85A2A}
+
+.tab-bar{display:flex;background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:0 16px}
+.tab-btn{padding:8px 12px;font-size:12px;color:var(--color-text-secondary);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-0.5px;white-space:nowrap}
+.tab-btn.on{color:#C85A2A;border-bottom-color:#C85A2A;font-weight:500}
+
+.det-body{flex:1;overflow-y:auto;padding:16px 18px}
+
+.section-title{font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:10px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:0.05em}
+.section-title i{font-size:14px;color:#C85A2A}
+
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.kpi{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px}
+.kpi-l{font-size:11px;color:var(--color-text-secondary);margin-bottom:4px}
+.kpi-v{font-size:18px;font-weight:500;color:var(--color-text-primary)}
+.kpi-s{font-size:10px;color:var(--color-text-secondary)}
+
+.avancement-block{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px;margin-bottom:14px}
+.av-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.av-title{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.av-pct{font-size:18px;font-weight:500;color:#C85A2A}
+.av-track{height:10px;background:var(--color-background-secondary);border-radius:5px;overflow:hidden;margin-bottom:8px}
+.av-fill{height:100%;border-radius:5px;background:#C85A2A}
+.av-milestones{display:flex;gap:0;position:relative;margin-top:4px}
+.milestone{flex:1;text-align:center;position:relative}
+.ms-dot{width:10px;height:10px;border-radius:50%;margin:0 auto 3px;border:2px solid var(--color-border-secondary);background:var(--color-background-primary)}
+.ms-dot.done{background:#2D8A5E;border-color:#2D8A5E}
+.ms-dot.current{background:#C85A2A;border-color:#C85A2A}
+.ms-label{font-size:9px;color:var(--color-text-secondary)}
+
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.team-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px;display:flex;align-items:center;gap:8px}
+.team-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:#fff;flex-shrink:0}
+.team-name{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.team-role{font-size:10px;color:var(--color-text-secondary)}
+
+.journal-item{display:flex;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.journal-item:last-child{border-bottom:none}
+.j-date{font-size:11px;color:var(--color-text-secondary);min-width:52px;padding-top:1px}
+.j-dot-col{display:flex;flex-direction:column;align-items:center;gap:0;padding-top:4px}
+.j-dot{width:8px;height:8px;border-radius:50%;background:#C85A2A;flex-shrink:0}
+.j-line{width:1px;flex:1;background:var(--color-border-tertiary);margin-top:3px}
+.j-content{flex:1}
+.j-title{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.j-body{font-size:11px;color:var(--color-text-secondary);line-height:1.5}
+.j-tag{display:inline-block;font-size:10px;padding:1px 6px;border-radius:8px;margin-top:3px}
+.jt-incident{background:#FBEAEA;color:#A32D2D}
+.jt-livraison{background:#E8F6EE;color:#1A6B3C}
+.jt-note{background:#E8F4FF;color:#1A5C9A}
+.jt-visite{background:#F5EEF8;color:#6A3A8A}
+
+.doc-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer}
+.doc-row:last-child{border-bottom:none}
+.doc-row:hover .doc-name{color:#C85A2A}
+.doc-icon{width:28px;height:28px;border-radius:6px;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;font-size:14px;color:#C85A2A;flex-shrink:0}
+.doc-name{font-size:12px;color:var(--color-text-primary);flex:1}
+.doc-meta{font-size:11px;color:var(--color-text-secondary)}
+</style>
+
+<div class="wrap">
+  <!-- LIST COL -->
+  <div class="list-col">
+    <div class="list-head">
+      <i class="ti ti-helmet" style="color:#C85A2A;font-size:15px" aria-hidden="true"></i>
+      <span class="list-head-title">Chantiers (7)</span>
+      <button class="add-btn" title="Nouveau chantier" onclick="sendPrompt('Comment créer une fiche chantier complète dans BatiPro ?')"><i class="ti ti-plus" aria-hidden="true"></i></button>
+    </div>
+    <div class="search-wrap">
+      <div class="search-rel">
+        <i class="ti ti-search search-icon" aria-hidden="true"></i>
+        <input type="text" placeholder="Rechercher…" oninput="filterChantiers(this.value)" aria-label="Rechercher un chantier">
+      </div>
+    </div>
+    <div class="filters">
+      <div class="fil on" onclick="setFilter('tous',this)">Tous</div>
+      <div class="fil" onclick="setFilter('en-cours',this)">En cours</div>
+      <div class="fil" onclick="setFilter('retard',this)">Retard</div>
+      <div class="fil" onclick="setFilter('termine',this)">Terminés</div>
+    </div>
+    <div class="ch-list" id="ch-list"></div>
+  </div>
+
+  <!-- DETAIL COL -->
+  <div class="detail-col">
+    <div class="det-header">
+      <div class="det-title-row">
+        <div class="det-title" id="det-name">Résidence Al Fath — Hay Riad</div>
+        <span class="status-badge badge-cours" id="det-badge">En cours</span>
+      </div>
+      <div class="det-meta">
+        <div class="meta-item"><i class="ti ti-map-pin" aria-hidden="true"></i><span id="det-loc">Hay Riad, Casablanca</span></div>
+        <div class="meta-item"><i class="ti ti-calendar" aria-hidden="true"></i><span id="det-dates">15 jan → 30 juin 2026</span></div>
+        <div class="meta-item"><i class="ti ti-user" aria-hidden="true"></i><span id="det-chef">Chef : M. Bensouda</span></div>
+        <div class="meta-item"><i class="ti ti-coins" aria-hidden="true"></i><span id="det-budget">Budget : 2 400 000 MAD</span></div>
+      </div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab-btn on" onclick="switchTab('apercu',this)">Aperçu</div>
+      <div class="tab-btn" onclick="switchTab('journal',this)">Journal</div>
+      <div class="tab-btn" onclick="switchTab('equipe',this)">Équipe</div>
+      <div class="tab-btn" onclick="switchTab('docs',this)">Documents</div>
+      <div class="tab-btn" onclick="sendPrompt('Montre-moi le module facturation / situation de travaux pour ce chantier')">Situation ↗</div>
+    </div>
+    <div class="det-body" id="det-body"></div>
+  </div>
+</div>
+
+<script>
+const chantiers = [
+  {id:0,name:"Résidence Al Fath",loc:"Hay Riad, Casablanca",dates:"15 jan → 30 juin 2026",chef:"M. Bensouda",budget:"2 400 000",pct:72,status:"en-cours",type:"Maçonnerie & gros œuvre",client:"Immocap SA",ouvriers:12},
+  {id:1,name:"Entrepôt logistique",loc:"Aïn Sebaâ, Casablanca",dates:"1 fév → 15 mai 2026",chef:"M. Tazi",budget:"1 800 000",pct:38,status:"retard",type:"Structure métallique",client:"LogiMaroc",ouvriers:8},
+  {id:2,name:"Villa Préfecture",loc:"Aïn Diab, Casablanca",dates:"3 oct 2025 → 1 juin 2026",chef:"Mme Chraibi",budget:"950 000",pct:91,status:"en-cours",type:"Finitions & décoration",client:"M. Idrissi",ouvriers:5},
+  {id:3,name:"Hôtel Mogador",loc:"Centre-ville, Casablanca",dates:"1 avr → 31 oct 2026",chef:"M. Slimani",budget:"3 200 000",pct:22,status:"retard",type:"Ravalement de façade",client:"Atlas Hotels",ouvriers:9},
+  {id:4,name:"École Privée Maarif",loc:"Maarif, Casablanca",dates:"15 mars → 15 août 2026",chef:"M. Ouali",budget:"680 000",pct:55,status:"en-cours",type:"Électricité & plomberie",client:"Groupe Éducatif AL",ouvriers:6},
+  {id:5,name:"Immeuble R+5 Sidi Maarouf",loc:"Sidi Maarouf, Casablanca",dates:"1 jan → 31 déc 2026",chef:"M. Hajji",budget:"5 600 000",pct:18,status:"en-cours",type:"Gros œuvre R+5",client:"Promoteur STAR",ouvriers:18},
+  {id:6,name:"Clinique dentaire Agdal",loc:"Agdal, Rabat",dates:"10 fév → 30 avr 2026",chef:"Mme Benhaddou",budget:"420 000",pct:100,status:"termine",type:"Aménagement intérieur",client:"Dr. Fennich",ouvriers:4},
+];
+
+let currentId = 0;
+let currentTab = 'apercu';
+let currentFilter = 'tous';
+let searchTerm = '';
+
+const statusColors = {'en-cours':'dot-green','retard':'dot-orange','termine':'dot-gray','pause':'dot-gray'};
+const statusLabels = {'en-cours':'En cours','retard':'En retard','termine':'Terminé','pause':'En pause'};
+const statusLabelColors = {'en-cours':'sl-green','retard':'sl-orange','termine':'sl-gray','pause':'sl-gray'};
+const badgeClass = {'en-cours':'badge-cours','retard':'badge-retard','termine':'badge-termine','pause':'badge-pause'};
+const barColors = {'en-cours':'#2D8A5E','retard':'#C85A2A','termine':'#888','pause':'#888'};
+
+function filterChantiers(v){searchTerm=v.toLowerCase();renderList();}
+function setFilter(f,el){currentFilter=f;document.querySelectorAll('.fil').forEach(x=>x.classList.remove('on'));el.classList.add('on');renderList();}
+
+function renderList(){
+  const el=document.getElementById('ch-list');
+  let items=chantiers.filter(c=>{
+    const matchF=currentFilter==='tous'||c.status===currentFilter;
+    const matchS=!searchTerm||c.name.toLowerCase().includes(searchTerm)||c.loc.toLowerCase().includes(searchTerm);
+    return matchF&&matchS;
+  });
+  el.innerHTML=items.map(c=>`
+    <div class="ch-item${c.id===currentId?' active':''}" onclick="selectChantier(${c.id})">
+      <div class="ch-name">${c.name}</div>
+      <div class="ch-loc"><i class="ti ti-map-pin" style="font-size:11px" aria-hidden="true"></i>${c.loc.split(',')[0]}</div>
+      <div class="ch-row">
+        <div class="status-dot ${statusColors[c.status]}"></div>
+        <span class="status-label ${statusLabelColors[c.status]}">${statusLabels[c.status]}</span>
+        <div class="pct-bar"><div class="pct-fill" style="width:${c.pct}%;background:${barColors[c.status]}"></div></div>
+        <span class="pct-txt">${c.pct}%</span>
+      </div>
+    </div>`).join('');
+}
+
+function selectChantier(id){
+  currentId=id;
+  renderList();
+  renderDetail();
+}
+
+function switchTab(tab,el){
+  currentTab=tab;
+  document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('on'));
+  el.classList.add('on');
+  renderDetail();
+}
+
+function renderDetail(){
+  const c=chantiers[currentId];
+  document.getElementById('det-name').textContent=c.name+' — '+c.loc.split(',')[0];
+  document.getElementById('det-badge').textContent=statusLabels[c.status];
+  document.getElementById('det-badge').className='status-badge '+badgeClass[c.status];
+  document.getElementById('det-loc').textContent=c.loc;
+  document.getElementById('det-dates').textContent=c.dates;
+  document.getElementById('det-chef').textContent='Chef : '+c.chef;
+  document.getElementById('det-budget').textContent='Budget : '+c.budget+' MAD';
+
+  const body=document.getElementById('det-body');
+  if(currentTab==='apercu') body.innerHTML=renderApercu(c);
+  if(currentTab==='journal') body.innerHTML=renderJournal(c);
+  if(currentTab==='equipe') body.innerHTML=renderEquipe(c);
+  if(currentTab==='docs') body.innerHTML=renderDocs(c);
+}
+
+function renderApercu(c){
+  const depense=Math.round(c.pct*parseInt(c.budget.replace(/\s/g,''))/100);
+  const reste=parseInt(c.budget.replace(/\s/g,''))-depense;
+  return `
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-l">Avancement</div><div class="kpi-v">${c.pct}%</div></div>
+    <div class="kpi"><div class="kpi-l">Dépensé</div><div class="kpi-v">${(depense/1000).toFixed(0)} K</div><div class="kpi-s">MAD</div></div>
+    <div class="kpi"><div class="kpi-l">Restant</div><div class="kpi-v">${(reste/1000).toFixed(0)} K</div><div class="kpi-s">MAD</div></div>
+    <div class="kpi"><div class="kpi-l">Effectif</div><div class="kpi-v">${c.ouvriers}</div><div class="kpi-s">ouvriers</div></div>
+  </div>
+
+  <div class="avancement-block">
+    <div class="av-label"><span class="av-title">Avancement global du chantier</span><span class="av-pct">${c.pct}%</span></div>
+    <div class="av-track"><div class="av-fill" style="width:${c.pct}%"></div></div>
+    <div class="av-milestones">
+      <div class="milestone"><div class="ms-dot done"></div><div class="ms-label">Installation</div></div>
+      <div class="milestone"><div class="ms-dot done"></div><div class="ms-label">Terrassement</div></div>
+      <div class="milestone"><div class="ms-dot ${c.pct>=50?'done':c.pct>=30?'current':''}"></div><div class="ms-label">Structure</div></div>
+      <div class="milestone"><div class="ms-dot ${c.pct>=75?'done':c.pct>=60?'current':''}"></div><div class="ms-label">Second œuvre</div></div>
+      <div class="milestone"><div class="ms-dot ${c.pct>=90?'done':c.pct>=80?'current':''}"></div><div class="ms-label">Finitions</div></div>
+      <div class="milestone"><div class="ms-dot ${c.pct>=100?'done':''}"></div><div class="ms-label">Réception</div></div>
+    </div>
+  </div>
+
+  <div style="background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px;margin-bottom:14px">
+    <div class="section-title"><i class="ti ti-info-circle" aria-hidden="true"></i>Informations chantier</div>
+    <table style="width:100%;font-size:12px;border-collapse:collapse">
+      <tr><td style="color:var(--color-text-secondary);padding:5px 0;width:40%">Client</td><td style="color:var(--color-text-primary);font-weight:500">${c.client}</td></tr>
+      <tr><td style="color:var(--color-text-secondary);padding:5px 0">Type de travaux</td><td style="color:var(--color-text-primary)">${c.type}</td></tr>
+      <tr><td style="color:var(--color-text-secondary);padding:5px 0">Localisation</td><td style="color:var(--color-text-primary)">${c.loc}</td></tr>
+      <tr><td style="color:var(--color-text-secondary);padding:5px 0">Délai contractuel</td><td style="color:var(--color-text-primary)">${c.dates}</td></tr>
+      <tr><td style="color:var(--color-text-secondary);padding:5px 0">Budget contractuel</td><td style="color:var(--color-text-primary)">${c.budget} MAD</td></tr>
+    </table>
+  </div>`;
+}
+
+function renderJournal(c){
+  const entries=[
+    {date:"22 mai",title:"Visite de contrôle maître d'ouvrage",body:"Inspection satisfaisante du niveau R+2. Quelques réserves sur les joints de façade nord.",tag:"jt-visite",label:"Visite"},
+    {date:"20 mai",title:"Incident : bétonnière en panne",body:"Bétonnière n°2 tombée en panne. Réparation prévue sous 48h. Retard estimé : 1 jour.",tag:"jt-incident",label:"Incident"},
+    {date:"18 mai",title:"Livraison fer à béton HA12",body:"Réception de 8 tonnes de fer HA12 du fournisseur Méta-Acier. Bon de réception signé.",tag:"jt-livraison",label:"Livraison"},
+    {date:"15 mai",title:"Réunion de chantier hebdomadaire",body:"Point planning avec l'architecte et le maître d'œuvre. Avancement conforme pour les dalles.",tag:"jt-note",label:"Note"},
+    {date:"12 mai",title:"Coulage dalles niveau R+1",body:"Coulage réalisé en 2 phases. Cure en cours. Résistance à vérifier sous 28 jours.",tag:"jt-livraison",label:"Travaux"},
+  ];
+  return `
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <div class="section-title" style="margin-bottom:0"><i class="ti ti-notebook" aria-hidden="true"></i>Journal de chantier</div>
+    <button onclick="sendPrompt('Comment ajouter une entrée au journal de chantier ?')" style="font-size:11px;padding:4px 10px;background:#C85A2A;color:#fff;border:none;border-radius:var(--border-radius-md);cursor:pointer">+ Nouvelle entrée ↗</button>
+  </div>
+  ${entries.map((e,i)=>`
+  <div class="journal-item">
+    <div class="j-date">${e.date}</div>
+    <div class="j-dot-col"><div class="j-dot"></div>${i<entries.length-1?'<div class="j-line"></div>':''}</div>
+    <div class="j-content">
+      <div class="j-title">${e.title}</div>
+      <div class="j-body">${e.body}</div>
+      <span class="j-tag ${e.tag}">${e.label}</span>
+    </div>
+  </div>`).join('')}`;
+}
+
+function renderEquipe(c){
+  const teams=[
+    {init:"MB",name:"M. Bensouda",role:"Chef de chantier",color:"#C85A2A"},
+    {init:"KA",name:"K. Azizi",role:"Maçon confirmé",color:"#2D8A5E"},
+    {init:"YO",name:"Y. Ouali",role:"Coffreur",color:"#2A6CB8"},
+    {init:"HB",name:"H. Belhaj",role:"Ferrailleur",color:"#7F4ABD"},
+    {init:"RM",name:"R. Moujane",role:"Aide-maçon",color:"#888"},
+    {init:"SM",name:"S. Mounir",role:"Électricien",color:"#C84242"},
+  ];
+  return `
+  <div class="section-title"><i class="ti ti-users" aria-hidden="true"></i>Équipe affectée (${c.ouvriers} personnes)</div>
+  <div class="team-grid">
+    ${teams.map(t=>`<div class="team-card">
+      <div class="team-av" style="background:${t.color}">${t.init}</div>
+      <div><div class="team-name">${t.name}</div><div class="team-role">${t.role}</div></div>
+    </div>`).join('')}
+  </div>
+  <div style="background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px">
+    <div class="section-title"><i class="ti ti-clock" aria-hidden="true"></i>Pointage — semaine du 19 mai</div>
+    <table style="width:100%;font-size:12px;border-collapse:collapse;table-layout:fixed">
+      <thead><tr style="color:var(--color-text-secondary)">
+        <td style="padding:4px 0;width:35%">Nom</td><td style="text-align:center">Lun</td><td style="text-align:center">Mar</td><td style="text-align:center">Mer</td><td style="text-align:center">Jeu</td><td style="text-align:center">Ven</td><td style="text-align:right">Total</td>
+      </tr></thead>
+      <tbody>
+        ${[['M. Bensouda',8,8,8,8,8],[`K. Azizi`,8,8,0,8,8],[`Y. Ouali`,8,8,8,8,0],[`H. Belhaj`,8,8,8,0,8]].map(r=>`
+        <tr style="border-top:0.5px solid var(--color-border-tertiary)">
+          <td style="padding:5px 0;color:var(--color-text-primary)">${r[0]}</td>
+          ${r.slice(1).map(v=>`<td style="text-align:center;color:${v===0?'#C84242':'var(--color-text-secondary)'}">${v===0?'—':v+'h'}</td>`).join('')}
+          <td style="text-align:right;font-weight:500;color:var(--color-text-primary)">${r.slice(1).reduce((a,b)=>a+b,0)}h</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+function renderDocs(c){
+  const docs=[
+    {icon:"ti-file-text",name:"Contrat de chantier signé",meta:"PDF · 2,4 Mo · 15 jan 2026"},
+    {icon:"ti-ruler",name:"Plans architecte R+0 à R+2",meta:"PDF · 18 Mo · 10 jan 2026"},
+    {icon:"ti-report-money",name:"Situation de travaux — avril 2026",meta:"PDF · 560 Ko · 1 mai 2026"},
+    {icon:"ti-camera",name:"Photos chantier — semaine 20",meta:"ZIP · 84 Mo · 22 mai 2026"},
+    {icon:"ti-clipboard-list",name:"Bon de commande béton BC-2026-041",meta:"PDF · 180 Ko · 10 mai 2026"},
+    {icon:"ti-certificate",name:"Attestation CNSS ouvriers",meta:"PDF · 230 Ko · 1 jan 2026"},
+  ];
+  return `
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <div class="section-title" style="margin-bottom:0"><i class="ti ti-folder" aria-hidden="true"></i>Documents (${docs.length})</div>
+    <button onclick="sendPrompt('Comment uploader un document sur un chantier dans BatiPro ?')" style="font-size:11px;padding:4px 10px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary);border-radius:var(--border-radius-md);cursor:pointer"><i class="ti ti-upload" style="font-size:12px" aria-hidden="true"></i> Ajouter ↗</button>
+  </div>
+  <div style="background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:4px 14px">
+    ${docs.map(d=>`<div class="doc-row">
+      <div class="doc-icon"><i class="ti ${d.icon}" aria-hidden="true"></i></div>
+      <div style="flex:1;min-width:0"><div class="doc-name">${d.name}</div><div class="doc-meta">${d.meta}</div></div>
+      <i class="ti ti-download" style="font-size:14px;color:var(--color-text-secondary)" aria-hidden="true"></i>
+    </div>`).join('')}
+  </div>`;
+}
+
+renderList();
+renderDetail();
+</script>

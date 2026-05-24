@@ -4,14 +4,15 @@
 @variant dark (&:is(.dark *));
 
 @theme {
-  --color-primary: #1D4ED8;
-  --color-primary-hover: #1e40af;
-  --color-accent: #E8611A;
-  --color-primary-light: #eff6ff;
-  --color-bg-main: #F8FAFC;
+  --color-primary: #C85A2A;
+  --color-primary-hover: #A8481F;
+  --color-accent: #E8784A;
+  --color-primary-light: #FDF0EA;
+  --color-bg-main: #F4F4F5;
+  --color-sidebar: #1C1C1C;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --radius-custom-base: 8px;
-  --radius-custom-lg: 12px;
+  --radius-custom-base: 6px;
+  --radius-custom-lg: 10px;
 }
 
 /* Base custom styles if needed */

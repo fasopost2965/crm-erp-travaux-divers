@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
@@ -22,7 +22,7 @@ const ProjectDetail = () => {
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDesc, setTaskDesc] = useState('');
   const [taskPriority, setTaskPriority] = useState('Moyenne');
-  const [taskStatus, setTaskStatus] = useState('À faire');
+  const [taskStatus, setTaskStatus] = useState('Ã€ faire');
 
   const [isWorkLogModalOpen, setIsWorkLogModalOpen] = useState(false);
   const [logHours, setLogHours] = useState('4');
@@ -98,7 +98,7 @@ const ProjectDetail = () => {
       await api.post(`/api/projects/${id}/tasks`, payload);
     },
     onSuccess: () => {
-      showToast('Nouvelle tâche créée avec succès !');
+      showToast('Nouvelle tÃ¢che crÃ©Ã©e avec succÃ¨s !');
       queryClient.invalidateQueries(['projectTasks', id]);
       setIsTaskModalOpen(false);
       setTaskTitle('');
@@ -113,7 +113,7 @@ const ProjectDetail = () => {
       await api.put(`/api/projects/${id}/tasks/${taskId}`, { status, priority: 'Moyenne' });
     },
     onSuccess: () => {
-      showToast('Statut de la tâche mis à jour.');
+      showToast('Statut de la tÃ¢che mis Ã  jour.');
       queryClient.invalidateQueries(['projectTasks', id]);
     },
     onError: (err) => showToast(`Erreur: ${err.message}`, 'error'),
@@ -125,7 +125,7 @@ const ProjectDetail = () => {
       await api.post(`/api/projects/${id}/work-logs`, payload);
     },
     onSuccess: () => {
-      showToast('Heures de travail enregistrées.');
+      showToast('Heures de travail enregistrÃ©es.');
       queryClient.invalidateQueries(['projectWorkLogs', id]);
       setIsWorkLogModalOpen(false);
       setLogDesc('');
@@ -139,7 +139,7 @@ const ProjectDetail = () => {
       await api.post(`/api/projects/${id}/photos`, payload);
     },
     onSuccess: () => {
-      showToast('Photo de chantier ajoutée avec succès.');
+      showToast('Photo de chantier ajoutÃ©e avec succÃ¨s.');
       queryClient.invalidateQueries(['projectPhotos', id]);
       setPhotoTitle('');
       setUploadedPhotoFile(null);
@@ -153,7 +153,7 @@ const ProjectDetail = () => {
       await api.post(`/api/projects/${id}/documents`, payload);
     },
     onSuccess: () => {
-      showToast('Pièce jointe enregistrée.');
+      showToast('PiÃ¨ce jointe enregistrÃ©e.');
       queryClient.invalidateQueries(['projectDocuments', id]);
       setDocTitle('');
       setUploadedDocFile(null);
@@ -168,7 +168,7 @@ const ProjectDetail = () => {
   if (error) {
     return (
       <div className="p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700 font-medium">
-        ⚠️ Impossible d'ouvrir la fiche chantier : {error.message}.
+        âš ï¸ Impossible d'ouvrir la fiche chantier : {error.message}.
       </div>
     );
   }
@@ -227,7 +227,7 @@ const ProjectDetail = () => {
   };
 
   // Progression calculation based on Tasks
-  const completedTasks = tasks.filter(t => t.status === 'Terminé').length;
+  const completedTasks = tasks.filter(t => t.status === 'TerminÃ©').length;
   const totalTasksCount = tasks.length;
   const progression = totalTasksCount > 0 ? Math.round((completedTasks / totalTasksCount) * 100) : 0;
 
@@ -249,19 +249,19 @@ const ProjectDetail = () => {
               onClick={() => navigate(`/dashboard/projects/${project.id}/edit`)}
               className="py-2 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs tracking-wide transition-colors cursor-pointer"
             >
-              ✏️ Éditer
+              âœï¸ Ã‰diter
             </button>
             <button
               onClick={() => setIsWorkLogModalOpen(true)}
               className="py-2 px-4 rounded-xl bg-blue-50 text-blue-600 font-bold text-xs tracking-wide transition-all cursor-pointer"
             >
-              ⏱️ Pointer des heures
+              â±ï¸ Pointer des heures
             </button>
             <button
               onClick={() => setIsTaskModalOpen(true)}
-              className="py-2 px-4 rounded-xl bg-blue-600 hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md transition-colors cursor-pointer"
+              className="py-2 px-4 rounded-xl bg-[#C85A2A] hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md transition-colors cursor-pointer"
             >
-              ➕ Ajouter une tâche
+              âž• Ajouter une tÃ¢che
             </button>
           </div>
         }
@@ -273,10 +273,10 @@ const ProjectDetail = () => {
           <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Progression Technique</span>
           <div className="flex items-end justify-between">
             <span className="text-3xl font-black text-slate-800">{progression}%</span>
-            <span className="text-xs text-slate-400 font-bold">{completedTasks}/{totalTasksCount} tâches</span>
+            <span className="text-xs text-slate-400 font-bold">{completedTasks}/{totalTasksCount} tÃ¢ches</span>
           </div>
           <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-            <div className="bg-blue-600 h-full rounded-full transition-all duration-500" style={{ width: `${progression}%` }}></div>
+            <div className="bg-[#C85A2A] h-full rounded-full transition-all duration-500" style={{ width: `${progression}%` }}></div>
           </div>
         </div>
 
@@ -287,20 +287,20 @@ const ProjectDetail = () => {
               {project.manager?.name ? project.manager.name.charAt(0) : 'C'}
             </div>
             <div>
-              <p className="font-bold text-slate-800 text-xs">{project.manager?.name || 'Non désigné'}</p>
+              <p className="font-bold text-slate-800 text-xs">{project.manager?.name || 'Non dÃ©signÃ©'}</p>
               <p className="text-[9px] text-slate-400 font-semibold">{project.manager?.email || 'N/A'}</p>
             </div>
           </div>
         </div>
 
         <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm space-y-1">
-          <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Heures Consommées</span>
+          <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Heures ConsommÃ©es</span>
           <p className="text-3xl font-black text-slate-800 pt-1">{totalHoursLogged} Hrs</p>
-          <span className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Pointées par l'équipe</span>
+          <span className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">PointÃ©es par l'Ã©quipe</span>
         </div>
 
         <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm space-y-1">
-          <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Budget Alloué</span>
+          <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Budget AllouÃ©</span>
           <p className="text-3xl font-black text-slate-850 pt-1">{formatCurrency(project.budget)}</p>
           <span className="text-[9px] text-blue-550 font-bold">Devis : {project.quote?.quoteNumber || '-'}</span>
         </div>
@@ -314,7 +314,7 @@ const ProjectDetail = () => {
             activeTab === 'overview' ? 'text-blue-600 border-blue-600' : 'border-transparent hover:text-slate-600'
           }`}
         >
-          🔍 Fiche
+          ðŸ” Fiche
         </button>
         <button
           onClick={() => setActiveTab('tasks')}
@@ -322,7 +322,7 @@ const ProjectDetail = () => {
             activeTab === 'tasks' ? 'text-blue-600 border-blue-600' : 'border-transparent hover:text-slate-600'
           }`}
         >
-          📋 Tâches (Kanban)
+          ðŸ“‹ TÃ¢ches (Kanban)
         </button>
         <button
           onClick={() => setActiveTab('hours')}
@@ -330,7 +330,7 @@ const ProjectDetail = () => {
             activeTab === 'hours' ? 'text-blue-600 border-blue-600' : 'border-transparent hover:text-slate-600'
           }`}
         >
-          ⏱️ Heures
+          â±ï¸ Heures
         </button>
         <button
           onClick={() => setActiveTab('photos')}
@@ -338,7 +338,7 @@ const ProjectDetail = () => {
             activeTab === 'photos' ? 'text-blue-600 border-blue-600' : 'border-transparent hover:text-slate-600'
           }`}
         >
-          📸 Photos & Docs
+          ðŸ“¸ Photos & Docs
         </button>
         <button
           onClick={() => setActiveTab('signatures')}
@@ -346,7 +346,7 @@ const ProjectDetail = () => {
             activeTab === 'signatures' ? 'text-blue-600 border-blue-600' : 'border-transparent hover:text-slate-600'
           }`}
         >
-          ✍️ Signatures PV
+          âœï¸ Signatures PV
         </button>
       </div>
 
@@ -356,8 +356,8 @@ const ProjectDetail = () => {
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6 text-xs font-semibold text-slate-655">
-              <h3 className="font-bold text-slate-800 text-sm">Description & Spécifications du Chantier</h3>
-              <p className="leading-relaxed whitespace-pre-line text-slate-500 font-semibold">{project.description || "Aucun descriptif rédigé pour ce chantier."}</p>
+              <h3 className="font-bold text-slate-800 text-sm">Description & SpÃ©cifications du Chantier</h3>
+              <p className="leading-relaxed whitespace-pre-line text-slate-500 font-semibold">{project.description || "Aucun descriptif rÃ©digÃ© pour ce chantier."}</p>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 border-t border-slate-100">
                 <div className="space-y-1">
@@ -366,13 +366,13 @@ const ProjectDetail = () => {
                 </div>
                 <div className="space-y-1">
                   <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Ville</span>
-                  <p className="text-slate-800">📍 {project.city || '-'}</p>
+                  <p className="text-slate-800">ðŸ“ {project.city || '-'}</p>
                 </div>
               </div>
             </div>
 
             <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6 text-xs">
-              <h3 className="font-bold text-slate-800 text-sm uppercase tracking-wider">Fiche d'identité</h3>
+              <h3 className="font-bold text-slate-800 text-sm uppercase tracking-wider">Fiche d'identitÃ©</h3>
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-slate-400 font-bold">Client</span>
@@ -383,13 +383,13 @@ const ProjectDetail = () => {
                   <StatusBadge status={project.status} />
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-400 font-bold">Date de démarrage</span>
+                  <span className="text-slate-400 font-bold">Date de dÃ©marrage</span>
                   <span className="font-bold text-slate-800">
                     {project.startDate ? new Date(project.startDate).toLocaleDateString('fr-FR') : '-'}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-400 font-bold">Échéance Planifiée</span>
+                  <span className="text-slate-400 font-bold">Ã‰chÃ©ance PlanifiÃ©e</span>
                   <span className="font-bold text-rose-500">
                     {project.endDatePlanned ? new Date(project.endDatePlanned).toLocaleDateString('fr-FR') : '-'}
                   </span>
@@ -403,7 +403,7 @@ const ProjectDetail = () => {
         {activeTab === 'tasks' && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Columns definitions */}
-            {['À faire', 'En cours', 'Terminé'].map((colStatus) => {
+            {['Ã€ faire', 'En cours', 'TerminÃ©'].map((colStatus) => {
               const colTasks = tasks.filter(t => t.status === colStatus);
               return (
                 <div key={colStatus} className="bg-slate-50 border border-slate-100 rounded-3xl p-4 flex flex-col space-y-4 min-h-[400px]">
@@ -414,7 +414,7 @@ const ProjectDetail = () => {
 
                   <div className="flex-1 space-y-3 overflow-y-auto">
                     {colTasks.length === 0 ? (
-                      <p className="text-[10px] text-slate-400 font-semibold text-center py-8">Aucune tâche</p>
+                      <p className="text-[10px] text-slate-400 font-semibold text-center py-8">Aucune tÃ¢che</p>
                     ) : (
                       colTasks.map(task => (
                         <div key={task.id} className="bg-white border border-slate-150/40 p-4 rounded-2xl shadow-xs space-y-3 hover:shadow-sm transition-all">
@@ -427,7 +427,7 @@ const ProjectDetail = () => {
                           <p className="text-[10px] text-slate-400 leading-normal">{task.description}</p>
                           <div className="flex justify-between items-center pt-2 border-t border-slate-50">
                             <span className="text-[9px] text-slate-400 font-semibold">
-                              👤 {task.assignee?.name || 'Non assigné'}
+                              ðŸ‘¤ {task.assignee?.name || 'Non assignÃ©'}
                             </span>
                             
                             {/* Simple state shifter */}
@@ -436,9 +436,9 @@ const ProjectDetail = () => {
                               onChange={(e) => updateTaskStatusMutation.mutate({ taskId: task.id, status: e.target.value })}
                               className="text-[9px] bg-slate-50 border border-slate-100 rounded px-1.5 py-0.5 font-bold cursor-pointer"
                             >
-                              <option value="À faire">À faire</option>
+                              <option value="Ã€ faire">Ã€ faire</option>
                               <option value="En cours">En cours</option>
-                              <option value="Terminé">Terminé</option>
+                              <option value="TerminÃ©">TerminÃ©</option>
                             </select>
                           </div>
                         </div>
@@ -456,16 +456,16 @@ const ProjectDetail = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Work log register */}
             <div className="lg:col-span-2 bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-4">
-              <h3 className="font-bold text-slate-800 text-xs uppercase tracking-wider">Journal des heures déclarées</h3>
+              <h3 className="font-bold text-slate-800 text-xs uppercase tracking-wider">Journal des heures dÃ©clarÃ©es</h3>
               <div className="overflow-x-auto">
                 <table className="min-w-full text-xs font-semibold text-slate-700">
                   <thead className="bg-slate-50 text-slate-400 uppercase text-[9px] tracking-wider text-left">
                     <tr>
                       <th className="px-4 py-2">Date</th>
                       <th className="px-4 py-2">Collaborateur</th>
-                      <th className="px-4 py-2">Tâche</th>
+                      <th className="px-4 py-2">TÃ¢che</th>
                       <th className="px-4 py-2">Description</th>
-                      <th className="px-4 py-2 text-right">Durée</th>
+                      <th className="px-4 py-2 text-right">DurÃ©e</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -523,7 +523,7 @@ const ProjectDetail = () => {
               
               <div className="grid grid-cols-2 gap-4">
                 {photos.length === 0 ? (
-                  <p className="col-span-2 text-center text-xs text-slate-400 py-8 font-semibold">Aucune photo téléversée.</p>
+                  <p className="col-span-2 text-center text-xs text-slate-400 py-8 font-semibold">Aucune photo tÃ©lÃ©versÃ©e.</p>
                 ) : (
                   photos.map(p => (
                     <div key={p.id} className="relative rounded-2xl overflow-hidden border border-slate-100 aspect-video group bg-slate-150">
@@ -539,7 +539,7 @@ const ProjectDetail = () => {
 
               {/* Photo Upload Form */}
               <form onSubmit={handlePhotoUploadSubmit} className="pt-4 border-t border-slate-100 space-y-4 text-xs font-semibold">
-                <h4 className="font-bold text-slate-800 text-xs">📷 Ajouter une photo d'avancement</h4>
+                <h4 className="font-bold text-slate-800 text-xs">ðŸ“· Ajouter une photo d'avancement</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold text-slate-400 uppercase">Titre</label>
@@ -549,21 +549,21 @@ const ProjectDetail = () => {
                       placeholder="Ex: Pose charpente"
                       value={photoTitle}
                       onChange={(e) => setPhotoTitle(e.target.value)}
-                      className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#C85A2A]"
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase">Phase / Étape</label>
+                    <label className="text-[10px] font-bold text-slate-400 uppercase">Phase / Ã‰tape</label>
                     <select
                       value={photoStage}
                       onChange={(e) => setPhotoStage(e.target.value)}
-                      className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                      className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#C85A2A] cursor-pointer"
                     >
                       <option value="Fondations">Fondations</option>
-                      <option value="Gros Œuvre">Gros Œuvre</option>
+                      <option value="Gros Å’uvre">Gros Å’uvre</option>
                       <option value="Charpente & Clos Couvert">Charpente & Clos Couvert</option>
-                      <option value="Second Œuvre">Second Œuvre</option>
-                      <option value="Finitions / Réception">Finitions / Réception</option>
+                      <option value="Second Å’uvre">Second Å’uvre</option>
+                      <option value="Finitions / RÃ©ception">Finitions / RÃ©ception</option>
                     </select>
                   </div>
                 </div>
@@ -576,38 +576,38 @@ const ProjectDetail = () => {
                 <button
                   type="submit"
                   disabled={uploadPhotoMutation.isLoading}
-                  className="w-full py-3 px-5 rounded-xl bg-blue-600 hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md transition-colors cursor-pointer"
+                  className="w-full py-3 px-5 rounded-xl bg-[#C85A2A] hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md transition-colors cursor-pointer"
                 >
-                  {uploadPhotoMutation.isLoading ? 'Envoi...' : 'Téléverser la Photo'}
+                  {uploadPhotoMutation.isLoading ? 'Envoi...' : 'TÃ©lÃ©verser la Photo'}
                 </button>
               </form>
             </div>
 
             {/* Documents Zone */}
             <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6">
-              <h3 className="font-bold text-slate-850 text-xs uppercase tracking-wider">Pièces jointes administratives & plans</h3>
+              <h3 className="font-bold text-slate-850 text-xs uppercase tracking-wider">PiÃ¨ces jointes administratives & plans</h3>
               
               <div className="space-y-2">
                 {documents.length === 0 ? (
-                  <p className="text-center text-xs text-slate-400 py-8 font-semibold">Aucune pièce jointe.</p>
+                  <p className="text-center text-xs text-slate-400 py-8 font-semibold">Aucune piÃ¨ce jointe.</p>
                 ) : (
                   documents.map(d => (
                     <div key={d.id} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 flex justify-between items-center text-xs font-semibold">
                       <div className="flex items-center space-x-2.5">
-                        <span className="text-lg">📁</span>
+                        <span className="text-lg">ðŸ“</span>
                         <div>
                           <p className="font-bold text-slate-800 leading-snug">{d.title}</p>
-                          <p className="text-[10px] text-slate-400 font-bold uppercase">{d.type} — {d.uploader?.name}</p>
+                          <p className="text-[10px] text-slate-400 font-bold uppercase">{d.type} â€” {d.uploader?.name}</p>
                         </div>
                       </div>
                       <button
                         onClick={() => {
-                          showToast(`Téléchargement de ${d.title}...`);
-                          setTimeout(() => showToast('Fichier téléchargé.'), 1000);
+                          showToast(`TÃ©lÃ©chargement de ${d.title}...`);
+                          setTimeout(() => showToast('Fichier tÃ©lÃ©chargÃ©.'), 1000);
                         }}
                         className="text-[10px] py-1 px-2.5 rounded bg-blue-50 hover:bg-blue-100 text-blue-650 font-bold transition-all cursor-pointer"
                       >
-                        Télécharger
+                        TÃ©lÃ©charger
                       </button>
                     </div>
                   ))
@@ -616,17 +616,17 @@ const ProjectDetail = () => {
 
               {/* Doc Upload Form */}
               <form onSubmit={handleDocUploadSubmit} className="pt-4 border-t border-slate-100 space-y-4 text-xs font-semibold">
-                <h4 className="font-bold text-slate-800 text-xs">📂 Joindre un plan PDF ou un contrat</h4>
+                <h4 className="font-bold text-slate-800 text-xs">ðŸ“‚ Joindre un plan PDF ou un contrat</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold text-slate-400 uppercase">Titre</label>
                     <input
                       type="text"
                       required
-                      placeholder="Ex: Plan électrique Verrière"
+                      placeholder="Ex: Plan Ã©lectrique VerriÃ¨re"
                       value={docTitle}
                       onChange={(e) => setDocTitle(e.target.value)}
-                      className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#C85A2A]"
                     />
                   </div>
                   <div className="space-y-1">
@@ -634,12 +634,12 @@ const ProjectDetail = () => {
                     <select
                       value={docType}
                       onChange={(e) => setDocType(e.target.value)}
-                      className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                      className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#C85A2A] cursor-pointer"
                     >
                       <option value="Plan technique">Plan technique</option>
                       <option value="Contrat de sous-traitance">Contrat de sous-traitance</option>
                       <option value="PV d'avancement technique">PV d'avancement technique</option>
-                      <option value="Rapport de sécurité">Rapport de sécurité</option>
+                      <option value="Rapport de sÃ©curitÃ©">Rapport de sÃ©curitÃ©</option>
                     </select>
                   </div>
                 </div>
@@ -652,7 +652,7 @@ const ProjectDetail = () => {
                 <button
                   type="submit"
                   disabled={uploadDocMutation.isLoading}
-                  className="w-full py-3 px-5 rounded-xl bg-blue-600 hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md transition-colors cursor-pointer"
+                  className="w-full py-3 px-5 rounded-xl bg-[#C85A2A] hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md transition-colors cursor-pointer"
                 >
                   {uploadDocMutation.isLoading ? 'Envoi...' : 'Ajouter le Document'}
                 </button>
@@ -666,10 +666,10 @@ const ProjectDetail = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-xs font-semibold">
             {/* Signatures List */}
             <div className="lg:col-span-2 bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-4">
-              <h3 className="font-bold text-slate-800 text-xs uppercase tracking-wider">PV de Réception & Signatures électroniques</h3>
+              <h3 className="font-bold text-slate-800 text-xs uppercase tracking-wider">PV de RÃ©ception & Signatures Ã©lectroniques</h3>
               <div className="space-y-4">
                 {signatures.length === 0 ? (
-                  <p className="text-center text-slate-400 py-8">Aucune signature enregistrée sur ce projet.</p>
+                  <p className="text-center text-slate-400 py-8">Aucune signature enregistrÃ©e sur ce projet.</p>
                 ) : (
                   signatures.map(s => (
                     <div key={s.id} className="p-4 rounded-2xl bg-emerald-50/20 border border-emerald-250 text-emerald-850 space-y-3 relative overflow-hidden">
@@ -678,11 +678,11 @@ const ProjectDetail = () => {
                           <p className="font-black text-[13px]">{s.signatoryName}</p>
                           <p className="text-[10px] text-slate-400 font-bold uppercase">{s.signatoryRole}</p>
                         </div>
-                        <span className="text-[10px] text-slate-400 font-bold">Signé le {new Date(s.createdAt).toLocaleDateString('fr-FR')}</span>
+                        <span className="text-[10px] text-slate-400 font-bold">SignÃ© le {new Date(s.createdAt).toLocaleDateString('fr-FR')}</span>
                       </div>
-                      {s.notes && <p className="text-[11px] text-slate-550 italic">« {s.notes} »</p>}
+                      {s.notes && <p className="text-[11px] text-slate-550 italic">Â« {s.notes} Â»</p>}
                       <div className="border-t border-dashed border-emerald-300 pt-2 flex items-center justify-between text-[10px]">
-                        <span className="font-extrabold uppercase text-emerald-650 tracking-wider">✓ AUTHENTIFIÉ PAR CLÉ UNIQUE</span>
+                        <span className="font-extrabold uppercase text-emerald-650 tracking-wider">âœ“ AUTHENTIFIÃ‰ PAR CLÃ‰ UNIQUE</span>
                         <span className="font-mono text-slate-400">HASH: 8cf6{s.id}db2...</span>
                       </div>
                     </div>
@@ -691,11 +691,11 @@ const ProjectDetail = () => {
               </div>
             </div>
 
-            {/* Link to full PV de réception page */}
+            {/* Link to full PV de rÃ©ception page */}
             <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
-              <h3 className="font-bold text-slate-800 text-sm">Clôture du chantier</h3>
+              <h3 className="font-bold text-slate-800 text-sm">ClÃ´ture du chantier</h3>
               <p className="text-sm text-slate-500 leading-relaxed">
-                Le PV de réception permet de finaliser le chantier avec les signatures électroniques des deux parties (client et chef de chantier) et de générer le document officiel en PDF.
+                Le PV de rÃ©ception permet de finaliser le chantier avec les signatures Ã©lectroniques des deux parties (client et chef de chantier) et de gÃ©nÃ©rer le document officiel en PDF.
               </p>
               <button
                 onClick={() => navigate(`/dashboard/projects/${id}/pv-reception`)}
@@ -704,11 +704,11 @@ const ProjectDetail = () => {
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Ouvrir le PV de Réception
+                Ouvrir le PV de RÃ©ception
               </button>
               {signatures.length > 0 && (
                 <p className="text-xs text-emerald-600 font-semibold text-center">
-                  ✓ {signatures.length} signature{signatures.length > 1 ? 's' : ''} enregistrée{signatures.length > 1 ? 's' : ''}
+                  âœ“ {signatures.length} signature{signatures.length > 1 ? 's' : ''} enregistrÃ©e{signatures.length > 1 ? 's' : ''}
                 </p>
               )}
             </div>
@@ -721,41 +721,41 @@ const ProjectDetail = () => {
         <div className="fixed inset-0 bg-slate-900/50 flex items-center justify-center p-4 z-50 animate-fadeIn">
           <div className="bg-white border border-slate-100 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-6">
             <div className="flex justify-between items-center pb-3 border-b border-slate-100">
-              <h3 className="font-bold text-slate-800 text-sm uppercase">📋 Créer une tâche</h3>
-              <button onClick={() => setIsTaskModalOpen(false)} className="text-slate-400 font-bold text-base hover:text-slate-655 cursor-pointer">×</button>
+              <h3 className="font-bold text-slate-800 text-sm uppercase">ðŸ“‹ CrÃ©er une tÃ¢che</h3>
+              <button onClick={() => setIsTaskModalOpen(false)} className="text-slate-400 font-bold text-base hover:text-slate-655 cursor-pointer">Ã—</button>
             </div>
 
             <form onSubmit={handleTaskSubmit} className="space-y-4 text-xs font-semibold">
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase">Titre de la tâche</label>
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Titre de la tÃ¢che</label>
                 <input
                   type="text"
                   required
-                  placeholder="Ex: Peinture verrière sous-couche"
+                  placeholder="Ex: Peinture verriÃ¨re sous-couche"
                   value={taskTitle}
                   onChange={(e) => setTaskTitle(e.target.value)}
-                  className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#C85A2A]"
                 />
               </div>
 
               <div className="space-y-1">
                 <label className="text-[10px] font-bold text-slate-400 uppercase">Description</label>
                 <textarea
-                  placeholder="Détail technique..."
+                  placeholder="DÃ©tail technique..."
                   rows="3"
                   value={taskDesc}
                   onChange={(e) => setTaskDesc(e.target.value)}
-                  className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#C85A2A]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Priorité</label>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">PrioritÃ©</label>
                   <select
                     value={taskPriority}
                     onChange={(e) => setTaskPriority(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#C85A2A] cursor-pointer"
                   >
                     <option value="Basse">Basse</option>
                     <option value="Moyenne">Moyenne</option>
@@ -768,11 +768,11 @@ const ProjectDetail = () => {
                   <select
                     value={taskStatus}
                     onChange={(e) => setTaskStatus(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#C85A2A] cursor-pointer"
                   >
-                    <option value="À faire">À faire</option>
+                    <option value="Ã€ faire">Ã€ faire</option>
                     <option value="En cours">En cours</option>
-                    <option value="Terminé">Terminé</option>
+                    <option value="TerminÃ©">TerminÃ©</option>
                   </select>
                 </div>
               </div>
@@ -788,9 +788,9 @@ const ProjectDetail = () => {
                 <button
                   type="submit"
                   disabled={createTaskMutation.isLoading}
-                  className="py-2 px-5 rounded-xl bg-blue-600 hover:bg-blue-550 text-white font-bold transition-all cursor-pointer"
+                  className="py-2 px-5 rounded-xl bg-[#C85A2A] hover:bg-blue-550 text-white font-bold transition-all cursor-pointer"
                 >
-                  {createTaskMutation.isLoading ? 'Création...' : 'Créer'}
+                  {createTaskMutation.isLoading ? 'CrÃ©ation...' : 'CrÃ©er'}
                 </button>
               </div>
             </form>
@@ -803,19 +803,19 @@ const ProjectDetail = () => {
         <div className="fixed inset-0 bg-slate-900/50 flex items-center justify-center p-4 z-50 animate-fadeIn">
           <div className="bg-white border border-slate-100 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-6">
             <div className="flex justify-between items-center pb-3 border-b border-slate-100">
-              <h3 className="font-bold text-slate-800 text-sm uppercase">⏱️ Pointer des heures</h3>
-              <button onClick={() => setIsWorkLogModalOpen(false)} className="text-slate-400 font-bold text-base hover:text-slate-655 cursor-pointer">×</button>
+              <h3 className="font-bold text-slate-800 text-sm uppercase">â±ï¸ Pointer des heures</h3>
+              <button onClick={() => setIsWorkLogModalOpen(false)} className="text-slate-400 font-bold text-base hover:text-slate-655 cursor-pointer">Ã—</button>
             </div>
 
             <form onSubmit={handleWorkLogSubmit} className="space-y-4 text-xs font-semibold">
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase">Tâche associée (optionnel)</label>
+                <label className="text-[10px] font-bold text-slate-400 uppercase">TÃ¢che associÃ©e (optionnel)</label>
                 <select
                   value={logTaskId}
                   onChange={(e) => setLogTaskId(e.target.value)}
-                  className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                  className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#C85A2A] cursor-pointer"
                 >
-                  <option value="">Sélectionner une tâche...</option>
+                  <option value="">SÃ©lectionner une tÃ¢che...</option>
                   {tasks.map(t => (
                     <option key={t.id} value={t.id}>{t.title} ({t.status})</option>
                   ))}
@@ -830,12 +830,12 @@ const ProjectDetail = () => {
                     required
                     value={logDate}
                     onChange={(e) => setLogDate(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#C85A2A] cursor-pointer"
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Durée (en heures)</label>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">DurÃ©e (en heures)</label>
                   <input
                     type="number"
                     step="0.5"
@@ -844,7 +844,7 @@ const ProjectDetail = () => {
                     required
                     value={logHours}
                     onChange={(e) => setLogHours(e.target.value)}
-                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#C85A2A]"
                   />
                 </div>
               </div>
@@ -853,11 +853,11 @@ const ProjectDetail = () => {
                 <label className="text-[10px] font-bold text-slate-400 uppercase">Observations / Rapport succinct</label>
                 <textarea
                   required
-                  placeholder="Travaux réalisés..."
+                  placeholder="Travaux rÃ©alisÃ©s..."
                   rows="3"
                   value={logDesc}
                   onChange={(e) => setLogDesc(e.target.value)}
-                  className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#C85A2A]"
                 />
               </div>
 
@@ -872,7 +872,7 @@ const ProjectDetail = () => {
                 <button
                   type="submit"
                   disabled={createWorkLogMutation.isLoading}
-                  className="py-2 px-5 rounded-xl bg-blue-600 hover:bg-blue-550 text-white font-bold transition-all cursor-pointer"
+                  className="py-2 px-5 rounded-xl bg-[#C85A2A] hover:bg-blue-550 text-white font-bold transition-all cursor-pointer"
                 >
                   {createWorkLogMutation.isLoading ? 'Enregistrement...' : 'Valider'}
                 </button>

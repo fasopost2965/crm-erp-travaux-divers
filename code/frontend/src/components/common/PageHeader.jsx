@@ -11,14 +11,14 @@ const PageHeader = ({
       <div>
         {breadcrumb && breadcrumb.length > 0 && (
           <nav className="flex items-center space-x-1.5 text-xs font-medium text-slate-400 mb-1.5">
-            <Link to="/dashboard" className="hover:text-blue-600 transition-colors">
+            <Link to="/dashboard" className="hover:text-[#C85A2A] transition-colors">
               Atlas Works
             </Link>
             {breadcrumb.map((item, idx) => (
               <React.Fragment key={idx}>
                 <span className="text-slate-300">/</span>
                 {item.path ? (
-                  <Link to={item.path} className="hover:text-blue-600 transition-colors">
+                  <Link to={item.path} className="hover:text-[#C85A2A] transition-colors">
                     {item.label}
                   </Link>
                 ) : (

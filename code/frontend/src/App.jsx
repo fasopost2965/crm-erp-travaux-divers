@@ -26,6 +26,17 @@ import InvoiceList from './pages/InvoiceList';
 import InvoiceDetail from './pages/InvoiceDetail';
 import InvoiceForm from './pages/InvoiceForm';
 import PaymentForm from './pages/PaymentForm';
+import AccountForm from './pages/AccountForm';
+import ContactList from './pages/ContactList';
+import ContactForm from './pages/ContactForm';
+import LeadList from './pages/LeadList';
+import LeadForm from './pages/LeadForm';
+import OpportunityList from './pages/OpportunityList';
+import OpportunityForm from './pages/OpportunityForm';
+import Tresorerie from './pages/Tresorerie';
+import Situations from './pages/Situations';
+import PointageJournalier from './pages/PointageJournalier';
+import Parametres from './pages/Parametres';
 
 // Création du client React Query pour la gestion d'état serveur
 const queryClient = new QueryClient({
@@ -93,7 +104,7 @@ function App() {
                 }
               />
 
-              {/* Module CRM : Liste & Détail Comptes */}
+              {/* Module CRM : Comptes */}
               <Route
                 path="accounts"
                 element={
@@ -103,10 +114,104 @@ function App() {
                 }
               />
               <Route
+                path="accounts/new"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'commercial']}>
+                    <AccountForm />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="accounts/:id"
                 element={
                   <ProtectedRoute allowedRoles={['directeur', 'admin', 'commercial']}>
                     <AccountDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="accounts/:id/edit"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'commercial']}>
+                    <AccountForm />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Module CRM : Contacts */}
+              <Route
+                path="contacts"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'commercial']}>
+                    <ContactList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="contacts/new"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'commercial']}>
+                    <ContactForm />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="contacts/:id/edit"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'commercial']}>
+                    <ContactForm />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Module CRM : Leads */}
+              <Route
+                path="leads"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'commercial']}>
+                    <LeadList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="leads/new"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'commercial']}>
+                    <LeadForm />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="leads/:id/edit"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'commercial']}>
+                    <LeadForm />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Module CRM : Opportunités */}
+              <Route
+                path="opportunities"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'commercial']}>
+                    <OpportunityList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="opportunities/new"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'commercial']}>
+                    <OpportunityForm />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="opportunities/:id/edit"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'commercial']}>
+                    <OpportunityForm />
                   </ProtectedRoute>
                 }
               />
@@ -228,6 +333,46 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+
+              {/* Module Trésorerie */}
+              <Route
+                path="tresorerie"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'super_admin', 'finance']}>
+                    <Tresorerie />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Module Situations de travaux */}
+              <Route
+                path="situations"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'super_admin', 'finance']}>
+                    <Situations />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Module Pointage journalier */}
+              <Route
+                path="pointage"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'super_admin', 'chef_chantier']}>
+                    <PointageJournalier />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Module Paramètres */}
+              <Route
+                path="parametres"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'super_admin']}>
+                    <Parametres />
+                  </ProtectedRoute>
+                }
+              />
             </Route>
 
             {/* Redirection Racine vers le hub de Dashboard */}
@@ -247,7 +392,7 @@ function App() {
                     </div>
                     <h2 className="text-xl font-bold text-slate-900 mb-2">Accès Non Autorisé</h2>
                     <p className="text-slate-500 text-sm mb-6">Votre rôle actuel ne vous donne pas accès à cette section.</p>
-                    <a href="/login" className="py-2.5 px-6 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold shadow-md transition-all">
+                    <a href="/login" className="py-2.5 px-6 rounded-xl bg-[#C85A2A] hover:bg-[#A8481F] text-white text-sm font-bold transition-all">
                       Retour à la connexion
                     </a>
                   </div>

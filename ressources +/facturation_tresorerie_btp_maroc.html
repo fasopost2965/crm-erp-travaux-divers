@@ -1,0 +1,467 @@
+
+<h2 class="sr-only">Module double : situation de travaux et trésorerie pour entreprise BTP marocaine — deux écrans interactifs avec tableau de bord financier</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.screens{display:flex;flex-direction:column;gap:0}
+
+.screen-toggle{display:flex;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;margin-bottom:14px}
+.stog{flex:1;padding:9px 0;text-align:center;font-size:12px;font-weight:500;cursor:pointer;color:var(--color-text-secondary);background:var(--color-background-primary);transition:all .15s}
+.stog.on{background:#1C1C1C;color:#fff}
+
+.screen{display:none}
+.screen.on{display:block}
+
+.topbar{background:#1C1C1C;border-radius:var(--border-radius-lg) var(--border-radius-lg) 0 0;padding:12px 18px;display:flex;align-items:center;gap:10px}
+.topbar-title{font-size:14px;font-weight:500;color:#fff;flex:1}
+.topbar-meta{font-size:11px;color:rgba(255,255,255,.4)}
+.btn-orange{background:#C85A2A;color:#fff;border:none;padding:6px 13px;border-radius:var(--border-radius-md);font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:5px}
+.btn-ghost{background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:none;padding:6px 11px;border-radius:var(--border-radius-md);font-size:12px;cursor:pointer;display:flex;align-items:center;gap:5px}
+
+.body-wrap{background:var(--color-background-tertiary);border:0.5px solid var(--color-border-tertiary);border-top:none;border-radius:0 0 var(--border-radius-lg) var(--border-radius-lg);padding:16px}
+
+.kpi4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.kpi{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:11px 13px}
+.kpi-l{font-size:11px;color:var(--color-text-secondary);margin-bottom:4px}
+.kpi-v{font-size:20px;font-weight:500;color:var(--color-text-primary);line-height:1}
+.kpi-s{font-size:10px;color:var(--color-text-secondary);margin-top:2px}
+.kpi-accent{border-top:2px solid #C85A2A}
+.kpi-green{border-top:2px solid #2D8A5E}
+.kpi-red{border-top:2px solid #C84242}
+.kpi-blue{border-top:2px solid #2A6CB8}
+
+.panel{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:12px;overflow:hidden}
+.panel-head{padding:11px 14px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:space-between}
+.panel-title{font-size:13px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:6px}
+.panel-title i{color:#C85A2A}
+.link-btn{font-size:11px;color:#C85A2A;cursor:pointer;background:none;border:none;padding:0}
+
+.sit-select{display:flex;gap:6px;padding:11px 14px;border-bottom:0.5px solid var(--color-border-tertiary);flex-wrap:wrap}
+.sit-chip{font-size:11px;padding:4px 10px;border-radius:10px;border:0.5px solid var(--color-border-tertiary);cursor:pointer;color:var(--color-text-secondary);background:var(--color-background-primary)}
+.sit-chip.on{background:#C85A2A;color:#fff;border-color:#C85A2A}
+
+.sit-table{width:100%;font-size:12px;border-collapse:collapse;table-layout:fixed}
+.sit-table th{padding:7px 14px;text-align:left;font-weight:500;font-size:11px;color:var(--color-text-secondary);border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary)}
+.sit-table td{padding:8px 14px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary);vertical-align:middle}
+.sit-table tr:last-child td{border-bottom:none}
+.sit-table tr:hover td{background:var(--color-background-secondary)}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.total-row td{font-weight:500;background:var(--color-background-secondary)}
+
+.badge{font-size:10px;padding:2px 7px;border-radius:8px;white-space:nowrap}
+.b-payee{background:#E8F6EE;color:#1A6B3C}
+.b-attente{background:#FFF3E0;color:#8A5000}
+.b-retard{background:#FBEAEA;color:#A32D2D}
+.b-brouillon{background:#F0F0F0;color:#555}
+
+.sit-recap{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px}
+.recap-block{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px}
+.recap-label{font-size:11px;color:var(--color-text-secondary);margin-bottom:6px}
+.recap-val{font-size:16px;font-weight:500;color:var(--color-text-primary)}
+.recap-sub{font-size:10px;color:var(--color-text-secondary);margin-top:2px}
+
+.progress-wrap{width:100%;height:6px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden;margin-top:6px}
+.progress-fill{height:100%;border-radius:3px}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.flow-row{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:0.5px solid var(--color-border-tertiary);font-size:12px}
+.flow-row:last-child{border-bottom:none}
+.flow-label{color:var(--color-text-secondary);display:flex;align-items:center;gap:6px}
+.flow-label i{font-size:13px}
+.flow-in{color:#1A6B3C;font-weight:500}
+.flow-out{color:#A32D2D;font-weight:500}
+.flow-date{font-size:10px;color:var(--color-text-secondary);margin-left:auto;padding-left:8px}
+
+.chart-wrap{position:relative;height:200px;padding:0 14px 14px}
+</style>
+
+<div class="screen-toggle">
+  <div class="stog on" onclick="showScreen('situation',this)"><i class="ti ti-report-money" style="font-size:13px;margin-right:4px" aria-hidden="true"></i>Situation de travaux</div>
+  <div class="stog" onclick="showScreen('tresorerie',this)"><i class="ti ti-coins" style="font-size:13px;margin-right:4px" aria-hidden="true"></i>Trésorerie</div>
+</div>
+
+<!-- ===== ÉCRAN 1 : SITUATION DE TRAVAUX ===== -->
+<div class="screen on" id="screen-situation">
+  <div class="topbar">
+    <i class="ti ti-report-money" style="color:#C85A2A;font-size:16px" aria-hidden="true"></i>
+    <span class="topbar-title">Situations de travaux — Résidence Al Fath</span>
+    <span class="topbar-meta">Budget : 2 400 000 MAD</span>
+    <button class="btn-ghost"><i class="ti ti-download" aria-hidden="true"></i> PDF</button>
+    <button class="btn-orange" onclick="sendPrompt('Comment générer une nouvelle situation de travaux mensuelle ?')"><i class="ti ti-plus" aria-hidden="true"></i> Nouvelle situation ↗</button>
+  </div>
+  <div class="body-wrap">
+
+    <div class="kpi4">
+      <div class="kpi kpi-accent">
+        <div class="kpi-l">Budget contractuel</div>
+        <div class="kpi-v">2 400 K</div>
+        <div class="kpi-s">MAD HT</div>
+      </div>
+      <div class="kpi kpi-green">
+        <div class="kpi-l">Déjà facturé</div>
+        <div class="kpi-v">1 584 K</div>
+        <div class="kpi-s">MAD HT · 66%</div>
+      </div>
+      <div class="kpi kpi-blue">
+        <div class="kpi-l">Encaissé</div>
+        <div class="kpi-v">1 244 K</div>
+        <div class="kpi-s">MAD · 78% du facturé</div>
+      </div>
+      <div class="kpi kpi-red">
+        <div class="kpi-l">Reste à facturer</div>
+        <div class="kpi-v">816 K</div>
+        <div class="kpi-s">MAD HT</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title"><i class="ti ti-calendar-stats" aria-hidden="true"></i>Situations mensuelles</div>
+        <button class="link-btn" onclick="sendPrompt('Exporte toutes les situations de travaux de ce chantier en PDF')">Tout exporter ↗</button>
+      </div>
+      <div class="sit-select" id="sit-tabs">
+        <div class="sit-chip on" onclick="setSit(0,this)">Sit. n°4 — Mai</div>
+        <div class="sit-chip" onclick="setSit(1,this)">Sit. n°3 — Avr</div>
+        <div class="sit-chip" onclick="setSit(2,this)">Sit. n°2 — Mar</div>
+        <div class="sit-chip" onclick="setSit(3,this)">Sit. n°1 — Fév</div>
+      </div>
+
+      <table class="sit-table" id="sit-table">
+        <thead><tr>
+          <th style="width:38%">Poste de travaux</th>
+          <th class="num" style="width:14%">Montant HT</th>
+          <th class="num" style="width:12%">Cumul préc.</th>
+          <th class="num" style="width:12%">Ce mois</th>
+          <th class="num" style="width:12%">Cumul</th>
+          <th style="width:12%;text-align:center">Avt.</th>
+        </tr></thead>
+        <tbody id="sit-body"></tbody>
+      </table>
+
+      <div class="sit-recap" id="sit-recap"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title"><i class="ti ti-receipt" aria-hidden="true"></i>Factures émises sur ce chantier</div>
+      </div>
+      <table class="sit-table">
+        <thead><tr>
+          <th style="width:14%">N° facture</th>
+          <th style="width:22%">Objet</th>
+          <th class="num" style="width:16%">Montant HT</th>
+          <th class="num" style="width:16%">TVA 20%</th>
+          <th class="num" style="width:16%">TTC</th>
+          <th style="width:16%;text-align:center">Statut</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>F-2026-047</td><td>Situation n°4 — mai</td><td class="num">288 000</td><td class="num">57 600</td><td class="num">345 600</td><td style="text-align:center"><span class="badge b-attente">En attente</span></td></tr>
+          <tr><td>F-2026-031</td><td>Situation n°3 — avr</td><td class="num">336 000</td><td class="num">67 200</td><td class="num">403 200</td><td style="text-align:center"><span class="badge b-payee">Payée</span></td></tr>
+          <tr><td>F-2026-018</td><td>Situation n°2 — mar</td><td class="num">528 000</td><td class="num">105 600</td><td class="num">633 600</td><td style="text-align:center"><span class="badge b-payee">Payée</span></td></tr>
+          <tr><td>F-2026-005</td><td>Situation n°1 — fév</td><td class="num">432 000</td><td class="num">86 400</td><td class="num">518 400</td><td style="text-align:center"><span class="badge b-retard">Retard</span></td></tr>
+          <tr class="total-row"><td colspan="2">Total</td><td class="num">1 584 000</td><td class="num">316 800</td><td class="num">1 900 800</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ÉCRAN 2 : TRÉSORERIE ===== -->
+<div class="screen" id="screen-tresorerie">
+  <div class="topbar">
+    <i class="ti ti-coins" style="color:#C85A2A;font-size:16px" aria-hidden="true"></i>
+    <span class="topbar-title">Trésorerie — Tous chantiers</span>
+    <span class="topbar-meta">Mai 2026</span>
+    <button class="btn-ghost" onclick="sendPrompt('Comment exporter le tableau de trésorerie en Excel ?')"><i class="ti ti-download" aria-hidden="true"></i> Export ↗</button>
+  </div>
+  <div class="body-wrap">
+
+    <div class="kpi4">
+      <div class="kpi kpi-green">
+        <div class="kpi-l">Solde disponible</div>
+        <div class="kpi-v">486 K</div>
+        <div class="kpi-s">MAD · compte courant</div>
+      </div>
+      <div class="kpi kpi-blue">
+        <div class="kpi-l">Encaissements mai</div>
+        <div class="kpi-v">1 024 K</div>
+        <div class="kpi-s">MAD reçus</div>
+      </div>
+      <div class="kpi kpi-red">
+        <div class="kpi-l">Décaissements mai</div>
+        <div class="kpi-v">738 K</div>
+        <div class="kpi-s">MAD dépensés</div>
+      </div>
+      <div class="kpi kpi-accent">
+        <div class="kpi-l">Créances en cours</div>
+        <div class="kpi-v">922 K</div>
+        <div class="kpi-s">MAD à encaisser</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title"><i class="ti ti-chart-bar" aria-hidden="true"></i>Flux de trésorerie — 6 mois</div>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="fluxChart" role="img" aria-label="Graphique des flux de trésorerie mensuels entrées et sorties de décembre 2025 à mai 2026">Entrées : Déc 680K, Jan 520K, Fév 890K, Mar 1100K, Avr 950K, Mai 1024K. Sorties : Déc 490K, Jan 610K, Fév 720K, Mar 680K, Avr 800K, Mai 738K.</canvas>
+        </div>
+        <div style="display:flex;gap:16px;padding:0 14px 12px;font-size:11px;color:var(--color-text-secondary)">
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#2D8A5E;display:inline-block"></span>Encaissements</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#C85A2A;display:inline-block"></span>Décaissements</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title"><i class="ti ti-alert-circle" aria-hidden="true"></i>Créances impayées</div>
+        </div>
+        <table class="sit-table" style="font-size:11px">
+          <thead><tr>
+            <th style="width:30%">Client</th>
+            <th class="num" style="width:25%">Montant TTC</th>
+            <th style="width:20%;text-align:center">Retard</th>
+            <th style="width:25%;text-align:center">Statut</th>
+          </tr></thead>
+          <tbody>
+            <tr><td>Immocap SA</td><td class="num">518 400</td><td style="text-align:center;color:#A32D2D">+62 j</td><td style="text-align:center"><span class="badge b-retard">Retard</span></td></tr>
+            <tr><td>Atlas Hotels</td><td class="num">250 000</td><td style="text-align:center;color:#8A5000">+18 j</td><td style="text-align:center"><span class="badge b-attente">Relancé</span></td></tr>
+            <tr><td>LogiMaroc</td><td class="num">153 600</td><td style="text-align:center;color:var(--color-text-secondary)">+5 j</td><td style="text-align:center"><span class="badge b-attente">En attente</span></td></tr>
+            <tr class="total-row"><td colspan="2">Total créances</td><td colspan="2" style="text-align:right;padding-right:14px">922 000 MAD</td></tr>
+          </tbody>
+        </table>
+        <div style="padding:10px 14px">
+          <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:5px">Taux de recouvrement</div>
+          <div class="progress-wrap"><div class="progress-fill" style="width:78%;background:#2D8A5E"></div></div>
+          <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:10px;color:var(--color-text-secondary)"><span>0%</span><span style="color:#1A6B3C;font-weight:500">78%</span><span>100%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title"><i class="ti ti-list" aria-hidden="true"></i>Derniers mouvements</div>
+        <button class="link-btn" onclick="sendPrompt('Montre-moi tous les mouvements de trésorerie filtrés par chantier')">Filtrer par chantier ↗</button>
+      </div>
+      <div class="flow-row">
+        <span class="flow-label"><i class="ti ti-arrow-down-circle" style="color:#2D8A5E" aria-hidden="true"></i>Encaissement — Groupe Éducatif AL (F-2026-031)</span>
+        <span class="flow-in">+403 200</span>
+        <span class="flow-date">22 mai</span>
+      </div>
+      <div class="flow-row">
+        <span class="flow-label"><i class="ti ti-arrow-up-circle" style="color:#C84242" aria-hidden="true"></i>Paie ouvriers — mai 2026</span>
+        <span class="flow-out">-187 400</span>
+        <span class="flow-date">20 mai</span>
+      </div>
+      <div class="flow-row">
+        <span class="flow-label"><i class="ti ti-arrow-up-circle" style="color:#C84242" aria-hidden="true"></i>Achat matériaux — Méta-Acier (BC-041)</span>
+        <span class="flow-out">-94 200</span>
+        <span class="flow-date">18 mai</span>
+      </div>
+      <div class="flow-row">
+        <span class="flow-label"><i class="ti ti-arrow-down-circle" style="color:#2D8A5E" aria-hidden="true"></i>Encaissement — M. Idrissi (F-2026-018)</span>
+        <span class="flow-in">+633 600</span>
+        <span class="flow-date">15 mai</span>
+      </div>
+      <div class="flow-row">
+        <span class="flow-label"><i class="ti ti-arrow-up-circle" style="color:#C84242" aria-hidden="true"></i>Location engins — Matéraloc</span>
+        <span class="flow-out">-48 000</span>
+        <span class="flow-date">12 mai</span>
+      </div>
+      <div class="flow-row">
+        <span class="flow-label"><i class="ti ti-arrow-up-circle" style="color:#C84242" aria-hidden="true"></i>CNSS — cotisations avril</span>
+        <span class="flow-out">-62 800</span>
+        <span class="flow-date">10 mai</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title"><i class="ti ti-chart-area" aria-hidden="true"></i>Prévision de trésorerie — juin à août 2026</div>
+      </div>
+      <div class="chart-wrap" style="height:160px">
+        <canvas id="prevChart" role="img" aria-label="Graphique de prévision de trésorerie de juin à août 2026 avec solde estimé">Solde estimé : juin 580K, juillet 710K, août 640K MAD.</canvas>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+function showScreen(id, el){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.stog').forEach(s=>s.classList.remove('on'));
+  document.getElementById('screen-'+id).classList.add('on');
+  el.classList.add('on');
+  if(id==='tresorerie' && !window.chartsDrawn){
+    setTimeout(drawCharts,50);
+    window.chartsDrawn=true;
+  }
+}
+
+const situations=[
+  {
+    label:'Situation n°4 — Mai 2026',
+    statut:'b-attente',statutLabel:'En attente',
+    postes:[
+      {nom:'Installation de chantier',total:120000,prev:100,ce:0},
+      {nom:'Terrassement & fouilles',total:180000,prev:100,ce:0},
+      {nom:'Fondations & béton armé',total:480000,prev:85,ce:5},
+      {nom:'Maçonnerie élévation',total:600000,prev:60,ce:12},
+      {nom:'Planchers & dalles',total:420000,prev:40,ce:15},
+      {nom:'Enduits & revêtements',total:360000,prev:10,ce:8},
+      {nom:'Menuiseries',total:240000,prev:0,ce:0},
+    ]
+  },
+  {
+    label:'Situation n°3 — Avril 2026',
+    statut:'b-payee',statutLabel:'Payée',
+    postes:[
+      {nom:'Installation de chantier',total:120000,prev:100,ce:0},
+      {nom:'Terrassement & fouilles',total:180000,prev:100,ce:0},
+      {nom:'Fondations & béton armé',total:480000,prev:72,ce:13},
+      {nom:'Maçonnerie élévation',total:600000,prev:38,ce:22},
+      {nom:'Planchers & dalles',total:420000,prev:15,ce:25},
+      {nom:'Enduits & revêtements',total:360000,prev:0,ce:10},
+      {nom:'Menuiseries',total:240000,prev:0,ce:0},
+    ]
+  },
+  {
+    label:'Situation n°2 — Mars 2026',
+    statut:'b-payee',statutLabel:'Payée',
+    postes:[
+      {nom:'Installation de chantier',total:120000,prev:100,ce:0},
+      {nom:'Terrassement & fouilles',total:180000,prev:100,ce:0},
+      {nom:'Fondations & béton armé',total:480000,prev:55,ce:17},
+      {nom:'Maçonnerie élévation',total:600000,prev:12,ce:26},
+      {nom:'Planchers & dalles',total:420000,prev:0,ce:15},
+      {nom:'Enduits & revêtements',total:360000,prev:0,ce:0},
+      {nom:'Menuiseries',total:240000,prev:0,ce:0},
+    ]
+  },
+  {
+    label:'Situation n°1 — Février 2026',
+    statut:'b-retard',statutLabel:'Retard paiement',
+    postes:[
+      {nom:'Installation de chantier',total:120000,prev:80,ce:20},
+      {nom:'Terrassement & fouilles',total:180000,prev:60,ce:40},
+      {nom:'Fondations & béton armé',total:480000,prev:0,ce:38},
+      {nom:'Maçonnerie élévation',total:600000,prev:0,ce:12},
+      {nom:'Planchers & dalles',total:420000,prev:0,ce:0},
+      {nom:'Enduits & revêtements',total:360000,prev:0,ce:0},
+      {nom:'Menuiseries',total:240000,prev:0,ce:0},
+    ]
+  }
+];
+
+let currentSit=0;
+function setSit(i,el){
+  currentSit=i;
+  document.querySelectorAll('.sit-chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  renderSit();
+}
+
+function renderSit(){
+  const s=situations[currentSit];
+  const body=document.getElementById('sit-body');
+  let totalHT=0,totalCePct=0,totalPrevPct=0,totalBudget=0;
+  body.innerHTML=s.postes.map(p=>{
+    const cumPrev=p.prev;
+    const cumCe=Math.min(p.prev+p.ce,100);
+    const montantPrev=Math.round(p.total*cumPrev/100);
+    const montantCe=Math.round(p.total*(p.ce)/100);
+    const montantCum=Math.round(p.total*cumCe/100);
+    totalHT+=montantCe;
+    totalBudget+=p.total;
+    const color=cumCe>=80?'#2D8A5E':cumCe>=40?'#C85A2A':'#888';
+    return `<tr>
+      <td>${p.nom}</td>
+      <td class="num">${p.total.toLocaleString('fr-MA')}</td>
+      <td class="num">${cumPrev}%</td>
+      <td class="num">${p.ce}%</td>
+      <td class="num">${cumCe}%</td>
+      <td style="text-align:center;padding:8px 14px">
+        <div style="width:100%;height:5px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden">
+          <div style="width:${cumCe}%;height:100%;background:${color};border-radius:3px"></div>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  const tva=Math.round(totalHT*0.2);
+  const ttc=totalHT+tva;
+  const ret=Math.round(ttc*0.1);
+  const net=ttc-ret;
+  const cumTotal=Math.round(totalBudget*0.66);
+
+  document.getElementById('sit-recap').innerHTML=`
+    <div class="recap-block">
+      <div class="recap-label">Montant HT ce mois</div>
+      <div class="recap-val">${totalHT.toLocaleString('fr-MA')} MAD</div>
+      <div class="recap-sub">TVA 20% : ${tva.toLocaleString('fr-MA')} MAD</div>
+      <div class="recap-sub" style="font-weight:500;color:var(--color-text-primary);margin-top:2px">TTC : ${ttc.toLocaleString('fr-MA')} MAD</div>
+    </div>
+    <div class="recap-block">
+      <div class="recap-label">Après retenue de garantie (10%)</div>
+      <div class="recap-val" style="color:#2D8A5E">${net.toLocaleString('fr-MA')} MAD</div>
+      <div class="recap-sub">Retenue : ${ret.toLocaleString('fr-MA')} MAD</div>
+      <div style="margin-top:8px">
+        <div style="font-size:10px;color:var(--color-text-secondary);margin-bottom:4px">Avancement global cumulé</div>
+        <div class="progress-wrap"><div class="progress-fill" style="width:66%;background:#C85A2A"></div></div>
+        <div style="font-size:10px;color:#993C1D;text-align:right;margin-top:2px">66% du budget</div>
+      </div>
+    </div>`;
+}
+
+function drawCharts(){
+  const labels=['Déc','Jan','Fév','Mar','Avr','Mai'];
+  const entrees=[680,520,890,1100,950,1024];
+  const sorties=[490,610,720,680,800,738];
+  new Chart(document.getElementById('fluxChart'),{
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        {label:'Encaissements',data:entrees,backgroundColor:'#2D8A5E',borderRadius:3,borderSkipped:false},
+        {label:'Décaissements',data:sorties,backgroundColor:'#C85A2A',borderRadius:3,borderSkipped:false}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>c.dataset.label+' : '+c.parsed.y+' K MAD'}}},
+      scales:{
+        x:{grid:{display:false},ticks:{font:{size:11},color:'#888',autoSkip:false}},
+        y:{grid:{color:'rgba(128,128,128,0.12)'},ticks:{font:{size:11},color:'#888',callback:v=>v+'K'}}
+      }
+    }
+  });
+
+  const soldes=[486,580,710,640];
+  new Chart(document.getElementById('prevChart'),{
+    type:'line',
+    data:{
+      labels:['Mai (réel)','Juin (prev.)','Juil. (prev.)','Août (prev.)'],
+      datasets:[{
+        label:'Solde estimé',data:soldes,
+        borderColor:'#2A6CB8',backgroundColor:'rgba(42,108,184,0.08)',
+        borderWidth:2,pointRadius:4,pointBackgroundColor:'#2A6CB8',fill:true,tension:0.3,
+        borderDash:[0],pointStyle:'circle'
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>c.parsed.y+' K MAD'}}},
+      scales:{
+        x:{grid:{display:false},ticks:{font:{size:11},color:'#888',autoSkip:false}},
+        y:{grid:{color:'rgba(128,128,128,0.12)'},ticks:{font:{size:11},color:'#888',callback:v=>v+'K'}}
+      }
+    }
+  });
+}
+
+renderSit();
+</script>
