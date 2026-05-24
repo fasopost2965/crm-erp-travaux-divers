@@ -59,11 +59,11 @@ const ReceptionPV = () => {
   });
 
   const totalHours = workLogs.reduce((s, l) => s + (l.hoursWorked || 0), 0);
-  const tasksCompleted = tasks.filter(t => t.status === 'TerminÃ©').length;
+  const tasksCompleted = tasks.filter(t => t.status === 'Terminé').length;
 
   const handleSaveSignatures = async () => {
     if (!clientName.trim()) {
-      showToast('Veuillez saisir le nom du reprÃ©sentant client.', 'error');
+      showToast('Veuillez saisir le nom du représentant client.', 'error');
       return;
     }
     if (clientPadRef.current?.isEmpty() && managerPadRef.current?.isEmpty()) {
@@ -100,7 +100,7 @@ const ReceptionPV = () => {
 
     try {
       await Promise.all(promises);
-      showToast('Signatures enregistrÃ©es avec succÃ¨s !');
+      showToast('Signatures enregistrées avec succès !');
       queryClient.invalidateQueries(['projectSignaturesPV', projectId]);
       refetchSignatures();
       clientPadRef.current?.clear();
@@ -121,13 +121,13 @@ const ReceptionPV = () => {
       a.click();
       URL.revokeObjectURL(url);
     } catch {
-      showToast('Erreur lors de la gÃ©nÃ©ration du PDF.', 'error');
+      showToast('Erreur lors de la génération du PDF.', 'error');
     } finally {
       setPdfLoading(false);
     }
   };
 
-  if (isLoading) return <LoadingSpinner fullPage message="Chargement du PV de rÃ©ception..." />;
+  if (isLoading) return <LoadingSpinner fullPage message="Chargement du PV de réception..." />;
   if (error) {
     return (
       <div className="p-5 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm">
@@ -139,11 +139,11 @@ const ReceptionPV = () => {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <PageHeader
-        title="PV de RÃ©ception"
+        title="PV de Réception"
         breadcrumb={[
           { label: 'Chantiers', path: '/dashboard/projects' },
           { label: project?.title, path: `/dashboard/projects/${projectId}` },
-          { label: 'PV de RÃ©ception' }
+          { label: 'PV de Réception' }
         ]}
         actions={
           <button
@@ -157,14 +157,14 @@ const ReceptionPV = () => {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>
-                GÃ©nÃ©ration...
+                Génération...
               </>
             ) : (
               <>
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
-                TÃ©lÃ©charger PDF
+                Télécharger PDF
               </>
             )}
           </button>
@@ -176,11 +176,11 @@ const ReceptionPV = () => {
         <h3 className="text-sm font-bold text-slate-900 mb-3">Informations du chantier</h3>
         <div className="grid grid-cols-2 gap-y-2 text-sm">
           <div><span className="text-slate-400">Projet :</span> <span className="font-semibold text-slate-800">{project?.title}</span></div>
-          <div><span className="text-slate-400">Client :</span> <span className="font-semibold text-slate-800">{project?.account?.name || 'â€”'}</span></div>
-          <div><span className="text-slate-400">Chef :</span> <span className="font-semibold text-slate-800">{project?.manager?.name || 'â€”'}</span></div>
+          <div><span className="text-slate-400">Client :</span> <span className="font-semibold text-slate-800">{project?.account?.name || '"”'}</span></div>
+          <div><span className="text-slate-400">Chef :</span> <span className="font-semibold text-slate-800">{project?.manager?.name || '"”'}</span></div>
           <div><span className="text-slate-400">Statut :</span> <StatusBadge status={project?.status} /></div>
-          <div><span className="text-slate-400">Ville :</span> <span className="font-semibold text-slate-800">{project?.city || 'â€”'}</span></div>
-          <div><span className="text-slate-400">Budget :</span> <span className="font-semibold text-slate-800">{project?.budget ? `${Number(project.budget).toLocaleString('fr-MA')} DH` : 'â€”'}</span></div>
+          <div><span className="text-slate-400">Ville :</span> <span className="font-semibold text-slate-800">{project?.city || '"”'}</span></div>
+          <div><span className="text-slate-400">Budget :</span> <span className="font-semibold text-slate-800">{project?.budget ? `${Number(project.budget).toLocaleString('fr-MA')} DH` : '"”'}</span></div>
         </div>
       </div>
 
@@ -188,37 +188,37 @@ const ReceptionPV = () => {
       <div className="grid grid-cols-3 gap-4">
         <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm text-center">
           <p className="text-3xl font-black text-emerald-600">{tasksCompleted}</p>
-          <p className="text-xs font-semibold text-slate-500 mt-1 uppercase tracking-wide">TÃ¢ches terminÃ©es</p>
+          <p className="text-xs font-semibold text-slate-500 mt-1 uppercase tracking-wide">Tâches terminées</p>
         </div>
         <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm text-center">
-          <p className="text-3xl font-black text-blue-600">{tasks.length}</p>
-          <p className="text-xs font-semibold text-slate-500 mt-1 uppercase tracking-wide">TÃ¢ches totales</p>
+          <p className="text-3xl font-black text-[#C85A2A]">{tasks.length}</p>
+          <p className="text-xs font-semibold text-slate-500 mt-1 uppercase tracking-wide">Tâches totales</p>
         </div>
         <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm text-center">
           <p className="text-3xl font-black text-slate-800">{totalHours.toFixed(1)}h</p>
-          <p className="text-xs font-semibold text-slate-500 mt-1 uppercase tracking-wide">Heures pointÃ©es</p>
+          <p className="text-xs font-semibold text-slate-500 mt-1 uppercase tracking-wide">Heures pointées</p>
         </div>
       </div>
 
       {/* Completed tasks */}
-      {tasks.filter(t => t.status === 'TerminÃ©').length > 0 && (
+      {tasks.filter(t => t.status === 'Terminé').length > 0 && (
         <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
           <div className="px-5 py-4 border-b border-slate-100">
-            <h3 className="text-sm font-bold text-slate-900">TÃ¢ches rÃ©ceptionnÃ©es</h3>
+            <h3 className="text-sm font-bold text-slate-900">Tâches réceptionnées</h3>
           </div>
           <table className="w-full text-sm">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
-                <th className="px-5 py-3 text-left text-[11px] font-bold text-slate-400 uppercase tracking-wide">TÃ¢che</th>
-                <th className="px-5 py-3 text-left text-[11px] font-bold text-slate-400 uppercase tracking-wide">PrioritÃ©</th>
+                <th className="px-5 py-3 text-left text-[11px] font-bold text-slate-400 uppercase tracking-wide">Tâche</th>
+                <th className="px-5 py-3 text-left text-[11px] font-bold text-slate-400 uppercase tracking-wide">Priorité</th>
                 <th className="px-5 py-3 text-left text-[11px] font-bold text-slate-400 uppercase tracking-wide">Statut</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {tasks.filter(t => t.status === 'TerminÃ©').map(t => (
+              {tasks.filter(t => t.status === 'Terminé').map(t => (
                 <tr key={t.id}>
                   <td className="px-5 py-3 font-medium text-slate-800">{t.title}</td>
-                  <td className="px-5 py-3 text-slate-500">{t.priority || 'â€”'}</td>
+                  <td className="px-5 py-3 text-slate-500">{t.priority || '"”'}</td>
                   <td className="px-5 py-3"><StatusBadge status={t.status} /></td>
                 </tr>
               ))}
@@ -230,7 +230,7 @@ const ReceptionPV = () => {
       {/* Existing signatures */}
       {signatures.length > 0 && (
         <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5">
-          <h3 className="text-sm font-bold text-emerald-800 mb-3">Signatures enregistrÃ©es ({signatures.length})</h3>
+          <h3 className="text-sm font-bold text-emerald-800 mb-3">Signatures enregistrées ({signatures.length})</h3>
           <div className="grid grid-cols-2 gap-4">
             {signatures.map(sig => (
               <div key={sig.id} className="bg-white rounded-xl p-4 border border-emerald-200">
@@ -252,9 +252,9 @@ const ReceptionPV = () => {
 
         {/* Client signature */}
         <div className="space-y-3 pb-6 border-b border-slate-100">
-          <p className="text-xs font-bold text-slate-700 uppercase tracking-wider">MaÃ®tre d'ouvrage (Client)</p>
+          <p className="text-xs font-bold text-slate-700 uppercase tracking-wider">Maître d'ouvrage (Client)</p>
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-500">Nom du reprÃ©sentant *</label>
+            <label className="text-xs font-semibold text-slate-500">Nom du représentant *</label>
             <input
               type="text"
               placeholder="Nom complet du signataire client"
@@ -265,10 +265,10 @@ const ReceptionPV = () => {
           </div>
           <SignaturePad ref={clientPadRef} label="Signature client" />
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-500">Observations / RÃ©serves</label>
+            <label className="text-xs font-semibold text-slate-500">Observations / Réserves</label>
             <input
               type="text"
-              placeholder="Sans rÃ©serve â€” ou mentionner les rÃ©serves Ã©ventuelles"
+              placeholder="Sans réserve "” ou mentionner les réserves éventuelles"
               value={clientNotes}
               onChange={(e) => setClientNotes(e.target.value)}
               className="block w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#C85A2A]"
@@ -279,9 +279,9 @@ const ReceptionPV = () => {
         {/* Manager signature */}
         <div className="space-y-3">
           <p className="text-xs font-bold text-slate-700 uppercase tracking-wider">Chef de Chantier (BATIPLUS)</p>
-          <div className="px-4 py-3 bg-blue-50 border border-blue-200 rounded-xl">
+          <div className="px-4 py-3 bg-[#FDF0EA] border border-[#FADDCC] rounded-xl">
             <p className="text-sm font-semibold text-blue-800">{project?.manager?.name || 'Chef de Chantier'}</p>
-            <p className="text-xs text-blue-500">Conducteur de travaux â€” BATIPLUS SARL</p>
+            <p className="text-xs text-[#C85A2A]">Conducteur de travaux "” BATIPLUS SARL</p>
           </div>
           <SignaturePad ref={managerPadRef} label="Signature chef de chantier" />
           <div className="space-y-1.5">
@@ -308,7 +308,7 @@ const ReceptionPV = () => {
 
       <button
         onClick={() => navigate(`/dashboard/projects/${projectId}`)}
-        className="text-sm text-slate-500 hover:text-blue-600 font-medium transition-colors"
+        className="text-sm text-slate-500 hover:text-[#C85A2A] font-medium transition-colors"
       >
         â† Retour Ã  la fiche projet
       </button>

@@ -26,7 +26,7 @@ const QuoteForm = () => {
   
   // Prestations State
   const [items, setItems] = useState([
-    { section: 'Gros Å’uvre', description: '', unit: 'mÂ²', quantity: 1, unitPriceHt: 0 }
+    { section: 'Gros Å’uvre', description: '', unit: 'm²', quantity: 1, unitPriceHt: 0 }
   ]);
 
   // Fetch Accounts list
@@ -70,7 +70,7 @@ const QuoteForm = () => {
         setItems(quote.items.map(it => ({
           section: it.section || '',
           description: it.description || '',
-          unit: it.unit || 'mÂ²',
+          unit: it.unit || 'm²',
           quantity: it.quantity || 1,
           unitPriceHt: it.unitPriceHt || 0
         })));
@@ -88,7 +88,7 @@ const QuoteForm = () => {
       }
     },
     onSuccess: () => {
-      showToast(`Devis ${isEdit ? 'mis Ã  jour' : 'crÃ©Ã©'} avec succÃ¨s !`);
+      showToast(`Devis ${isEdit ? 'mis Ã  jour' : 'créé'} avec succès !`);
       queryClient.invalidateQueries(['quotesList']);
       if (isEdit) {
         queryClient.invalidateQueries(['quoteDetail', id]);
@@ -105,7 +105,7 @@ const QuoteForm = () => {
   const handleAddItemRow = () => {
     setItems([
       ...items,
-      { section: items[items.length - 1]?.section || 'Gros Å’uvre', description: '', unit: 'mÂ²', quantity: 1, unitPriceHt: 0 }
+      { section: items[items.length - 1]?.section || 'Gros Å’uvre', description: '', unit: 'm²', quantity: 1, unitPriceHt: 0 }
     ]);
   };
 
@@ -136,11 +136,11 @@ const QuoteForm = () => {
     e.preventDefault();
 
     if (!accountId) {
-      showToast('Veuillez sÃ©lectionner un compte client.', 'error');
+      showToast('Veuillez sélectionner un compte client.', 'error');
       return;
     }
     if (!opportunityId) {
-      showToast('Veuillez sÃ©lectionner une opportunitÃ© associÃ©e.', 'error');
+      showToast('Veuillez sélectionner une opportunité associée.', 'error');
       return;
     }
     if (!title.trim()) {
@@ -151,7 +151,7 @@ const QuoteForm = () => {
     // Validate items
     const invalidItem = items.find(it => !it.description.trim() || it.quantity <= 0 || it.unitPriceHt < 0);
     if (invalidItem) {
-      showToast('Veuillez remplir les descriptions, quantitÃ©s (>0) et prix HT pour toutes les lignes.', 'error');
+      showToast('Veuillez remplir les descriptions, quantités (>0) et prix HT pour toutes les lignes.', 'error');
       return;
     }
 
@@ -200,11 +200,11 @@ const QuoteForm = () => {
   return (
     <div className="space-y-6 font-sans">
       <PageHeader
-        title={isEdit ? `Ã‰dition Devis : ${quoteNumber}` : 'Nouveau Devis Client'}
+        title={isEdit ? `Édition Devis : ${quoteNumber}` : 'Nouveau Devis Client'}
         breadcrumb={[
           { label: 'Ventes' },
           { label: 'Devis', link: '/dashboard/quotes' },
-          { label: isEdit ? 'Ã‰dition' : 'Nouveau' }
+          { label: isEdit ? 'Édition' : 'Nouveau' }
         ]}
       />
 
@@ -212,14 +212,14 @@ const QuoteForm = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Form Fields */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6">
+            <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm space-y-6">
               <h3 className="font-bold text-slate-800 text-xs uppercase tracking-wider pb-3 border-b border-slate-100">
-                Informations GÃ©nÃ©rales
+                Informations Générales
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">NumÃ©ro de devis</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Numéro de devis</label>
                   <input
                     type="text"
                     required
@@ -234,7 +234,7 @@ const QuoteForm = () => {
                   <input
                     type="text"
                     required
-                    placeholder="Ex: RÃ©novation verriÃ¨re et peinture"
+                    placeholder="Ex: Rénovation verrière et peinture"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all"
@@ -254,12 +254,12 @@ const QuoteForm = () => {
                         setOpportunityId(matchedOpp.id);
                       }
                     }}
-                    placeholder="Rechercher et sÃ©lectionner un client..."
+                    placeholder="Rechercher et sélectionner un client..."
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">OpportunitÃ© commerciale associÃ©e</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Opportunité commerciale associée</label>
                   <AutocompleteSelect
                     options={opportunityOptions}
                     value={opportunityId}
@@ -271,14 +271,14 @@ const QuoteForm = () => {
                         setAccountId(matchedOpp.accountId);
                       }
                     }}
-                    placeholder="Rechercher et sÃ©lectionner l'opportunitÃ©..."
+                    placeholder="Rechercher et sélectionner l'opportunité..."
                   />
                 </div>
               </div>
             </div>
 
             {/* Prestation items dynamic table */}
-            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6">
+            <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm space-y-6">
               <div className="flex justify-between items-center pb-3 border-b border-slate-100">
                 <h3 className="font-bold text-slate-800 text-xs uppercase tracking-wider">
                   Lignes de prestation
@@ -286,7 +286,7 @@ const QuoteForm = () => {
                 <button
                   type="button"
                   onClick={handleAddItemRow}
-                  className="py-1.5 px-3 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold text-xs tracking-wide transition-all cursor-pointer flex items-center space-x-1"
+                  className="py-1.5 px-3 rounded-xl bg-[#FDF0EA] hover:bg-blue-100 text-[#C85A2A] font-bold text-xs tracking-wide transition-all cursor-pointer flex items-center space-x-1"
                 >
                   <span>+ Ajouter une ligne</span>
                 </button>
@@ -299,7 +299,7 @@ const QuoteForm = () => {
                       <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Section</label>
                       <input
                         type="text"
-                        placeholder="Ex: MaÃ§onnerie"
+                        placeholder="Ex: Maçonnerie"
                         value={item.section}
                         onChange={(e) => handleItemChange(idx, 'section', e.target.value)}
                         className="block w-full px-3 py-2 rounded-xl bg-white border border-slate-150 text-slate-800 text-xs focus:outline-none focus:ring-1 focus:ring-[#C85A2A] transition-all font-semibold"
@@ -319,7 +319,7 @@ const QuoteForm = () => {
                     </div>
 
                     <div className="w-20 space-y-1">
-                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">UnitÃ©</label>
+                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Unité</label>
                       <input
                         type="text"
                         required
@@ -331,7 +331,7 @@ const QuoteForm = () => {
                     </div>
 
                     <div className="w-24 space-y-1">
-                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">QtÃ©</label>
+                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Qté</label>
                       <input
                         type="number"
                         required
@@ -371,9 +371,9 @@ const QuoteForm = () => {
 
           {/* Sidebar calculations & settings */}
           <div className="space-y-6">
-            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6">
+            <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm space-y-6">
               <h3 className="font-bold text-slate-850 text-xs uppercase tracking-wider pb-3 border-b border-slate-100">
-                ParamÃ¨tres & Totaux
+                Paramètres & Totaux
               </h3>
 
               <div className="space-y-4">
@@ -385,14 +385,14 @@ const QuoteForm = () => {
                     className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all cursor-pointer"
                   >
                     <option value="Brouillon">Brouillon</option>
-                    <option value="EnvoyÃ©">EnvoyÃ©</option>
-                    <option value="AcceptÃ©">AcceptÃ©</option>
-                    <option value="RefusÃ©">RefusÃ©</option>
+                    <option value="Envoyé">Envoyé</option>
+                    <option value="Accepté">Accepté</option>
+                    <option value="Refusé">Refusé</option>
                   </select>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Date de validitÃ©</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Date de validité</label>
                   <input
                     type="date"
                     value={validUntil}
@@ -402,7 +402,7 @@ const QuoteForm = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Marge EstimÃ©e (HT)</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Marge Estimée (HT)</label>
                   <input
                     type="number"
                     min="0"
@@ -428,7 +428,7 @@ const QuoteForm = () => {
               </div>
 
               {/* Instant invoice total card */}
-              <div className="p-5 rounded-2xl bg-blue-50 border border-blue-100 space-y-3.5 text-xs font-semibold text-slate-655">
+              <div className="p-5 rounded-2xl bg-[#FDF0EA] border border-blue-100 space-y-3.5 text-xs font-semibold text-slate-655">
                 <div className="flex justify-between items-center">
                   <span>Sous-total HT</span>
                   <span className="text-slate-850 font-extrabold">{formatCurrency(totalHt)}</span>
@@ -448,9 +448,9 @@ const QuoteForm = () => {
                 <button
                   type="submit"
                   disabled={saveMutation.isLoading}
-                  className="w-full py-3 px-5 rounded-xl bg-[#C85A2A] hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 hover:shadow-blue-500/15 disabled:bg-slate-300 disabled:cursor-not-allowed transition-all cursor-pointer"
+                  className="w-full py-3 px-5 rounded-xl bg-[#C85A2A] hover:bg-[#A8481F] text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 hover:shadow-blue-500/15 disabled:bg-slate-300 disabled:cursor-not-allowed transition-all cursor-pointer"
                 >
-                  {saveMutation.isLoading ? 'Enregistrement...' : isEdit ? 'Enregistrer les modifications' : 'CrÃ©er le Devis'}
+                  {saveMutation.isLoading ? 'Enregistrement...' : isEdit ? 'Enregistrer les modifications' : 'Créer le Devis'}
                 </button>
               </div>
             </div>

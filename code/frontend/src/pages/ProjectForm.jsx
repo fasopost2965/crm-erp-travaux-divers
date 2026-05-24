@@ -22,7 +22,7 @@ const ProjectForm = () => {
   const [description, setDescription] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('Casablanca');
-  const [status, setStatus] = useState('PlanifiÃ©');
+  const [status, setStatus] = useState('Planifié');
   const [budget, setBudget] = useState('0');
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
   const [endDatePlanned, setEndDatePlanned] = useState('');
@@ -73,8 +73,8 @@ const ProjectForm = () => {
       setBudget(String(quote.totalHt || '0'));
       
       const itemsList = quote.items || [];
-      const generatedDesc = `Projet crÃ©Ã© Ã  partir du devis nÂ° ${quote.quoteNumber}.\n\nPrestations prÃ©vues :\n` + 
-        itemsList.map(it => `- [${it.section || 'GÃ©nÃ©ral'}] ${it.description} (${it.quantity} ${it.unit} x ${it.unitPriceHt} DH)`).join('\n');
+      const generatedDesc = `Projet créé Ã  partir du devis n° ${quote.quoteNumber}.\n\nPrestations prévues :\n` + 
+        itemsList.map(it => `- [${it.section || 'Général'}] ${it.description} (${it.quantity} ${it.unit} x ${it.unitPriceHt} DH)`).join('\n');
       setDescription(generatedDesc);
       
       if (quote.account?.address) {
@@ -83,10 +83,10 @@ const ProjectForm = () => {
       if (quote.account?.city) {
         setCity(quote.account.city);
       }
-      showToast('DÃ©tails du devis prÃ©-remplis avec succÃ¨s.');
+      showToast('Détails du devis pré-remplis avec succès.');
     },
     onError: (err) => {
-      showToast(`Impossible de charger le devis de rÃ©fÃ©rence : ${err.message}`, 'error');
+      showToast(`Impossible de charger le devis de référence : ${err.message}`, 'error');
     }
   });
 
@@ -103,7 +103,7 @@ const ProjectForm = () => {
       setDescription(proj.description || '');
       setAddress(proj.address || '');
       setCity(proj.city || 'Casablanca');
-      setStatus(proj.status || 'PlanifiÃ©');
+      setStatus(proj.status || 'Planifié');
       setBudget(String(proj.budget || '0'));
       if (proj.startDate) setStartDate(proj.startDate.split('T')[0]);
       if (proj.endDatePlanned) setEndDatePlanned(proj.endDatePlanned.split('T')[0]);
@@ -113,7 +113,7 @@ const ProjectForm = () => {
       setProjectManagerId(proj.projectManagerId || proj.manager?.id || '');
     },
     onError: (err) => {
-      showToast(`Impossible de charger les dÃ©tails du projet : ${err.message}`, 'error');
+      showToast(`Impossible de charger les détails du projet : ${err.message}`, 'error');
     }
   });
 
@@ -127,7 +127,7 @@ const ProjectForm = () => {
       }
     },
     onSuccess: () => {
-      showToast(`Chantier ${isEdit ? 'mis Ã  jour' : 'crÃ©Ã©'} avec succÃ¨s !`);
+      showToast(`Chantier ${isEdit ? 'mis Ã  jour' : 'créé'} avec succès !`);
       queryClient.invalidateQueries(['projectsList']);
       if (isEdit) {
         queryClient.invalidateQueries(['projectDetail', id]);
@@ -144,11 +144,11 @@ const ProjectForm = () => {
     e.preventDefault();
 
     if (!quoteId) {
-      showToast('Le devis de rÃ©fÃ©rence est obligatoire.', 'error');
+      showToast('Le devis de référence est obligatoire.', 'error');
       return;
     }
     if (!accountId) {
-      showToast('Le compte client associÃ© est obligatoire.', 'error');
+      showToast('Le compte client associé est obligatoire.', 'error');
       return;
     }
     if (!projectManagerId) {
@@ -160,11 +160,11 @@ const ProjectForm = () => {
       return;
     }
     if (!startDate) {
-      showToast('La date de dÃ©marrage est obligatoire.', 'error');
+      showToast('La date de démarrage est obligatoire.', 'error');
       return;
     }
     if (!endDatePlanned) {
-      showToast('La date de fin prÃ©visionnelle est obligatoire.', 'error');
+      showToast('La date de fin prévisionnelle est obligatoire.', 'error');
       return;
     }
 
@@ -193,7 +193,7 @@ const ProjectForm = () => {
   // Map options for selects
   const quoteOptions = (quotesData || []).map(q => ({
     value: q.id,
-    label: `${q.quoteNumber} â€” ${q.title}`
+    label: `${q.quoteNumber} "” ${q.title}`
   }));
 
   const accountOptions = (accountsData || []).map(acc => ({
@@ -218,9 +218,9 @@ const ProjectForm = () => {
       <PageHeader
         title={isEdit ? `Modification Chantier : ${title}` : 'Nouveau Chantier (Projet)'}
         breadcrumb={[
-          { label: 'OpÃ©rations' },
+          { label: 'Opérations' },
           { label: 'Chantiers', link: '/dashboard/projects' },
-          { label: isEdit ? 'Ã‰dition' : 'Nouveau' }
+          { label: isEdit ? 'Édition' : 'Nouveau' }
         ]}
       />
 
@@ -228,7 +228,7 @@ const ProjectForm = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main inputs */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6">
+            <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm space-y-6">
               <h3 className="font-bold text-slate-800 text-xs uppercase tracking-wider pb-3 border-b border-slate-100">
                 Informations du Projet
               </h3>
@@ -249,7 +249,7 @@ const ProjectForm = () => {
                 <div className="space-y-2">
                   <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Descriptif Technique & Plan de charge</label>
                   <textarea
-                    placeholder="Saisir la description des travaux, les jalons clÃ©s ou les contraintes techniques..."
+                    placeholder="Saisir la description des travaux, les jalons clés ou les contraintes techniques..."
                     rows="6"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
@@ -284,14 +284,14 @@ const ProjectForm = () => {
             </div>
 
             {/* Relations */}
-            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6">
+            <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm space-y-6">
               <h3 className="font-bold text-slate-800 text-xs uppercase tracking-wider pb-3 border-b border-slate-100">
                 Liaisons Administratives & Relations
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Devis de rÃ©fÃ©rence (Obligatoire)</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Devis de référence (Obligatoire)</label>
                   <AutocompleteSelect
                     options={quoteOptions}
                     value={quoteId}
@@ -307,27 +307,27 @@ const ProjectForm = () => {
                         }
                       }
                     }}
-                    placeholder="SÃ©lectionner le devis d'origine..."
+                    placeholder="Sélectionner le devis d'origine..."
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Client associÃ© (Compte)</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Client associé (Compte)</label>
                   <AutocompleteSelect
                     options={accountOptions}
                     value={accountId}
                     onChange={setAccountId}
-                    placeholder="SÃ©lectionner le client..."
+                    placeholder="Sélectionner le client..."
                   />
                 </div>
 
                 <div className="space-y-2 sm:col-span-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Conducteur de travaux (Chef de chantier assignÃ©)</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Conducteur de travaux (Chef de chantier assigné)</label>
                   <AutocompleteSelect
                     options={managerOptions}
                     value={projectManagerId}
                     onChange={setProjectManagerId}
-                    placeholder="DÃ©signer le responsable terrain..."
+                    placeholder="Désigner le responsable terrain..."
                   />
                 </div>
               </div>
@@ -336,7 +336,7 @@ const ProjectForm = () => {
 
           {/* Sidebar parameters & dates */}
           <div className="space-y-6">
-            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6">
+            <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm space-y-6">
               <h3 className="font-bold text-slate-850 text-xs uppercase tracking-wider pb-3 border-b border-slate-100">
                 Planification & Statut
               </h3>
@@ -349,15 +349,15 @@ const ProjectForm = () => {
                     onChange={(e) => setStatus(e.target.value)}
                     className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all cursor-pointer font-bold"
                   >
-                    <option value="Ã€ commencer">Ã€ commencer</option>
+                    <option value="À commencer">À commencer</option>
                     <option value="En cours">En cours</option>
                     <option value="Suspendu">Suspendu</option>
-                    <option value="TerminÃ©">TerminÃ©</option>
+                    <option value="Terminé">Terminé</option>
                   </select>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Enveloppe budgÃ©taire (HT)</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Enveloppe budgétaire (HT)</label>
                   <div className="relative">
                     <input
                       type="number"
@@ -383,7 +383,7 @@ const ProjectForm = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Ã‰chÃ©ance de rÃ©ception planifiÃ©e</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Échéance de réception planifiée</label>
                   <input
                     type="date"
                     required
@@ -395,7 +395,7 @@ const ProjectForm = () => {
 
                 {isEdit && (
                   <div className="space-y-2">
-                    <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Date de rÃ©ception dÃ©finitive (Effective)</label>
+                    <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Date de réception définitive (Effective)</label>
                     <input
                       type="date"
                       value={endDateActual}
@@ -417,7 +417,7 @@ const ProjectForm = () => {
                 <button
                   type="submit"
                   disabled={saveMutation.isLoading}
-                  className="w-full py-3 px-5 rounded-xl bg-[#C85A2A] hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 transition-all cursor-pointer"
+                  className="w-full py-3 px-5 rounded-xl bg-[#C85A2A] hover:bg-[#A8481F] text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 transition-all cursor-pointer"
                 >
                   {saveMutation.isLoading ? 'Enregistrement...' : isEdit ? 'Sauvegarder les modifications' : 'Lancer le Chantier'}
                 </button>

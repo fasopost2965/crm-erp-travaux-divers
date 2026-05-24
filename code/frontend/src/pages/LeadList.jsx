@@ -31,7 +31,7 @@ const LeadList = () => {
   const deleteMutation = useMutation({
     mutationFn: async (id) => { await api.delete(`/api/leads/${id}`); },
     onSuccess: () => {
-      showToast('Lead supprimÃ©.');
+      showToast('Lead supprimé.');
       queryClient.invalidateQueries(['leadsList']);
       setIsDeleteOpen(false);
     },
@@ -39,7 +39,7 @@ const LeadList = () => {
   });
 
   if (isLoading) return <LoadingSpinner fullPage message="Chargement des leads..." />;
-  if (error) return <div className="p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700 font-medium">âš ï¸ Erreur : {error.message}</div>;
+  if (error) return <div className="p-6 bg-red-50 border border-red-200 rounded-xl text-red-700 font-medium">âš ï¸ Erreur : {error.message}</div>;
 
   const rawData = responseData?.data || [];
   const meta = responseData?.meta || { current_page: 1, last_page: 1, per_page: 10, total: rawData.length };
@@ -65,14 +65,14 @@ const LeadList = () => {
     {
       header: 'Contact',
       accessor: 'contactName',
-      cell: (row) => <span className="text-xs text-slate-600">{row.contactName || 'â€”'}</span>,
+      cell: (row) => <span className="text-xs text-slate-600">{row.contactName || '"”'}</span>,
     },
     {
       header: 'Source',
       accessor: 'source',
       cell: (row) => (
         <span className="text-xs font-semibold text-slate-600 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-100">
-          {row.source || 'â€”'}
+          {row.source || '"”'}
         </span>
       ),
     },
@@ -89,7 +89,7 @@ const LeadList = () => {
           <button
             onClick={(e) => { e.stopPropagation(); navigate(`/dashboard/leads/${row.id}/edit`); }}
             className="p-1.5 rounded-lg border border-slate-100 hover:bg-slate-50 text-slate-500 cursor-pointer transition-colors"
-            title="Ã‰diter"
+            title="Éditer"
           >âœï¸</button>
           <button
             onClick={(e) => { e.stopPropagation(); setDeleteTarget(row); setIsDeleteOpen(true); }}
@@ -109,7 +109,7 @@ const LeadList = () => {
         actions={
           <button
             onClick={() => navigate('/dashboard/leads/new')}
-            className="py-2.5 px-5 rounded-xl bg-[#C85A2A] hover:bg-blue-500 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 transition-all cursor-pointer flex items-center space-x-2"
+            className="py-2.5 px-5 rounded-xl bg-[#C85A2A] hover:bg-[#FDF0EA]0 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 transition-all cursor-pointer flex items-center space-x-2"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -119,7 +119,7 @@ const LeadList = () => {
         }
       />
 
-      <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm flex flex-col md:flex-row gap-4">
+      <div className="bg-white border border-slate-100 rounded-xl p-5 shadow-sm flex flex-col md:flex-row gap-4">
         <div className="flex-1 relative">
           <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
             <svg className="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -142,14 +142,14 @@ const LeadList = () => {
           >
             <option value="">Tous les Statuts</option>
             <option value="Nouveau">Nouveau</option>
-            <option value="ContactÃ©">ContactÃ©</option>
-            <option value="QualifiÃ©">QualifiÃ©</option>
+            <option value="Contacté">Contacté</option>
+            <option value="Qualifié">Qualifié</option>
             <option value="Perdu">Perdu</option>
           </select>
         </div>
         {(search || statusFilter) && (
-          <button onClick={() => { setSearch(''); setStatusFilter(''); }} className="text-xs font-bold text-slate-500 hover:text-blue-500 cursor-pointer py-2.5 transition-colors">
-            RÃ©initialiser
+          <button onClick={() => { setSearch(''); setStatusFilter(''); }} className="text-xs font-bold text-slate-500 hover:text-[#C85A2A] cursor-pointer py-2.5 transition-colors">
+            Réinitialiser
           </button>
         )}
       </div>
@@ -157,8 +157,8 @@ const LeadList = () => {
       <DataTable
         columns={columns}
         data={filtered}
-        emptyTitle="Aucun lead trouvÃ©"
-        emptyDescription="CrÃ©ez votre premier lead commercial."
+        emptyTitle="Aucun lead trouvé"
+        emptyDescription="Créez votre premier lead commercial."
         paginationMeta={{ currentPage: meta.current_page, lastPage: meta.last_page, perPage: meta.per_page, total: meta.total }}
         onPageChange={(p) => setPage(p)}
       />
@@ -166,7 +166,7 @@ const LeadList = () => {
       <ConfirmDialog
         isOpen={isDeleteOpen}
         title="Supprimer le lead ?"
-        message={`Supprimer dÃ©finitivement le lead "${deleteTarget?.title}" ?`}
+        message={`Supprimer définitivement le lead "${deleteTarget?.title}" ?`}
         confirmText="Supprimer"
         cancelText="Annuler"
         type="danger"

@@ -11,7 +11,7 @@ const AccountDetail = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
 
-  // RÃ©cupÃ©rer le compte client dÃ©taillÃ© via React Query depuis l'API Laravel
+  // Récupérer le compte client détaillé via React Query depuis l'API Laravel
   const { data: account, isLoading, error } = useQuery({
     queryKey: ['accountDetail', id],
     queryFn: async () => {
@@ -27,13 +27,13 @@ const AccountDetail = () => {
 
   if (error) {
     return (
-      <div className="p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700 font-medium">
-        âš ï¸ Erreur lors de la rÃ©cupÃ©ration de la fiche client : {error.message}.
+      <div className="p-6 bg-red-50 border border-red-200 rounded-xl text-red-700 font-medium">
+        âš ï¸ Erreur lors de la récupération de la fiche client : {error.message}.
       </div>
     );
   }
 
-  // Formatage des montants monÃ©taires en Dirhams marocains (DH)
+  // Formatage des montants monétaires en Dirhams marocains (DH)
   const formatCurrency = (val) => {
     return new Intl.NumberFormat('fr-MA', { style: 'currency', currency: 'MAD', maximumFractionDigits: 0 })
       .format(val)
@@ -50,13 +50,13 @@ const AccountDetail = () => {
         title={acc.name || "Fiche Client"} 
         breadcrumb={[
           { label: "CRM", path: "/dashboard/accounts" }, 
-          { label: "DÃ©tails du Client" }
+          { label: "Détails du Client" }
         ]}
         actions={
           <div className="flex items-center space-x-2">
             <button
               onClick={() => navigate(`/dashboard/accounts/${id}/edit`)}
-              className="py-2.5 px-4 rounded-xl bg-[#C85A2A] hover:bg-blue-500 text-white font-bold text-xs cursor-pointer transition-all flex items-center space-x-2 shadow-md shadow-blue-900/10"
+              className="py-2.5 px-4 rounded-xl bg-[#C85A2A] hover:bg-[#FDF0EA]0 text-white font-bold text-xs cursor-pointer transition-all flex items-center space-x-2 shadow-md shadow-blue-900/10"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -77,9 +77,9 @@ const AccountDetail = () => {
       />
 
       {/* 360 Client Header Summary Card */}
-      <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+      <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
         <div className="flex items-start space-x-4">
-          <div className="w-16 h-16 rounded-2xl bg-[#C85A2A]/10 text-blue-600 flex items-center justify-center font-black text-2xl shadow-inner shrink-0">
+          <div className="w-16 h-16 rounded-2xl bg-[#C85A2A]/10 text-[#C85A2A] flex items-center justify-center font-black text-2xl shadow-inner shrink-0">
             {acc.name?.charAt(0)}
           </div>
           <div className="space-y-1">
@@ -91,12 +91,12 @@ const AccountDetail = () => {
             </p>
             <div className="flex flex-wrap gap-3 pt-1 text-[11px] font-bold text-slate-500">
               {acc.email && (
-                <a href={`mailto:${acc.email}`} className="hover:text-blue-500 flex items-center space-x-1">
+                <a href={`mailto:${acc.email}`} className="hover:text-[#C85A2A] flex items-center space-x-1">
                   <span>âœ‰ï¸</span> <span className="underline">{acc.email}</span>
                 </a>
               )}
               {acc.phone && (
-                <a href={`tel:${acc.phone}`} className="hover:text-blue-500 flex items-center space-x-1">
+                <a href={`tel:${acc.phone}`} className="hover:text-[#C85A2A] flex items-center space-x-1">
                   <span>ðŸ“ž</span> <span>{acc.phone}</span>
                 </a>
               )}
@@ -108,19 +108,19 @@ const AccountDetail = () => {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 px-6 py-4 rounded-2xl bg-slate-50/50 border border-slate-100/50">
           <div>
             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">ICE</p>
-            <p className="text-xs font-black text-slate-800 mt-0.5">{acc.ice || 'Non spÃ©cifiÃ©'}</p>
+            <p className="text-xs font-black text-slate-800 mt-0.5">{acc.ice || 'Non spécifié'}</p>
           </div>
           <div>
             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">RC</p>
-            <p className="text-xs font-black text-slate-800 mt-0.5">{acc.rc || 'Non spÃ©cifiÃ©'}</p>
+            <p className="text-xs font-black text-slate-800 mt-0.5">{acc.rc || 'Non spécifié'}</p>
           </div>
           <div>
             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Patente</p>
-            <p className="text-xs font-black text-slate-800 mt-0.5">{acc.patente || 'Non spÃ©cifiÃ©'}</p>
+            <p className="text-xs font-black text-slate-800 mt-0.5">{acc.patente || 'Non spécifié'}</p>
           </div>
           <div>
             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">IF</p>
-            <p className="text-xs font-black text-slate-800 mt-0.5">{acc.iff || 'Non spÃ©cifiÃ©'}</p>
+            <p className="text-xs font-black text-slate-800 mt-0.5">{acc.iff || 'Non spécifié'}</p>
           </div>
         </div>
       </div>
@@ -135,7 +135,7 @@ const AccountDetail = () => {
               : 'text-slate-450 hover:text-slate-700'
           }`}
         >
-          AperÃ§u
+          Aperçu
           {activeTab === 'overview' && (
             <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#C85A2A] rounded-full"></span>
           )}
@@ -161,7 +161,7 @@ const AccountDetail = () => {
               : 'text-slate-450 hover:text-slate-700'
           }`}
         >
-          OpportunitÃ©s ({acc.opportunities?.length || 0})
+          Opportunités ({acc.opportunities?.length || 0})
           {activeTab === 'opportunities' && (
             <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#C85A2A] rounded-full"></span>
           )}
@@ -176,70 +176,70 @@ const AccountDetail = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
             {/* Legal Information Summary Grid */}
-            <div className="lg:col-span-2 bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
+            <div className="lg:col-span-2 bg-white border border-slate-100 rounded-xl p-6 shadow-sm">
               <h3 className="text-sm font-bold text-slate-800 mb-6">
-                Fiche d'identitÃ© Fiscale & LÃ©gale (Maroc)
+                Fiche d'identité Fiscale & Légale (Maroc)
               </h3>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
                 <div>
-                  <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Nom LÃ©gal de l'Entreprise</span>
+                  <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Nom Légal de l'Entreprise</span>
                   <span className="text-slate-800 font-extrabold block mt-0.5">{acc.name}</span>
                 </div>
                 <div>
-                  <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">SiÃ¨ge Social / Adresse</span>
+                  <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Siège Social / Adresse</span>
                   <span className="text-slate-800 font-bold block mt-0.5">
                     {acc.address ? `${acc.address}, ${acc.city}` : `${acc.city}, Maroc`}
                   </span>
                 </div>
                 <div className="border-t border-slate-50 pt-4">
                   <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Identifiant Commun de l'Entreprise (ICE)</span>
-                  <span className="text-slate-800 font-bold block mt-0.5">{acc.ice || 'Non renseignÃ©'}</span>
+                  <span className="text-slate-800 font-bold block mt-0.5">{acc.ice || 'Non renseigné'}</span>
                 </div>
                 <div className="border-t border-slate-50 pt-4">
                   <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Registre du Commerce (RC)</span>
                   <span className="text-slate-800 font-bold block mt-0.5">
-                    {acc.rc ? `NÂ° ${acc.rc} (${acc.city})` : 'Non renseignÃ©'}
+                    {acc.rc ? `N° ${acc.rc} (${acc.city})` : 'Non renseigné'}
                   </span>
                 </div>
                 <div className="border-t border-slate-50 pt-4">
                   <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Identifiant Fiscal (IF)</span>
-                  <span className="text-slate-800 font-bold block mt-0.5">{acc.iff || 'Non renseignÃ©'}</span>
+                  <span className="text-slate-800 font-bold block mt-0.5">{acc.iff || 'Non renseigné'}</span>
                 </div>
                 <div className="border-t border-slate-50 pt-4">
                   <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Taxe Professionnelle (Patente)</span>
-                  <span className="text-slate-800 font-bold block mt-0.5">{acc.patente || 'Non renseignÃ©'}</span>
+                  <span className="text-slate-800 font-bold block mt-0.5">{acc.patente || 'Non renseigné'}</span>
                 </div>
               </div>
             </div>
 
             {/* Sidebar Overview - Timeline of account history */}
-            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
+            <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm">
               <h3 className="text-sm font-bold text-slate-800 mb-6">
-                ActivitÃ© rÃ©cente du compte
+                Activité récente du compte
               </h3>
               
               <div className="relative border-l border-slate-100 ml-3 space-y-6 py-2">
                 <div className="relative pl-6 group">
                   <div className="absolute left-0 top-1.5 -translate-x-1/2 w-3.5 h-3.5 rounded-full border-2 border-white bg-[#C85A2A]"></div>
-                  <h4 className="text-xs font-bold text-slate-800">CrÃ©ation du Compte CRM</h4>
+                  <h4 className="text-xs font-bold text-slate-800">Création du Compte CRM</h4>
                   <p className="text-[10px] text-slate-400 font-semibold mt-0.5">
                     {acc.createdAt ? new Date(acc.createdAt).toLocaleDateString('fr-FR', { 
                       year: 'numeric', 
                       month: 'long', 
                       day: 'numeric' 
-                    }) : 'Non spÃ©cifiÃ©e'}
+                    }) : 'Non spécifiée'}
                   </p>
                 </div>
                 <div className="relative pl-6 group">
                   <div className="absolute left-0 top-1.5 -translate-x-1/2 w-3.5 h-3.5 rounded-full border-2 border-white bg-slate-400"></div>
-                  <h4 className="text-xs font-bold text-slate-800">DerniÃ¨re mise Ã  jour</h4>
+                  <h4 className="text-xs font-bold text-slate-800">Dernière mise Ã  jour</h4>
                   <p className="text-[10px] text-slate-400 font-semibold mt-0.5">
                     {acc.updatedAt ? new Date(acc.updatedAt).toLocaleDateString('fr-FR', { 
                       year: 'numeric', 
                       month: 'long', 
                       day: 'numeric' 
-                    }) : 'Non spÃ©cifiÃ©e'}
+                    }) : 'Non spécifiée'}
                   </p>
                 </div>
               </div>
@@ -250,21 +250,21 @@ const AccountDetail = () => {
 
         {/* Tab 2: CONTACTS LIST */}
         {activeTab === 'contacts' && (
-          <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
+          <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm">
             <h3 className="text-sm font-bold text-slate-800 mb-6">
-              Interlocuteurs & Contacts AssociÃ©s
+              Interlocuteurs & Contacts Associés
             </h3>
 
             {!acc.contacts || acc.contacts.length === 0 ? (
               <div className="text-center py-12 text-slate-400 font-medium text-sm">
-                Aucun contact associÃ© Ã  ce compte pour le moment.
+                Aucun contact associé Ã  ce compte pour le moment.
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {acc.contacts.map((contact) => (
                   <div key={contact.id} className="p-4 border border-slate-100 rounded-2xl flex flex-col justify-between hover:border-slate-200 transition-all duration-300">
                     <div className="space-y-1">
-                      <span className="text-[9px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md uppercase tracking-wider">
+                      <span className="text-[9px] font-bold text-[#C85A2A] bg-[#FDF0EA] px-2 py-0.5 rounded-md uppercase tracking-wider">
                         {contact.position || 'Interlocuteur'}
                       </span>
                       <h4 className="text-sm font-extrabold text-slate-800 pt-1">
@@ -273,12 +273,12 @@ const AccountDetail = () => {
                       <div className="text-xs font-semibold text-slate-500 pt-1 space-y-1">
                         {contact.email && (
                           <p className="flex items-center space-x-1.5">
-                            <span>âœ‰ï¸</span> <a href={`mailto:${contact.email}`} className="underline hover:text-blue-500">{contact.email}</a>
+                            <span>âœ‰ï¸</span> <a href={`mailto:${contact.email}`} className="underline hover:text-[#C85A2A]">{contact.email}</a>
                           </p>
                         )}
                         {contact.phone && (
                           <p className="flex items-center space-x-1.5">
-                            <span>ðŸ“ž</span> <a href={`tel:${contact.phone}`} className="hover:text-blue-500">{contact.phone}</a>
+                            <span>ðŸ“ž</span> <a href={`tel:${contact.phone}`} className="hover:text-[#C85A2A]">{contact.phone}</a>
                           </p>
                         )}
                       </div>
@@ -292,14 +292,14 @@ const AccountDetail = () => {
 
         {/* Tab 3: OPPORTUNITIES LIST */}
         {activeTab === 'opportunities' && (
-          <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
+          <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm">
             <h3 className="text-sm font-bold text-slate-800 mb-6">
-              Pipeline des OpportunitÃ©s AssociÃ©es
+              Pipeline des Opportunités Associées
             </h3>
 
             {!acc.opportunities || acc.opportunities.length === 0 ? (
               <div className="text-center py-12 text-slate-400 font-medium text-sm">
-                Aucune opportunitÃ© commerciale rattachÃ©e Ã  ce client.
+                Aucune opportunité commerciale rattachée Ã  ce client.
               </div>
             ) : (
               <div className="divide-y divide-slate-100">
@@ -310,9 +310,9 @@ const AccountDetail = () => {
                         {opp.title}
                       </h4>
                       <div className="flex items-center space-x-2 text-[11px] font-semibold text-slate-400">
-                        <span>Ã‰chÃ©ance de signature : {opp.closeDate ? new Date(opp.closeDate).toLocaleDateString('fr-FR') : 'Non renseignÃ©e'}</span>
-                        <span>â€¢</span>
-                        <span className="text-blue-600 font-bold">ProbabilitÃ© : {opp.probability || 0}%</span>
+                        <span>Échéance de signature : {opp.closeDate ? new Date(opp.closeDate).toLocaleDateString('fr-FR') : 'Non renseignée'}</span>
+                        <span>"¢</span>
+                        <span className="text-[#C85A2A] font-bold">Probabilité : {opp.probability || 0}%</span>
                       </div>
                     </div>
 

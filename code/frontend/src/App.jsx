@@ -37,6 +37,9 @@ import Tresorerie from './pages/Tresorerie';
 import Situations from './pages/Situations';
 import PointageJournalier from './pages/PointageJournalier';
 import Parametres from './pages/Parametres';
+import PersonnelList from './pages/PersonnelList';
+import ParcEngins from './pages/ParcEngins';
+import AchatsStock from './pages/AchatsStock';
 
 // Création du client React Query pour la gestion d'état serveur
 const queryClient = new QueryClient({
@@ -370,6 +373,36 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={['directeur', 'admin', 'super_admin']}>
                     <Parametres />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Module RH — Personnel */}
+              <Route
+                path="personnel"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'super_admin']}>
+                    <PersonnelList />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Module Parc Engins */}
+              <Route
+                path="engins"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'super_admin', 'chef_chantier']}>
+                    <ParcEngins />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Module Achats & Stock */}
+              <Route
+                path="achats"
+                element={
+                  <ProtectedRoute allowedRoles={['directeur', 'admin', 'super_admin']}>
+                    <AchatsStock />
                   </ProtectedRoute>
                 }
               />

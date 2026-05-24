@@ -25,7 +25,7 @@ const InvoiceDetail = () => {
     },
   });
 
-  // Mutate Invoice Status (Brouillon -> EnvoyÃ©e)
+  // Mutate Invoice Status (Brouillon -> Envoyée)
   const statusMutation = useMutation({
     mutationFn: async (newStatus) => {
       const res = await api.put(`/api/invoices/${id}`, {
@@ -54,7 +54,7 @@ const InvoiceDetail = () => {
 
   if (error) {
     return (
-      <div className="p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700 font-medium">
+      <div className="p-6 bg-red-50 border border-red-200 rounded-xl text-red-700 font-medium">
         âš ï¸ Impossible d'ouvrir la facture : {error.message}.
       </div>
     );
@@ -68,7 +68,7 @@ const InvoiceDetail = () => {
 
   const handleExportPdf = async () => {
     try {
-      showToast(`GÃ©nÃ©ration du PDF pour la facture ${invoice.invoiceNumber}...`);
+      showToast(`Génération du PDF pour la facture ${invoice.invoiceNumber}...`);
       const response = await api.get(`/api/invoices/${id}/pdf`, {
         responseType: 'blob'
       });
@@ -80,9 +80,9 @@ const InvoiceDetail = () => {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
-      showToast(`PDF de la facture ${invoice.invoiceNumber} tÃ©lÃ©chargÃ©.`, 'success');
+      showToast(`PDF de la facture ${invoice.invoiceNumber} téléchargé.`, 'success');
     } catch (err) {
-      showToast(`Erreur lors de la gÃ©nÃ©ration du PDF : ${err.message}`, 'error');
+      showToast(`Erreur lors de la génération du PDF : ${err.message}`, 'error');
     }
   };
 
@@ -107,7 +107,7 @@ const InvoiceDetail = () => {
               onClick={() => navigate(`/dashboard/invoices/${invoice.id}/edit`)}
               className="py-2 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs tracking-wide transition-colors cursor-pointer"
             >
-              âœï¸ Ã‰diter
+              âœï¸ Éditer
             </button>
             <button
               onClick={handleExportPdf}
@@ -118,17 +118,17 @@ const InvoiceDetail = () => {
             {invoice.status === 'Brouillon' && (
               <button
                 onClick={() => setIsSendOpen(true)}
-                className="py-2 px-4 rounded-xl bg-blue-50 text-blue-600 font-bold text-xs tracking-wide transition-all cursor-pointer"
+                className="py-2 px-4 rounded-xl bg-[#FDF0EA] text-[#C85A2A] font-bold text-xs tracking-wide transition-all cursor-pointer"
               >
                 âœ‰ï¸ Envoyer Facture
               </button>
             )}
-            {invoice.status !== 'PayÃ©e' && (
+            {invoice.status !== 'Payée' && (
               <button
                 onClick={() => navigate(`/dashboard/invoices/${invoice.id}/payments/new`)}
-                className="py-2.5 px-5 rounded-xl bg-[#C85A2A] hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md transition-colors cursor-pointer"
+                className="py-2.5 px-5 rounded-xl bg-[#C85A2A] hover:bg-[#A8481F] text-white font-bold text-xs tracking-wide shadow-md transition-colors cursor-pointer"
               >
-                ðŸ’³ Enregistrer RÃ¨glement
+                ðŸ’³ Enregistrer Règlement
               </button>
             )}
           </div>
@@ -138,27 +138,27 @@ const InvoiceDetail = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Invoice PDF layout representation */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-sm space-y-8 relative overflow-hidden">
+          <div className="bg-white border border-slate-100 rounded-xl p-6 sm:p-8 shadow-sm space-y-8 relative overflow-hidden">
             {/* Header branding */}
             <div className="flex flex-col sm:flex-row justify-between items-start gap-4 pb-6 border-b border-slate-100">
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
-                  <span className="text-2xl font-black tracking-tighter text-blue-600">ATLAS WORKS</span>
+                  <span className="text-xl font-black tracking-tighter text-[#C85A2A]">ATLAS WORKS</span>
                   <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 bg-slate-100 py-0.5 px-2 rounded">Facturation</span>
                 </div>
                 <p className="text-[10px] text-slate-400 font-semibold leading-relaxed">
-                  Atlas Works S.A.R.L. â€” Travaux Divers & RÃ©novation<br />
+                  Atlas Works S.A.R.L. "” Travaux Divers & Rénovation<br />
                   Casablanca, Maroc | IF: 52367489 | RC: 94827 | ICE: 001548792000145
                 </p>
               </div>
               <div className="text-right sm:text-right space-y-1">
                 <h2 className="text-xl font-black text-slate-800 uppercase tracking-tight">FACTURE</h2>
-                <p className="text-xs font-bold text-blue-600">{invoice.invoiceNumber}</p>
+                <p className="text-xs font-bold text-[#C85A2A]">{invoice.invoiceNumber}</p>
                 <p className="text-[10px] text-slate-400 font-semibold">
-                  Date d'Ã©mission : {invoice.createdAt ? new Date(invoice.createdAt).toLocaleDateString('fr-FR') : '-'}
+                  Date d'émission : {invoice.createdAt ? new Date(invoice.createdAt).toLocaleDateString('fr-FR') : '-'}
                 </p>
                 <p className="text-[10px] text-rose-500 font-bold">
-                  Date d'Ã©chÃ©ance : {invoice.dueDate ? new Date(invoice.dueDate).toLocaleDateString('fr-FR') : 'ImmÃ©diate'}
+                  Date d'échéance : {invoice.dueDate ? new Date(invoice.dueDate).toLocaleDateString('fr-FR') : 'Immédiate'}
                 </p>
               </div>
             </div>
@@ -166,17 +166,17 @@ const InvoiceDetail = () => {
             {/* Entities details */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs leading-relaxed">
               <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
-                <h3 className="font-extrabold text-[10px] text-slate-400 uppercase tracking-widest">Ã‰metteur</h3>
+                <h3 className="font-extrabold text-[10px] text-slate-400 uppercase tracking-widest">Émetteur</h3>
                 <p className="font-bold text-slate-800">Atlas Works SARL</p>
                 <p className="text-slate-500">
-                  12 Rue des HÃ´pitaux, Maarif<br />
+                  12 Rue des Hôpitaux, Maarif<br />
                   Casablanca, Maroc
                 </p>
                 <p className="text-slate-400">billing@atlasworks.ma | +212 522 34 56 78</p>
               </div>
               <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
-                <h3 className="font-extrabold text-[10px] text-slate-400 uppercase tracking-widest">FacturÃ© Ã  (Client)</h3>
-                <p className="font-bold text-slate-800">{invoice.account?.name || 'SociÃ©tÃ© Client'}</p>
+                <h3 className="font-extrabold text-[10px] text-slate-400 uppercase tracking-widest">Facturé Ã  (Client)</h3>
+                <p className="font-bold text-slate-800">{invoice.account?.name || 'Société Client'}</p>
                 {invoice.account?.address && (
                   <p className="text-slate-500">
                     {invoice.account.address}<br />
@@ -193,10 +193,10 @@ const InvoiceDetail = () => {
             <div className="space-y-4">
               <div className="flex justify-between items-end">
                 <h3 className="font-extrabold text-xs text-slate-800 tracking-tight">
-                  Prestations facturÃ©es â€” {invoice.title}
+                  Prestations facturées "” {invoice.title}
                 </h3>
                 {invoice.situationPercentage > 0 && (
-                  <span className="text-[10px] font-black uppercase text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+                  <span className="text-[10px] font-black uppercase text-[#C85A2A] bg-[#FDF0EA] px-2 py-0.5 rounded">
                     Facturation de situation : {invoice.situationPercentage}%
                   </span>
                 )}
@@ -207,7 +207,7 @@ const InvoiceDetail = () => {
                     <tr>
                       <th scope="col" className="px-4 py-3">Description Prestation</th>
                       <th scope="col" className="px-4 py-3 text-center w-16">U</th>
-                      <th scope="col" className="px-4 py-3 text-right w-20">QtÃ©</th>
+                      <th scope="col" className="px-4 py-3 text-right w-20">Qté</th>
                       <th scope="col" className="px-4 py-3 text-right w-28">P.U. HT</th>
                       <th scope="col" className="px-4 py-3 text-right w-32">Total HT</th>
                     </tr>
@@ -259,14 +259,14 @@ const InvoiceDetail = () => {
                 <div className="h-px bg-slate-100 my-1"></div>
                 <div className="flex justify-between items-center text-slate-850 font-black text-sm">
                   <span>Total TTC</span>
-                  <span className="text-blue-600">{formatCurrency(invoice.totalTtc)}</span>
+                  <span className="text-[#C85A2A]">{formatCurrency(invoice.totalTtc)}</span>
                 </div>
               </div>
             </div>
 
             {/* Legal */}
             <div className="pt-6 border-t border-slate-100 text-[10px] text-slate-400 font-medium leading-relaxed">
-              <p className="font-bold text-slate-600">Informations & CoordonnÃ©es Bancaires :</p>
+              <p className="font-bold text-slate-600">Informations & Coordonnées Bancaires :</p>
               <p className="mt-1">
                 Virement en faveur de : <strong>Atlas Works S.A.R.L.</strong><br />
                 Banque : Attijariwafa Bank - Agence Maarif Casablanca<br />
@@ -278,8 +278,8 @@ const InvoiceDetail = () => {
 
         {/* Payments Ledger Sidebar */}
         <div className="space-y-6">
-          <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-5">
-            <h3 className="font-bold text-slate-850 text-xs uppercase tracking-wider">Ã‰tat de TrÃ©sorerie</h3>
+          <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm space-y-5">
+            <h3 className="font-bold text-slate-850 text-xs uppercase tracking-wider">État de Trésorerie</h3>
             
             <div className="flex items-center space-x-3">
               <StatusBadge status={invoice.status} />
@@ -291,7 +291,7 @@ const InvoiceDetail = () => {
                 <span className="text-slate-800 font-black">{formatCurrency(invoice.totalTtc)}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-emerald-550 font-bold">Total RÃ©glÃ©</span>
+                <span className="text-emerald-550 font-bold">Total Réglé</span>
                 <span className="text-emerald-650 font-black">{formatCurrency(amountPaid)}</span>
               </div>
               <div className="h-px bg-slate-100 my-1"></div>
@@ -312,7 +312,7 @@ const InvoiceDetail = () => {
           </div>
 
           {/* Payments History Register */}
-          <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-4">
+          <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm space-y-4">
             <h3 className="font-bold text-slate-850 text-xs uppercase tracking-wider pb-2 border-b border-slate-100">
               Historique des encaissements ({payments.length})
             </h3>
@@ -325,7 +325,7 @@ const InvoiceDetail = () => {
                   <div key={pay.id} className="p-3.5 rounded-2xl bg-emerald-50/20 border border-emerald-250 flex justify-between items-center text-xs">
                     <div>
                       <p className="font-black text-emerald-850">{formatCurrency(pay.amount)}</p>
-                      <p className="text-[9px] text-slate-400 font-bold uppercase mt-0.5">{pay.paymentMethod} {pay.reference && `â€” ref : ${pay.reference}`}</p>
+                      <p className="text-[9px] text-slate-400 font-bold uppercase mt-0.5">{pay.paymentMethod} {pay.reference && `"” ref : ${pay.reference}`}</p>
                     </div>
                     <span className="text-[10px] text-slate-400 font-bold">{new Date(pay.paymentDate).toLocaleDateString('fr-FR')}</span>
                   </div>
@@ -339,13 +339,13 @@ const InvoiceDetail = () => {
       {/* Confirmation Dialogs */}
       <ConfirmDialog
         isOpen={isSendOpen}
-        title="Marquer comme envoyÃ©e ?"
-        message="Voulez-vous marquer cette facture comme envoyÃ©e au client ? Son statut passera Ã  'EnvoyÃ©e'."
+        title="Marquer comme envoyée ?"
+        message="Voulez-vous marquer cette facture comme envoyée au client ? Son statut passera Ã  'Envoyée'."
         confirmText="Confirmer l'envoi"
         cancelText="Annuler"
         type="info"
         loading={statusMutation.isLoading}
-        onConfirm={() => statusMutation.mutate('EnvoyÃ©e')}
+        onConfirm={() => statusMutation.mutate('Envoyée')}
         onCancel={() => setIsSendOpen(false)}
       />
     </div>

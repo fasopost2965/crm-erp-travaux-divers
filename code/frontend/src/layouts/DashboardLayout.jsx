@@ -20,6 +20,9 @@ const ICONS = {
   situations: 'M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11',
   invoice: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
   tresorerie: 'M3 3h18v4H3zM3 10h18v4H3zM3 17h18v4H3z',
+  personnel: 'M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z',
+  engins: 'M17 8C8 10 5.9 16.17 3.82 19H2v2h1.5A1.5 1.5 0 005 19.5v-.5h14v.5a1.5 1.5 0 001.5 1.5H22v-2h-1.82C18.1 16.17 16 10 17 8zM7 17a2 2 0 110-4 2 2 0 010 4zm10 0a2 2 0 110-4 2 2 0 010 4z',
+  achats: 'M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0',
   parametres: 'M12 15a3 3 0 100-6 3 3 0 000 6zM19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z',
   reports: 'M12 20V10M18 20V4M6 20v-6',
   logout: 'M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9',
@@ -129,6 +132,15 @@ const DashboardLayout = () => {
           {isChantier && <NavItem to="/dashboard/projects" icon="project" label="Projets & Chantiers" active={isActive('/dashboard/projects')} />}
           {isChantier && <NavItem to="/dashboard/pointage" icon="pointage" label="Pointage journalier" active={isActive('/dashboard/pointage')} />}
           {(isAdmin || isFinance) && <NavItem to="/dashboard/situations" icon="situations" label="Situations de travaux" active={isActive('/dashboard/situations')} />}
+        </NavSection>
+
+        <NavSection label="RH & Personnel" show={isAdmin}>
+          <NavItem to="/dashboard/personnel" icon="personnel" label="Registre du personnel" active={isActive('/dashboard/personnel')} />
+        </NavSection>
+
+        <NavSection label="Équipements & Achats" show={isAdmin || isChantier}>
+          {isAdmin && <NavItem to="/dashboard/engins" icon="engins" label="Parc Engins" active={isActive('/dashboard/engins')} />}
+          {isAdmin && <NavItem to="/dashboard/achats" icon="achats" label="Achats & Stock" active={isActive('/dashboard/achats')} />}
         </NavSection>
 
         <NavSection label="Finance" show={isFinance}>

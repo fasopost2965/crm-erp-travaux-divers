@@ -51,7 +51,7 @@ const AccountForm = () => {
       }
     },
     onSuccess: (data) => {
-      showToast(isEdit ? 'Client mis Ã  jour avec succÃ¨s.' : 'Client crÃ©Ã© avec succÃ¨s.');
+      showToast(isEdit ? 'Client mis Ã  jour avec succès.' : 'Client créé avec succès.');
       queryClient.invalidateQueries(['accountsList']);
       const accountId = data.data?.id || data.id || id;
       navigate(`/dashboard/accounts/${accountId}`);
@@ -106,13 +106,13 @@ const AccountForm = () => {
       />
 
       <form onSubmit={handleSubmit} className="max-w-3xl space-y-5">
-        {/* Informations gÃ©nÃ©rales */}
-        <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-4">
-          <h3 className="text-sm font-extrabold text-slate-800 border-b border-slate-100 pb-3">Informations GÃ©nÃ©rales</h3>
+        {/* Informations générales */}
+        <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm space-y-4">
+          <h3 className="text-sm font-extrabold text-slate-800 border-b border-slate-100 pb-3">Informations Générales</h3>
           <Field label="Raison Sociale" name="name" required placeholder="Atlas Works S.A.R.L." />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Email" name="email" type="email" placeholder="contact@entreprise.ma" />
-            <Field label="TÃ©lÃ©phone" name="phone" placeholder="+212 5XX XX XX XX" />
+            <Field label="Téléphone" name="phone" placeholder="+212 5XX XX XX XX" />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Adresse" name="address" placeholder="Rue Mohammed V" />
@@ -121,7 +121,7 @@ const AccountForm = () => {
         </div>
 
         {/* Identifiants fiscaux marocains */}
-        <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-4">
+        <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm space-y-4">
           <h3 className="text-sm font-extrabold text-slate-800 border-b border-slate-100 pb-3">Identifiants Fiscaux (Maroc)</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="ICE" name="ice" placeholder="000000000000000" />
@@ -136,9 +136,9 @@ const AccountForm = () => {
           <button
             type="submit"
             disabled={mutation.isLoading}
-            className="py-2.5 px-6 rounded-xl bg-[#C85A2A] hover:bg-blue-500 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 transition-all disabled:opacity-50 cursor-pointer"
+            className="py-2.5 px-6 rounded-xl bg-[#C85A2A] hover:bg-[#FDF0EA]0 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 transition-all disabled:opacity-50 cursor-pointer"
           >
-            {mutation.isLoading ? 'Enregistrement...' : isEdit ? 'Mettre Ã  jour' : 'CrÃ©er le Client'}
+            {mutation.isLoading ? 'Enregistrement...' : isEdit ? 'Mettre Ã  jour' : 'Créer le Client'}
           </button>
           <button
             type="button"

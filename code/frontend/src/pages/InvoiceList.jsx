@@ -36,7 +36,7 @@ const InvoiceList = () => {
       await api.delete(`/api/invoices/${id}`);
     },
     onSuccess: () => {
-      showToast('Facture supprimÃ©e avec succÃ¨s.');
+      showToast('Facture supprimée avec succès.');
       queryClient.invalidateQueries(['invoicesList']);
       setIsDeleteOpen(false);
     },
@@ -51,7 +51,7 @@ const InvoiceList = () => {
 
   if (error) {
     return (
-      <div className="p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700 font-medium">
+      <div className="p-6 bg-red-50 border border-red-200 rounded-xl text-red-700 font-medium">
         âš ï¸ Erreur de chargement des factures : {error.message}.
       </div>
     );
@@ -84,15 +84,15 @@ const InvoiceList = () => {
 
   const handleExportPdf = (inv, e) => {
     e.stopPropagation();
-    showToast(`TÃ©lÃ©chargement de la facture ${inv.invoiceNumber}...`);
+    showToast(`Téléchargement de la facture ${inv.invoiceNumber}...`);
     setTimeout(() => {
-      showToast(`Facture ${inv.invoiceNumber} enregistrÃ©e.`);
+      showToast(`Facture ${inv.invoiceNumber} enregistrée.`);
     }, 1200);
   };
 
   const columns = [
     {
-      header: 'NumÃ©ro',
+      header: 'Numéro',
       accessor: 'invoiceNumber',
       cell: (row) => (
         <span className="font-extrabold text-blue-650 text-xs">
@@ -111,13 +111,13 @@ const InvoiceList = () => {
       ),
     },
     {
-      header: 'Ã‰chÃ©ance',
+      header: 'Échéance',
       accessor: 'dueDate',
       cell: (row) => {
-        const isOverdue = row.status !== 'PayÃ©e' && row.dueDate && new Date(row.dueDate) < new Date();
+        const isOverdue = row.status !== 'Payée' && row.dueDate && new Date(row.dueDate) < new Date();
         return (
           <span className={`text-xs font-semibold ${isOverdue ? 'text-rose-500 font-bold' : 'text-slate-500'}`}>
-            {row.dueDate ? new Date(row.dueDate).toLocaleDateString('fr-FR') : 'ImmÃ©diate'}
+            {row.dueDate ? new Date(row.dueDate).toLocaleDateString('fr-FR') : 'Immédiate'}
             {isOverdue && ' (En retard)'}
           </span>
         );
@@ -141,8 +141,8 @@ const InvoiceList = () => {
         return (
           <div className="space-y-1">
             <StatusBadge status={row.status} />
-            {paid > 0 && row.status !== 'PayÃ©e' && (
-              <p className="text-[9px] text-slate-400 font-bold">PayÃ© : {formatCurrency(paid)}</p>
+            {paid > 0 && row.status !== 'Payée' && (
+              <p className="text-[9px] text-slate-400 font-bold">Payé : {formatCurrency(paid)}</p>
             )}
           </div>
         );
@@ -169,9 +169,9 @@ const InvoiceList = () => {
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); navigate(`/dashboard/invoices/${row.id}/payments/new`); }}
-            disabled={row.status === 'PayÃ©e'}
+            disabled={row.status === 'Payée'}
             className="p-1.5 rounded-lg border border-slate-100 hover:bg-slate-50 text-slate-500 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-            title="Enregistrer un rÃ¨glement"
+            title="Enregistrer un règlement"
           >
             ðŸ’³
           </button>
@@ -197,7 +197,7 @@ const InvoiceList = () => {
   return (
     <div className="space-y-6 font-sans">
       <PageHeader
-        title="Factures & TrÃ©sorerie"
+        title="Factures & Trésorerie"
         breadcrumb={[
           { label: 'Finances' },
           { label: 'Registre des Factures' }
@@ -205,19 +205,19 @@ const InvoiceList = () => {
         actions={
           <button
             onClick={() => navigate('/dashboard/invoices/new')}
-            className="py-2.5 px-5 bg-[#C85A2A] hover:bg-blue-550 text-white font-bold text-xs tracking-wide rounded-xl shadow-md shadow-blue-900/10 hover:shadow-blue-500/15 transition-all cursor-pointer"
+            className="py-2.5 px-5 bg-[#C85A2A] hover:bg-[#A8481F] text-white font-bold text-xs tracking-wide rounded-xl shadow-md shadow-blue-900/10 hover:shadow-blue-500/15 transition-all cursor-pointer"
           >
-            âž• CrÃ©er Facture
+            âž• Créer Facture
           </button>
         }
       />
 
       {/* Filter and Search Bar */}
-      <div className="p-4 sm:p-5 bg-white border border-slate-100 rounded-3xl shadow-sm flex flex-col sm:flex-row gap-4 items-center justify-between">
+      <div className="p-4 sm:p-5 bg-white border border-slate-100 rounded-xl shadow-sm flex flex-col sm:flex-row gap-4 items-center justify-between">
         <div className="relative w-full sm:w-80">
           <input
             type="text"
-            placeholder="Rechercher client, numÃ©ro..."
+            placeholder="Rechercher client, numéro..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all font-semibold"
@@ -233,17 +233,17 @@ const InvoiceList = () => {
           >
             <option value="">Tous les statuts</option>
             <option value="Brouillon">Brouillon</option>
-            <option value="EnvoyÃ©e">EnvoyÃ©e</option>
-            <option value="PayÃ©e">PayÃ©e</option>
-            <option value="Partiellement PayÃ©e">Partiellement PayÃ©e</option>
-            <option value="ImpayÃ©e">ImpayÃ©e</option>
+            <option value="Envoyée">Envoyée</option>
+            <option value="Payée">Payée</option>
+            <option value="Partiellement Payée">Partiellement Payée</option>
+            <option value="Impayée">Impayée</option>
             <option value="En retard">En retard</option>
           </select>
         </div>
       </div>
 
       {/* Table Section */}
-      <div className="bg-white border border-slate-100 rounded-3xl shadow-sm overflow-hidden p-6">
+      <div className="bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden p-6">
         <DataTable
           columns={columns}
           data={filteredInvoices}
@@ -260,7 +260,7 @@ const InvoiceList = () => {
                 onClick={() => setPage(p => Math.max(p - 1, 1))}
                 className="py-1.5 px-3 rounded-lg border border-slate-200 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
               >
-                PrÃ©cÃ©dent
+                Précédent
               </button>
               <button
                 disabled={page === meta.last_page}
@@ -278,7 +278,7 @@ const InvoiceList = () => {
       <ConfirmDialog
         isOpen={isDeleteOpen}
         title="Supprimer la facture ?"
-        message={`Attention, vous allez supprimer dÃ©finitivement la facture ${deleteTarget?.invoiceNumber}. Cette action est irrÃ©versible.`}
+        message={`Attention, vous allez supprimer définitivement la facture ${deleteTarget?.invoiceNumber}. Cette action est irréversible.`}
         confirmText="Supprimer"
         cancelText="Annuler"
         type="danger"

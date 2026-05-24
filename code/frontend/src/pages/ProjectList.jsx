@@ -34,7 +34,7 @@ const ProjectList = () => {
       await api.delete(`/api/projects/${id}`);
     },
     onSuccess: () => {
-      showToast('Projet supprimÃ© avec succÃ¨s.');
+      showToast('Projet supprimé avec succès.');
       queryClient.invalidateQueries(['projectsList']);
       setIsDeleteOpen(false);
     },
@@ -80,7 +80,7 @@ const ProjectList = () => {
       header: 'ID',
       accessor: 'id',
       cell: (row) => (
-        <span className="font-bold text-blue-600 text-xs">#{row.id}</span>
+        <span className="font-bold text-[#C85A2A] text-xs">#{row.id}</span>
       ),
     },
     {
@@ -90,7 +90,7 @@ const ProjectList = () => {
         <div>
           <p className="font-semibold text-slate-900 text-sm">{row.title}</p>
           <p className="text-xs text-slate-400 mt-0.5">
-            ðŸ“ {row.city || 'Non spÃ©cifiÃ©'}{row.address ? ` â€” ${row.address}` : ''}
+            ðŸ“ {row.city || 'Non spécifié'}{row.address ? ` "” ${row.address}` : ''}
           </p>
         </div>
       ),
@@ -100,7 +100,7 @@ const ProjectList = () => {
       accessor: 'account.name',
       cell: (row) => (
         <span className="text-sm text-slate-700 font-medium">
-          {row.account?.name || <span className="text-slate-400">â€”</span>}
+          {row.account?.name || <span className="text-slate-400">"”</span>}
         </span>
       ),
     },
@@ -112,7 +112,7 @@ const ProjectList = () => {
           <div className="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600">
             {row.manager?.name ? row.manager.name.charAt(0) : '?'}
           </div>
-          <span className="text-sm text-slate-700">{row.manager?.name || <span className="text-slate-400">Non assignÃ©</span>}</span>
+          <span className="text-sm text-slate-700">{row.manager?.name || <span className="text-slate-400">Non assigné</span>}</span>
         </div>
       ),
     },
@@ -121,8 +121,8 @@ const ProjectList = () => {
       accessor: 'startDate',
       cell: (row) => (
         <div className="text-xs text-slate-500 space-y-0.5">
-          <p>DÃ©but : {row.startDate ? new Date(row.startDate).toLocaleDateString('fr-FR') : 'â€”'}</p>
-          <p className="text-rose-500">Fin : {row.endDatePlanned ? new Date(row.endDatePlanned).toLocaleDateString('fr-FR') : 'â€”'}</p>
+          <p>Début : {row.startDate ? new Date(row.startDate).toLocaleDateString('fr-FR') : '"”'}</p>
+          <p className="text-rose-500">Fin : {row.endDatePlanned ? new Date(row.endDatePlanned).toLocaleDateString('fr-FR') : '"”'}</p>
         </div>
       ),
     },
@@ -153,7 +153,7 @@ const ProjectList = () => {
           <button
             onClick={(e) => { e.stopPropagation(); navigate(`/dashboard/projects/${row.id}/edit`); }}
             className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-500 transition-colors"
-            title="Ã‰diter"
+            title="Éditer"
           >
             âœï¸
           </button>
@@ -207,18 +207,18 @@ const ProjectList = () => {
           className="w-full md:w-48 px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-[#C85A2A] focus:border-transparent transition-all"
         >
           <option value="">Tous les statuts</option>
-          <option value="PlanifiÃ©">PlanifiÃ©</option>
+          <option value="Planifié">Planifié</option>
           <option value="En cours">En cours</option>
           <option value="Suspendu">Suspendu</option>
-          <option value="TerminÃ©">TerminÃ©</option>
+          <option value="Terminé">Terminé</option>
         </select>
 
         {(search || statusFilter) && (
           <button
             onClick={() => { setSearch(''); setStatusFilter(''); }}
-            className="text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors whitespace-nowrap"
+            className="text-sm font-medium text-slate-500 hover:text-[#C85A2A] transition-colors whitespace-nowrap"
           >
-            RÃ©initialiser
+            Réinitialiser
           </button>
         )}
       </div>
@@ -227,8 +227,8 @@ const ProjectList = () => {
         columns={columns}
         data={filteredProjects}
         onRowClick={(project) => navigate(`/dashboard/projects/${project.id}`)}
-        emptyTitle="Aucun projet trouvÃ©"
-        emptyDescription="Aucun chantier ne correspond Ã  ce filtre. CrÃ©ez un nouveau projet pour commencer."
+        emptyTitle="Aucun projet trouvé"
+        emptyDescription="Aucun chantier ne correspond Ã  ce filtre. Créez un nouveau projet pour commencer."
         paginationMeta={{
           currentPage: meta.current_page || 1,
           lastPage: meta.last_page || 1,
@@ -241,7 +241,7 @@ const ProjectList = () => {
       <ConfirmDialog
         isOpen={isDeleteOpen}
         title="Supprimer le projet ?"
-        message={`ÃŠtes-vous sÃ»r de vouloir supprimer dÃ©finitivement le chantier "${deleteTarget?.title}" ? Cette action supprimera Ã©galement les heures pointÃ©es et tÃ¢ches associÃ©es.`}
+        message={`ÃŠtes-vous sûr de vouloir supprimer définitivement le chantier "${deleteTarget?.title}" ? Cette action supprimera également les heures pointées et tâches associées.`}
         confirmText="Supprimer"
         cancelText="Annuler"
         type="danger"

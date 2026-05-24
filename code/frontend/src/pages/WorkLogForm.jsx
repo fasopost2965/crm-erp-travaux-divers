@@ -67,7 +67,7 @@ const WorkLogForm = () => {
       return await api.post(`/api/projects/${projectId}/work-logs`, payload);
     },
     onSuccess: () => {
-      showToast('Pointage enregistrÃ© avec succÃ¨s !');
+      showToast('Pointage enregistré avec succès !');
       queryClient.invalidateQueries(['projectWorkLogs', projectId]);
       queryClient.invalidateQueries(['projectDetail', projectId]);
       navigate(`/dashboard/projects/${projectId}`);
@@ -82,11 +82,11 @@ const WorkLogForm = () => {
     e.preventDefault();
 
     if (!hours || parseFloat(hours) <= 0) {
-      showToast('Le nombre d\'heures doit Ãªtre positif.', 'error');
+      showToast('Le nombre d\'heures doit être positif.', 'error');
       return;
     }
     if (!workDate) {
-      showToast('Veuillez spÃ©cifier la date.', 'error');
+      showToast('Veuillez spécifier la date.', 'error');
       return;
     }
 
@@ -109,7 +109,7 @@ const WorkLogForm = () => {
 
   if (projectError) {
     return (
-      <div className="p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700 font-medium">
+      <div className="p-6 bg-red-50 border border-red-200 rounded-xl text-red-700 font-medium">
         âš ï¸ Impossible d'ouvrir la saisie d'heures pour ce chantier : {projectError.message}.
       </div>
     );
@@ -117,9 +117,9 @@ const WorkLogForm = () => {
 
   const gpsLabel = {
     idle: null,
-    loading: <span className="text-[10px] text-blue-500 font-semibold animate-pulse">Localisation en cours...</span>,
-    ok: <span className="text-[10px] text-emerald-600 font-semibold">âœ“ GPS captÃ© ({locationLat?.toFixed(4)}, {locationLng?.toFixed(4)})</span>,
-    denied: <span className="text-[10px] text-amber-500 font-semibold">Localisation refusÃ©e â€” pointage sans GPS</span>,
+    loading: <span className="text-[10px] text-[#C85A2A] font-semibold animate-pulse">Localisation en cours...</span>,
+    ok: <span className="text-[10px] text-emerald-600 font-semibold">âœ“ GPS capté ({locationLat?.toFixed(4)}, {locationLng?.toFixed(4)})</span>,
+    denied: <span className="text-[10px] text-amber-500 font-semibold">Localisation refusée "” pointage sans GPS</span>,
   }[gpsStatus];
 
   return (
@@ -133,9 +133,9 @@ const WorkLogForm = () => {
         ]}
       />
 
-      <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+      <div className="bg-white border border-slate-100 rounded-xl p-6 sm:p-8 shadow-sm space-y-6">
         {/* Project info strip */}
-        <div className="p-4 rounded-2xl bg-blue-50 border border-blue-100 space-y-1">
+        <div className="p-4 rounded-2xl bg-[#FDF0EA] border border-blue-100 space-y-1">
           <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest block">Chantier</span>
           <span className="text-sm font-black text-slate-850 block">{project.title}</span>
           <span className="text-[10px] text-slate-400 font-semibold block">ðŸ“ {project.address}, {project.city}</span>
@@ -151,17 +151,17 @@ const WorkLogForm = () => {
           {/* Task */}
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">
-              TÃ¢che associÃ©e (RecommandÃ©)
+              Tâche associée (Recommandé)
             </label>
             <select
               value={taskId}
               onChange={(e) => setTaskId(e.target.value)}
               className="block w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#C85A2A] cursor-pointer font-bold"
             >
-              <option value="">SÃ©lectionner une tÃ¢che en cours...</option>
+              <option value="">Sélectionner une tâche en cours...</option>
               {tasks.map(t => (
                 <option key={t.id} value={t.id}>
-                  {t.title} ({t.status} â€” PrioritÃ© : {t.priority})
+                  {t.title} ({t.status} "” Priorité : {t.priority})
                 </option>
               ))}
             </select>
@@ -184,7 +184,7 @@ const WorkLogForm = () => {
           {/* Start / End time */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Heure dÃ©but</label>
+              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Heure début</label>
               <input
                 type="time"
                 value={startTime}
@@ -206,9 +206,9 @@ const WorkLogForm = () => {
           {/* Hours worked */}
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">
-              Heures travaillÃ©es
+              Heures travaillées
               {startTime && endTime && (
-                <span className="ml-2 text-blue-500 normal-case font-normal">(calculÃ© depuis les horaires)</span>
+                <span className="ml-2 text-[#C85A2A] normal-case font-normal">(calculé depuis les horaires)</span>
               )}
             </label>
             <div className="relative">
@@ -233,7 +233,7 @@ const WorkLogForm = () => {
               {[
                 { value: 'draft', label: 'Brouillon' },
                 { value: 'submitted', label: 'Soumis' },
-                { value: 'validated', label: 'ValidÃ©' },
+                { value: 'validated', label: 'Validé' },
               ].map(({ value, label }) => (
                 <button
                   key={value}
@@ -241,7 +241,7 @@ const WorkLogForm = () => {
                   onClick={() => setStatus(value)}
                   className={`py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wide border transition-colors cursor-pointer ${
                     status === value
-                      ? 'bg-[#C85A2A] text-white border-blue-600'
+                      ? 'bg-[#C85A2A] text-white border-[#C85A2A]'
                       : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
                   }`}
                 >
@@ -257,7 +257,7 @@ const WorkLogForm = () => {
               Observations / Rapport technique
             </label>
             <textarea
-              placeholder="DÃ©crire succinctement les travaux rÃ©alisÃ©s, les fournitures consommÃ©es, ou les Ã©ventuels points de blocage..."
+              placeholder="Décrire succinctement les travaux réalisés, les fournitures consommées, ou les éventuels points de blocage..."
               rows="4"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -277,7 +277,7 @@ const WorkLogForm = () => {
             <button
               type="submit"
               disabled={logMutation.isLoading}
-              className="flex-1 py-3 px-4 rounded-xl bg-[#C85A2A] hover:bg-blue-550 text-white font-bold tracking-wide shadow-md shadow-blue-900/10 transition-colors cursor-pointer disabled:opacity-60"
+              className="flex-1 py-3 px-4 rounded-xl bg-[#C85A2A] hover:bg-[#A8481F] text-white font-bold tracking-wide shadow-md shadow-blue-900/10 transition-colors cursor-pointer disabled:opacity-60"
             >
               {logMutation.isLoading
                 ? 'Envoi en cours...'

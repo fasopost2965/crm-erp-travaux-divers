@@ -30,7 +30,7 @@ const InvoiceForm = () => {
 
   // Line items state
   const [items, setItems] = useState([
-    { section: 'Gros Å’uvre', description: '', unit: 'mÂ²', quantity: 1, unitPriceHt: 0 }
+    { section: 'Gros Å’uvre', description: '', unit: 'm²', quantity: 1, unitPriceHt: 0 }
   ]);
 
   // Fetch Quotes list
@@ -74,10 +74,10 @@ const InvoiceForm = () => {
           unitPriceHt: it.unitPriceHt || 0
         })));
       }
-      showToast('DÃ©tails du devis rÃ©pliquÃ©s dans la facture.');
+      showToast('Détails du devis répliqués dans la facture.');
     },
     onError: (err) => {
-      showToast(`Erreur lors du prÃ©-remplissage Ã  partir du devis : ${err.message}`, 'error');
+      showToast(`Erreur lors du pré-remplissage Ã  partir du devis : ${err.message}`, 'error');
     }
   });
 
@@ -126,7 +126,7 @@ const InvoiceForm = () => {
       }
     },
     onSuccess: () => {
-      showToast(`Facture ${isEdit ? 'mise Ã  jour' : 'crÃ©Ã©e'} avec succÃ¨s !`);
+      showToast(`Facture ${isEdit ? 'mise Ã  jour' : 'créée'} avec succès !`);
       queryClient.invalidateQueries(['invoicesList']);
       if (isEdit) {
         queryClient.invalidateQueries(['invoiceDetail', id]);
@@ -172,12 +172,12 @@ const InvoiceForm = () => {
   const handleApplySituationPercentage = () => {
     const pct = parseFloat(situationPercentage || 100) / 100;
     if (pct <= 0 || pct > 1) {
-      showToast('Veuillez spÃ©cifier un pourcentage valide entre 1% et 100%.', 'error');
+      showToast('Veuillez spécifier un pourcentage valide entre 1% et 100%.', 'error');
       return;
     }
 
     if (!quoteId && !refQuoteId) {
-      showToast('SÃ©lectionnez d\'abord un devis de rÃ©fÃ©rence pour charger les prix d\'origine.', 'error');
+      showToast('Sélectionnez d\'abord un devis de référence pour charger les prix d\'origine.', 'error');
       return;
     }
 
@@ -188,14 +188,14 @@ const InvoiceForm = () => {
       quantity: parseFloat((it.quantity * pct).toFixed(2))
     }));
     setItems(scaledItems);
-    showToast(`Pourcentage de situation de ${situationPercentage}% appliquÃ© aux quantitÃ©s.`);
+    showToast(`Pourcentage de situation de ${situationPercentage}% appliqué aux quantités.`);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!quoteId) {
-      showToast('Le devis de rÃ©fÃ©rence associÃ© est obligatoire.', 'error');
+      showToast('Le devis de référence associé est obligatoire.', 'error');
       return;
     }
     if (!accountId) {
@@ -210,7 +210,7 @@ const InvoiceForm = () => {
     // Validate items
     const invalidItem = items.find(it => !it.description.trim() || it.quantity <= 0 || it.unitPriceHt < 0);
     if (invalidItem) {
-      showToast('Toutes les lignes doivent avoir une description, une quantitÃ© positive et un prix HT supÃ©rieur ou Ã©gal Ã  0.', 'error');
+      showToast('Toutes les lignes doivent avoir une description, une quantité positive et un prix HT supérieur ou égal Ã  0.', 'error');
       return;
     }
 
@@ -242,7 +242,7 @@ const InvoiceForm = () => {
 
   const quoteOptions = (quotesData || []).map(q => ({
     value: q.id,
-    label: `${q.quoteNumber} â€” ${q.title}`
+    label: `${q.quoteNumber} "” ${q.title}`
   }));
 
   const accountOptions = (accountsData || []).map(acc => ({
@@ -263,7 +263,7 @@ const InvoiceForm = () => {
         breadcrumb={[
           { label: 'Finances' },
           { label: 'Factures', link: '/dashboard/invoices' },
-          { label: isEdit ? 'Ã‰dition' : 'Nouveau' }
+          { label: isEdit ? 'Édition' : 'Nouveau' }
         ]}
       />
 
@@ -271,14 +271,14 @@ const InvoiceForm = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main forms inputs */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6">
+            <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm space-y-6">
               <h3 className="font-bold text-slate-800 text-xs uppercase tracking-wider pb-3 border-b border-slate-100">
                 Informations Facturation
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">NumÃ©ro de facture</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Numéro de facture</label>
                   <input
                     type="text"
                     required
@@ -289,11 +289,11 @@ const InvoiceForm = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Objet / LibellÃ© de facturation</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Objet / Libellé de facturation</label>
                   <input
                     type="text"
                     required
-                    placeholder="Ex: Facture de situation nÂ° 1 â€” Plomberie Anfa"
+                    placeholder="Ex: Facture de situation n° 1 "” Plomberie Anfa"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all font-semibold"
@@ -301,7 +301,7 @@ const InvoiceForm = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Devis de rÃ©fÃ©rence associÃ©</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Devis de référence associé</label>
                   <AutocompleteSelect
                     options={quoteOptions}
                     value={quoteId}
@@ -309,24 +309,24 @@ const InvoiceForm = () => {
                       setQuoteId(val);
                       setRefQuoteId(val); // triggers React Query details fetch
                     }}
-                    placeholder="SÃ©lectionner le devis d'origine..."
+                    placeholder="Sélectionner le devis d'origine..."
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Client facturÃ©</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Client facturé</label>
                   <AutocompleteSelect
                     options={accountOptions}
                     value={accountId}
                     onChange={setAccountId}
-                    placeholder="SÃ©lectionner le client..."
+                    placeholder="Sélectionner le client..."
                   />
                 </div>
               </div>
             </div>
 
             {/* Line items dynamic ledger */}
-            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6">
+            <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm space-y-6">
               <div className="flex justify-between items-center pb-3 border-b border-slate-100">
                 <h3 className="font-bold text-slate-880 text-xs uppercase tracking-wider">
                   Lignes de Facture
@@ -334,7 +334,7 @@ const InvoiceForm = () => {
                 <button
                   type="button"
                   onClick={handleAddItemRow}
-                  className="py-1.5 px-3 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold text-xs tracking-wide transition-all cursor-pointer flex items-center space-x-1"
+                  className="py-1.5 px-3 rounded-xl bg-[#FDF0EA] hover:bg-blue-100 text-[#C85A2A] font-bold text-xs tracking-wide transition-all cursor-pointer flex items-center space-x-1"
                 >
                   <span>+ Ajouter une ligne</span>
                 </button>
@@ -355,7 +355,7 @@ const InvoiceForm = () => {
                     </div>
 
                     <div className="w-full sm:flex-1 space-y-1">
-                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Prestation facturÃ©e</label>
+                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Prestation facturée</label>
                       <input
                         type="text"
                         required
@@ -367,7 +367,7 @@ const InvoiceForm = () => {
                     </div>
 
                     <div className="w-16 space-y-1">
-                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">UnitÃ©</label>
+                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Unité</label>
                       <input
                         type="text"
                         required
@@ -379,7 +379,7 @@ const InvoiceForm = () => {
                     </div>
 
                     <div className="w-20 space-y-1">
-                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">QtÃ©</label>
+                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Qté</label>
                       <input
                         type="number"
                         step="0.01"
@@ -418,9 +418,9 @@ const InvoiceForm = () => {
 
           {/* Sidebar calculations & settings */}
           <div className="space-y-6">
-            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6">
+            <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm space-y-6">
               <h3 className="font-bold text-slate-850 text-xs uppercase tracking-wider pb-3 border-b border-slate-100">
-                ParamÃ¨tres fiscaux & Type
+                Paramètres fiscaux & Type
               </h3>
 
               <div className="space-y-4">
@@ -431,7 +431,7 @@ const InvoiceForm = () => {
                     onChange={(e) => setType(e.target.value)}
                     className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] cursor-pointer font-bold"
                   >
-                    <option value="Standard">Standard (ComplÃ¨te)</option>
+                    <option value="Standard">Standard (Complète)</option>
                     <option value="Acompte">Acompte Ã  la signature</option>
                     <option value="Situation">Facture de situation (Avancement)</option>
                     <option value="Solde">Facture de Solde</option>
@@ -439,7 +439,7 @@ const InvoiceForm = () => {
                 </div>
 
                 {type === 'Situation' && (
-                  <div className="p-4 rounded-2xl bg-blue-50 border border-blue-100 space-y-3">
+                  <div className="p-4 rounded-2xl bg-[#FDF0EA] border border-blue-100 space-y-3">
                     <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide block">Pourcentage d'avancement (%)</label>
                     <div className="flex space-x-2">
                       <input
@@ -453,32 +453,32 @@ const InvoiceForm = () => {
                       <button
                         type="button"
                         onClick={handleApplySituationPercentage}
-                        className="py-2 px-3 rounded-xl bg-[#C85A2A] hover:bg-blue-550 text-white font-bold text-[10px] uppercase shrink-0 cursor-pointer transition-colors"
+                        className="py-2 px-3 rounded-xl bg-[#C85A2A] hover:bg-[#A8481F] text-white font-bold text-[10px] uppercase shrink-0 cursor-pointer transition-colors"
                       >
                         Appliquer
                       </button>
                     </div>
                     <span className="text-[9px] text-slate-400 font-bold leading-normal block">
-                      Cliquez sur "Appliquer" pour multiplier les quantitÃ©s de chaque ligne de devis d'origine par le taux d'avancement spÃ©cifiÃ©.
+                      Cliquez sur "Appliquer" pour multiplier les quantités de chaque ligne de devis d'origine par le taux d'avancement spécifié.
                     </span>
                   </div>
                 )}
 
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Ã‰tat initial</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">État initial</label>
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
                     className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] cursor-pointer font-bold"
                   >
                     <option value="Brouillon">Brouillon</option>
-                    <option value="EnvoyÃ©e">EnvoyÃ©e</option>
-                    <option value="PayÃ©e">PayÃ©e</option>
+                    <option value="Envoyée">Envoyée</option>
+                    <option value="Payée">Payée</option>
                   </select>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Date d'Ã©chÃ©ance rÃ©glementaire</label>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Date d'échéance réglementaire</label>
                   <input
                     type="date"
                     value={dueDate}
@@ -495,16 +495,16 @@ const InvoiceForm = () => {
                     className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] cursor-pointer font-bold"
                   >
                     <option value="20">20% (Taux standard Maroc)</option>
-                    <option value="14">14% (Taux rÃ©duit)</option>
+                    <option value="14">14% (Taux réduit)</option>
                     <option value="10">10%</option>
                     <option value="7">7%</option>
-                    <option value="0">ExonÃ©rÃ© (0%)</option>
+                    <option value="0">Exonéré (0%)</option>
                   </select>
                 </div>
               </div>
 
               {/* Instant calculations summary */}
-              <div className="p-5 rounded-2xl bg-blue-50 border border-blue-100 space-y-3.5 text-xs font-semibold text-slate-655">
+              <div className="p-5 rounded-2xl bg-[#FDF0EA] border border-blue-100 space-y-3.5 text-xs font-semibold text-slate-655">
                 <div className="flex justify-between items-center">
                   <span>Sous-total HT</span>
                   <span className="text-slate-850 font-extrabold">{formatCurrency(totalHt)}</span>
@@ -524,9 +524,9 @@ const InvoiceForm = () => {
                 <button
                   type="submit"
                   disabled={saveMutation.isLoading}
-                  className="w-full py-3 px-5 rounded-xl bg-[#C85A2A] hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 disabled:bg-slate-300 disabled:cursor-not-allowed transition-all cursor-pointer"
+                  className="w-full py-3 px-5 rounded-xl bg-[#C85A2A] hover:bg-[#A8481F] text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 disabled:bg-slate-300 disabled:cursor-not-allowed transition-all cursor-pointer"
                 >
-                  {saveMutation.isLoading ? 'Enregistrement...' : isEdit ? 'Enregistrer les modifications' : 'Ã‰mettre la Facture'}
+                  {saveMutation.isLoading ? 'Enregistrement...' : isEdit ? 'Enregistrer les modifications' : 'Émettre la Facture'}
                 </button>
               </div>
             </div>

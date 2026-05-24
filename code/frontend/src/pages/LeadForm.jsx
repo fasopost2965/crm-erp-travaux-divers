@@ -6,8 +6,8 @@ import PageHeader from '../components/common/PageHeader';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import { useToast } from '../components/common/NotificationToast';
 
-const LEAD_SOURCES = ['Appel entrant', 'Appel d\'offres', 'Recommandation', 'RÃ©seaux sociaux', 'Site web', 'Salon', 'Autre'];
-const LEAD_STATUSES = ['Nouveau', 'ContactÃ©', 'QualifiÃ©', 'Perdu'];
+const LEAD_SOURCES = ['Appel entrant', 'Appel d\'offres', 'Recommandation', 'Réseaux sociaux', 'Site web', 'Salon', 'Autre'];
+const LEAD_STATUSES = ['Nouveau', 'Contacté', 'Qualifié', 'Perdu'];
 
 const LeadForm = () => {
   const { id } = useParams();
@@ -48,7 +48,7 @@ const LeadForm = () => {
       return (await api.post('/api/leads', data)).data;
     },
     onSuccess: () => {
-      showToast(isEdit ? 'Lead mis Ã  jour.' : 'Lead crÃ©Ã© avec succÃ¨s.');
+      showToast(isEdit ? 'Lead mis Ã  jour.' : 'Lead créé avec succès.');
       queryClient.invalidateQueries(['leadsList']);
       navigate('/dashboard/leads');
     },
@@ -71,12 +71,12 @@ const LeadForm = () => {
       />
 
       <form onSubmit={handleSubmit} className="max-w-2xl space-y-5">
-        <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-4">
+        <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm space-y-4">
           <h3 className="text-sm font-extrabold text-slate-800 border-b border-slate-100 pb-3">Informations du Lead</h3>
 
           <div>
             <label className="block text-xs font-bold text-slate-600 mb-1.5">Titre / Objet <span className="text-red-500">*</span></label>
-            <input type="text" name="title" value={form.title} onChange={handleChange} required placeholder="RÃ©novation Ã©lectrique siÃ¨ge..." className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all" />
+            <input type="text" name="title" value={form.title} onChange={handleChange} required placeholder="Rénovation électrique siège..." className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all" />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -93,13 +93,13 @@ const LeadForm = () => {
               <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="contact@entreprise.ma" className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-600 mb-1.5">TÃ©lÃ©phone</label>
+              <label className="block text-xs font-bold text-slate-600 mb-1.5">Téléphone</label>
               <input type="text" name="phone" value={form.phone} onChange={handleChange} placeholder="+212 6XX XX XX XX" className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all" />
             </div>
             <div>
               <label className="block text-xs font-bold text-slate-600 mb-1.5">Source</label>
               <select name="source" value={form.source} onChange={handleChange} className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all cursor-pointer">
-                <option value="">SÃ©lectionner...</option>
+                <option value="">Sélectionner...</option>
                 {LEAD_SOURCES.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
@@ -118,15 +118,15 @@ const LeadForm = () => {
               value={form.notes}
               onChange={handleChange}
               rows={4}
-              placeholder="Contexte, besoins spÃ©cifiques, historique des Ã©changes..."
+              placeholder="Contexte, besoins spécifiques, historique des échanges..."
               className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all resize-none"
             />
           </div>
         </div>
 
         <div className="flex items-center space-x-3">
-          <button type="submit" disabled={mutation.isLoading} className="py-2.5 px-6 rounded-xl bg-[#C85A2A] hover:bg-blue-500 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 transition-all disabled:opacity-50 cursor-pointer">
-            {mutation.isLoading ? 'Enregistrement...' : isEdit ? 'Mettre Ã  jour' : 'CrÃ©er le Lead'}
+          <button type="submit" disabled={mutation.isLoading} className="py-2.5 px-6 rounded-xl bg-[#C85A2A] hover:bg-[#FDF0EA]0 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 transition-all disabled:opacity-50 cursor-pointer">
+            {mutation.isLoading ? 'Enregistrement...' : isEdit ? 'Mettre Ã  jour' : 'Créer le Lead'}
           </button>
           <button type="button" onClick={() => navigate('/dashboard/leads')} className="py-2.5 px-5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs transition-all cursor-pointer">
             Annuler

@@ -57,7 +57,7 @@ const QuoteDetail = () => {
 
   if (error) {
     return (
-      <div className="p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700 font-medium">
+      <div className="p-6 bg-red-50 border border-red-200 rounded-xl text-red-700 font-medium">
         âš ï¸ Erreur de chargement de la fiche devis : {error.message}.
       </div>
     );
@@ -71,7 +71,7 @@ const QuoteDetail = () => {
 
   const handleExportPdf = async () => {
     try {
-      showToast(`GÃ©nÃ©ration du PDF pour le devis ${quote.quoteNumber}...`);
+      showToast(`Génération du PDF pour le devis ${quote.quoteNumber}...`);
       const response = await api.get(`/api/quotes/${id}/pdf`, {
         responseType: 'blob'
       });
@@ -83,9 +83,9 @@ const QuoteDetail = () => {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
-      showToast(`PDF du devis ${quote.quoteNumber} tÃ©lÃ©chargÃ© avec succÃ¨s.`, 'success');
+      showToast(`PDF du devis ${quote.quoteNumber} téléchargé avec succès.`, 'success');
     } catch (err) {
-      showToast(`Erreur lors de la gÃ©nÃ©ration du PDF: ${err.message}`, 'error');
+      showToast(`Erreur lors de la génération du PDF: ${err.message}`, 'error');
     }
   };
 
@@ -112,7 +112,7 @@ const QuoteDetail = () => {
               onClick={() => navigate(`/dashboard/quotes/${quote.id}/edit`)}
               className="py-2 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs tracking-wide transition-all cursor-pointer"
             >
-              âœï¸ Ã‰diter
+              âœï¸ Éditer
             </button>
             <button
               onClick={handleExportPdf}
@@ -123,12 +123,12 @@ const QuoteDetail = () => {
             {quote.status === 'Brouillon' && (
               <button
                 onClick={() => setIsSendOpen(true)}
-                className="py-2 px-4 rounded-xl bg-blue-50 text-blue-600 font-bold text-xs tracking-wide transition-all cursor-pointer"
+                className="py-2 px-4 rounded-xl bg-[#FDF0EA] text-[#C85A2A] font-bold text-xs tracking-wide transition-all cursor-pointer"
               >
                 âœ‰ï¸ Envoyer
               </button>
             )}
-            {quote.status === 'EnvoyÃ©' && (
+            {quote.status === 'Envoyé' && (
               <>
                 <button
                   onClick={() => setIsAcceptOpen(true)}
@@ -144,10 +144,10 @@ const QuoteDetail = () => {
                 </button>
               </>
             )}
-            {quote.status === 'AcceptÃ©' && (
+            {quote.status === 'Accepté' && (
               <button
                 onClick={handleConvertToProject}
-                className="py-2.5 px-5 rounded-xl bg-[#C85A2A] hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 transition-all cursor-pointer"
+                className="py-2.5 px-5 rounded-xl bg-[#C85A2A] hover:bg-[#A8481F] text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 transition-all cursor-pointer"
               >
                 ðŸ—ï¸ Convertir en Projet
               </button>
@@ -159,27 +159,27 @@ const QuoteDetail = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Document Pane */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-sm space-y-8 relative overflow-hidden">
+          <div className="bg-white border border-slate-100 rounded-xl p-6 sm:p-8 shadow-sm space-y-8 relative overflow-hidden">
             {/* Header branding */}
             <div className="flex flex-col sm:flex-row justify-between items-start gap-4 pb-6 border-b border-slate-100">
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
-                  <span className="text-2xl font-black tracking-tighter text-blue-600">ATLAS WORKS</span>
+                  <span className="text-xl font-black tracking-tighter text-[#C85A2A]">ATLAS WORKS</span>
                   <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 bg-slate-100 py-0.5 px-2 rounded">Divers Pro</span>
                 </div>
                 <p className="text-[10px] text-slate-400 font-semibold leading-relaxed">
-                  Atlas Works S.A.R.L. â€” Travaux Divers & RÃ©novation<br />
+                  Atlas Works S.A.R.L. "” Travaux Divers & Rénovation<br />
                   Casablanca, Maroc | IF: 52367489 | RC: 94827
                 </p>
               </div>
               <div className="text-right sm:text-right space-y-1">
                 <h2 className="text-xl font-black text-slate-800 uppercase tracking-tight">DEVIS</h2>
-                <p className="text-xs font-bold text-blue-600">{quote.quoteNumber}</p>
+                <p className="text-xs font-bold text-[#C85A2A]">{quote.quoteNumber}</p>
                 <p className="text-[10px] text-slate-400 font-semibold">
-                  Date d'Ã©mission : {quote.createdAt ? new Date(quote.createdAt).toLocaleDateString('fr-FR') : '-'}
+                  Date d'émission : {quote.createdAt ? new Date(quote.createdAt).toLocaleDateString('fr-FR') : '-'}
                 </p>
                 <p className="text-[10px] text-rose-500 font-bold">
-                  Valide jusqu'au : {quote.validUntil ? new Date(quote.validUntil).toLocaleDateString('fr-FR') : 'Non dÃ©finie'}
+                  Valide jusqu'au : {quote.validUntil ? new Date(quote.validUntil).toLocaleDateString('fr-FR') : 'Non définie'}
                 </p>
               </div>
             </div>
@@ -187,17 +187,17 @@ const QuoteDetail = () => {
             {/* Client and Partner details */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs leading-relaxed">
               <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
-                <h3 className="font-extrabold text-[10px] text-slate-400 uppercase tracking-widest">Ã‰metteur</h3>
+                <h3 className="font-extrabold text-[10px] text-slate-400 uppercase tracking-widest">Émetteur</h3>
                 <p className="font-bold text-slate-800">Atlas Works SARL</p>
                 <p className="text-slate-500">
-                  12 Rue des HÃ´pitaux, Maarif<br />
+                  12 Rue des Hôpitaux, Maarif<br />
                   Casablanca, Maroc
                 </p>
                 <p className="text-slate-400">contact@atlasworks.ma | +212 522 34 56 78</p>
               </div>
               <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
                 <h3 className="font-extrabold text-[10px] text-slate-400 uppercase tracking-widest">Destinataire</h3>
-                <p className="font-bold text-slate-800">{quote.account?.name || 'SociÃ©tÃ© Client'}</p>
+                <p className="font-bold text-slate-800">{quote.account?.name || 'Société Client'}</p>
                 {quote.account?.address && (
                   <p className="text-slate-500">
                     {quote.account.address}<br />
@@ -213,7 +213,7 @@ const QuoteDetail = () => {
             {/* Prestation lines table */}
             <div className="space-y-4">
               <h3 className="font-extrabold text-xs text-slate-800 tracking-tight">
-                DÃ©tail des prestations - {quote.title}
+                Détail des prestations - {quote.title}
               </h3>
               <div className="overflow-x-auto border border-slate-100 rounded-2xl">
                 <table className="min-w-full divide-y divide-slate-100 text-left text-xs">
@@ -221,7 +221,7 @@ const QuoteDetail = () => {
                     <tr>
                       <th scope="col" className="px-4 py-3">Description / Section</th>
                       <th scope="col" className="px-4 py-3 text-center w-16">U</th>
-                      <th scope="col" className="px-4 py-3 text-right w-20">QtÃ©</th>
+                      <th scope="col" className="px-4 py-3 text-right w-20">Qté</th>
                       <th scope="col" className="px-4 py-3 text-right w-28">P.U. HT</th>
                       <th scope="col" className="px-4 py-3 text-right w-32">Total HT</th>
                     </tr>
@@ -238,7 +238,7 @@ const QuoteDetail = () => {
                         <tr key={item.id || index} className="hover:bg-slate-50/50 transition-colors">
                           <td className="px-4 py-3.5 max-w-xs">
                             {item.section && (
-                              <span className="block text-[9px] font-black uppercase text-blue-500 tracking-wider mb-0.5">
+                              <span className="block text-[9px] font-black uppercase text-[#C85A2A] tracking-wider mb-0.5">
                                 [{item.section}]
                               </span>
                             )}
@@ -278,18 +278,18 @@ const QuoteDetail = () => {
                 <div className="h-px bg-slate-100 my-1"></div>
                 <div className="flex justify-between items-center text-slate-850 font-black text-sm">
                   <span>Total TTC</span>
-                  <span className="text-blue-600">{formatCurrency(quote.totalTtc)}</span>
+                  <span className="text-[#C85A2A]">{formatCurrency(quote.totalTtc)}</span>
                 </div>
               </div>
             </div>
 
             {/* Notes & legal terms */}
             <div className="pt-6 border-t border-slate-100 text-[10px] text-slate-400 font-medium leading-relaxed space-y-2">
-              <p className="font-bold text-slate-600">Conditions & ModalitÃ©s de Paiement :</p>
+              <p className="font-bold text-slate-600">Conditions & Modalités de Paiement :</p>
               <ul className="list-disc pl-4 space-y-1">
-                <li>ValiditÃ© de l'offre : 30 jours Ã  compter de la date d'Ã©mission.</li>
-                <li>ModalitÃ©s de rÃ¨glement : 30% d'acompte Ã  la signature de la commande, le solde selon avancement sur situations mensuelles de travaux.</li>
-                <li>Toutes les rÃ©clamations concernant l'exÃ©cution des prestations doivent Ãªtre signalÃ©es sous 48 heures.</li>
+                <li>Validité de l'offre : 30 jours Ã  compter de la date d'émission.</li>
+                <li>Modalités de règlement : 30% d'acompte Ã  la signature de la commande, le solde selon avancement sur situations mensuelles de travaux.</li>
+                <li>Toutes les réclamations concernant l'exécution des prestations doivent être signalées sous 48 heures.</li>
               </ul>
             </div>
           </div>
@@ -298,22 +298,22 @@ const QuoteDetail = () => {
         {/* Sidebar Status & Timeline */}
         <div className="space-y-6">
           {/* Status info card */}
-          <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-4">
-            <h3 className="font-bold text-slate-850 text-xs uppercase tracking-wider">Ã‰tat du Devis</h3>
+          <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm space-y-4">
+            <h3 className="font-bold text-slate-850 text-xs uppercase tracking-wider">État du Devis</h3>
             <div className="flex items-center space-x-3">
               <StatusBadge status={quote.status} />
               <span className="text-xs text-slate-400 font-semibold">
-                ModifiÃ© le {quote.updatedAt ? new Date(quote.updatedAt).toLocaleDateString('fr-FR') : '-'}
+                Modifié le {quote.updatedAt ? new Date(quote.updatedAt).toLocaleDateString('fr-FR') : '-'}
               </span>
             </div>
             {quote.marginEstimated > 0 && (
               <div className="pt-4 border-t border-slate-100 space-y-2 text-xs">
                 <div className="flex justify-between items-center text-slate-400 font-bold">
-                  <span>Marge estimÃ©e (HT)</span>
+                  <span>Marge estimée (HT)</span>
                   <span className="text-slate-800 font-extrabold">{formatCurrency(quote.marginEstimated)}</span>
                 </div>
                 <div className="flex justify-between items-center text-slate-400 font-bold">
-                  <span>Taux de rÃ©tention</span>
+                  <span>Taux de rétention</span>
                   <span className="text-slate-800 font-extrabold">{quote.retentionRate || 0}%</span>
                 </div>
               </div>
@@ -321,51 +321,51 @@ const QuoteDetail = () => {
           </div>
 
           {/* Activity Timeline */}
-          <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-6">
-            <h3 className="font-bold text-slate-850 text-xs uppercase tracking-wider">Historique d'activitÃ©</h3>
+          <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm space-y-6">
+            <h3 className="font-bold text-slate-850 text-xs uppercase tracking-wider">Historique d'activité</h3>
             <div className="space-y-6 relative before:absolute before:inset-y-0 before:left-3 before:w-0.5 before:bg-slate-100">
               {/* Brouillon state */}
               <div className="flex items-start space-x-3 relative">
-                <div className="w-6 h-6 rounded-full bg-blue-500 border-4 border-white z-10 shrink-0 flex items-center justify-center text-[10px] text-white">âœ“</div>
+                <div className="w-6 h-6 rounded-full bg-[#FDF0EA]0 border-4 border-white z-10 shrink-0 flex items-center justify-center text-[10px] text-white">âœ“</div>
                 <div className="text-xs">
-                  <p className="font-bold text-slate-850">CrÃ©ation du devis</p>
-                  <p className="text-[10px] text-slate-400">Le devis a Ã©tÃ© initialisÃ© au format Brouillon.</p>
+                  <p className="font-bold text-slate-850">Création du devis</p>
+                  <p className="text-[10px] text-slate-400">Le devis a été initialisé au format Brouillon.</p>
                 </div>
               </div>
 
-              {/* EnvoyÃ© state */}
+              {/* Envoyé state */}
               <div className="flex items-start space-x-3 relative">
                 <div className={`w-6 h-6 rounded-full border-4 border-white z-10 shrink-0 flex items-center justify-center text-[10px] ${
-                  ['EnvoyÃ©', 'AcceptÃ©', 'RefusÃ©'].includes(quote.status)
-                    ? 'bg-blue-500 text-white'
+                  ['Envoyé', 'Accepté', 'Refusé'].includes(quote.status)
+                    ? 'bg-[#FDF0EA]0 text-white'
                     : 'bg-slate-200 text-slate-400'
                 }`}>
-                  {['EnvoyÃ©', 'AcceptÃ©', 'RefusÃ©'].includes(quote.status) ? 'âœ“' : 'â€¢'}
+                  {['Envoyé', 'Accepté', 'Refusé'].includes(quote.status) ? 'âœ“' : '"¢'}
                 </div>
                 <div className="text-xs">
-                  <p className={`font-bold ${['EnvoyÃ©', 'AcceptÃ©', 'RefusÃ©'].includes(quote.status) ? 'text-slate-850' : 'text-slate-400'}`}>
-                    EnvoyÃ© au client
+                  <p className={`font-bold ${['Envoyé', 'Accepté', 'Refusé'].includes(quote.status) ? 'text-slate-850' : 'text-slate-400'}`}>
+                    Envoyé au client
                   </p>
-                  <p className="text-[10px] text-slate-400">Le devis a Ã©tÃ© partagÃ© avec le client pour nÃ©gociation.</p>
+                  <p className="text-[10px] text-slate-400">Le devis a été partagé avec le client pour négociation.</p>
                 </div>
               </div>
 
-              {/* AcceptÃ© / RefusÃ© state */}
+              {/* Accepté / Refusé state */}
               <div className="flex items-start space-x-3 relative">
                 <div className={`w-6 h-6 rounded-full border-4 border-white z-10 shrink-0 flex items-center justify-center text-[10px] ${
-                  quote.status === 'AcceptÃ©'
+                  quote.status === 'Accepté'
                     ? 'bg-emerald-500 text-white'
-                    : quote.status === 'RefusÃ©'
+                    : quote.status === 'Refusé'
                     ? 'bg-rose-500 text-white'
                     : 'bg-slate-200 text-slate-400'
                 }`}>
-                  {quote.status === 'AcceptÃ©' ? 'âœ“' : quote.status === 'RefusÃ©' ? 'âœ—' : 'â€¢'}
+                  {quote.status === 'Accepté' ? 'âœ“' : quote.status === 'Refusé' ? 'âœ—' : '"¢'}
                 </div>
                 <div className="text-xs">
-                  <p className={`font-bold ${['AcceptÃ©', 'RefusÃ©'].includes(quote.status) ? 'text-slate-850' : 'text-slate-400'}`}>
-                    {quote.status === 'RefusÃ©' ? 'Devis RefusÃ©' : 'Devis AcceptÃ© / GagnÃ©'}
+                  <p className={`font-bold ${['Accepté', 'Refusé'].includes(quote.status) ? 'text-slate-850' : 'text-slate-400'}`}>
+                    {quote.status === 'Refusé' ? 'Devis Refusé' : 'Devis Accepté / Gagné'}
                   </p>
-                  <p className="text-[10px] text-slate-400">La dÃ©cision commerciale finale du client a Ã©tÃ© enregistrÃ©e.</p>
+                  <p className="text-[10px] text-slate-400">La décision commerciale finale du client a été enregistrée.</p>
                 </div>
               </div>
             </div>
@@ -376,37 +376,37 @@ const QuoteDetail = () => {
       {/* Confirmation Dialogs */}
       <ConfirmDialog
         isOpen={isSendOpen}
-        title="Marquer comme envoyÃ© ?"
-        message="Voulez-vous notifier le systÃ¨me que ce devis a Ã©tÃ© envoyÃ© au client ? Son statut passera Ã  'EnvoyÃ©'."
+        title="Marquer comme envoyé ?"
+        message="Voulez-vous notifier le système que ce devis a été envoyé au client ? Son statut passera Ã  'Envoyé'."
         confirmText="Confirmer l'envoi"
         cancelText="Annuler"
         type="info"
         loading={statusMutation.isLoading}
-        onConfirm={() => statusMutation.mutate('EnvoyÃ©')}
+        onConfirm={() => statusMutation.mutate('Envoyé')}
         onCancel={() => setIsSendOpen(false)}
       />
 
       <ConfirmDialog
         isOpen={isAcceptOpen}
         title="Accepter le devis ?"
-        message="ÃŠtes-vous sÃ»r de vouloir marquer ce devis comme acceptÃ© ? Cette action validera le budget et vous permettra de le convertir en chantier."
-        confirmText="Devis AcceptÃ©"
+        message="ÃŠtes-vous sûr de vouloir marquer ce devis comme accepté ? Cette action validera le budget et vous permettra de le convertir en chantier."
+        confirmText="Devis Accepté"
         cancelText="Annuler"
         type="success"
         loading={statusMutation.isLoading}
-        onConfirm={() => statusMutation.mutate('AcceptÃ©')}
+        onConfirm={() => statusMutation.mutate('Accepté')}
         onCancel={() => setIsAcceptOpen(false)}
       />
 
       <ConfirmDialog
         isOpen={isRefuseOpen}
         title="Refuser le devis ?"
-        message="ÃŠtes-vous sÃ»r de vouloir classer ce devis comme refusÃ© ?"
-        confirmText="Devis RefusÃ©"
+        message="ÃŠtes-vous sûr de vouloir classer ce devis comme refusé ?"
+        confirmText="Devis Refusé"
         cancelText="Annuler"
         type="danger"
         loading={statusMutation.isLoading}
-        onConfirm={() => statusMutation.mutate('RefusÃ©')}
+        onConfirm={() => statusMutation.mutate('Refusé')}
         onCancel={() => setIsRefuseOpen(false)}
       />
     </div>

@@ -51,7 +51,7 @@ const ContactForm = () => {
       return (await api.post('/api/contacts', data)).data;
     },
     onSuccess: () => {
-      showToast(isEdit ? 'Contact mis Ã  jour.' : 'Contact crÃ©Ã©.');
+      showToast(isEdit ? 'Contact mis Ã  jour.' : 'Contact créé.');
       queryClient.invalidateQueries(['contactsList']);
       navigate('/dashboard/contacts');
     },
@@ -78,7 +78,7 @@ const ContactForm = () => {
       />
 
       <form onSubmit={handleSubmit} className="max-w-2xl space-y-5">
-        <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-4">
+        <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm space-y-4">
           <h3 className="text-sm font-extrabold text-slate-800 border-b border-slate-100 pb-3">Informations du Contact</h3>
 
           <div>
@@ -90,7 +90,7 @@ const ContactForm = () => {
               required
               className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all"
             >
-              <option value="">SÃ©lectionner un client...</option>
+              <option value="">Sélectionner un client...</option>
               {(accountsData || []).map(acc => (
                 <option key={acc.id} value={acc.id}>{acc.name}</option>
               ))}
@@ -99,10 +99,10 @@ const ContactForm = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
-              { label: 'PrÃ©nom', name: 'first_name', required: true, placeholder: 'Mohammed' },
+              { label: 'Prénom', name: 'first_name', required: true, placeholder: 'Mohammed' },
               { label: 'Nom', name: 'last_name', required: true, placeholder: 'Alami' },
               { label: 'Poste', name: 'position', placeholder: 'Directeur Technique' },
-              { label: 'TÃ©lÃ©phone', name: 'phone', placeholder: '+212 6XX XX XX XX' },
+              { label: 'Téléphone', name: 'phone', placeholder: '+212 6XX XX XX XX' },
             ].map(({ label, name, required, placeholder }) => (
               <div key={name}>
                 <label className="block text-xs font-bold text-slate-600 mb-1.5">
@@ -138,9 +138,9 @@ const ContactForm = () => {
           <button
             type="submit"
             disabled={mutation.isLoading}
-            className="py-2.5 px-6 rounded-xl bg-[#C85A2A] hover:bg-blue-500 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 transition-all disabled:opacity-50 cursor-pointer"
+            className="py-2.5 px-6 rounded-xl bg-[#C85A2A] hover:bg-[#FDF0EA]0 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 transition-all disabled:opacity-50 cursor-pointer"
           >
-            {mutation.isLoading ? 'Enregistrement...' : isEdit ? 'Mettre Ã  jour' : 'CrÃ©er le Contact'}
+            {mutation.isLoading ? 'Enregistrement...' : isEdit ? 'Mettre Ã  jour' : 'Créer le Contact'}
           </button>
           <button
             type="button"

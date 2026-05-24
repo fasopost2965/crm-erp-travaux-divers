@@ -42,7 +42,7 @@ const PaymentForm = () => {
       return await api.post(`/api/invoices/${invoiceId}/payments`, payload);
     },
     onSuccess: () => {
-      showToast('RÃ¨glement enregistrÃ© avec succÃ¨s !');
+      showToast('Règlement enregistré avec succès !');
       // Invalidate caches
       queryClient.invalidateQueries(['invoiceDetail', invoiceId]);
       queryClient.invalidateQueries(['invoices']);
@@ -54,7 +54,7 @@ const PaymentForm = () => {
     },
     onError: (err) => {
       const errMsg = err.response?.data?.message || err.message;
-      showToast(`Erreur lors de l'enregistrement du rÃ¨glement : ${errMsg}`, 'error');
+      showToast(`Erreur lors de l'enregistrement du règlement : ${errMsg}`, 'error');
     }
   });
 
@@ -63,17 +63,17 @@ const PaymentForm = () => {
 
     const parsedAmount = parseFloat(amount);
     if (isNaN(parsedAmount) || parsedAmount <= 0) {
-      showToast('Le montant du rÃ¨glement doit Ãªtre supÃ©rieur Ã  0.', 'error');
+      showToast('Le montant du règlement doit être supérieur Ã  0.', 'error');
       return;
     }
 
     if (!paymentDate) {
-      showToast('Veuillez spÃ©cifier la date de paiement.', 'error');
+      showToast('Veuillez spécifier la date de paiement.', 'error');
       return;
     }
 
     if (!paymentMethod) {
-      showToast('Veuillez choisir un mode de rÃ¨glement.', 'error');
+      showToast('Veuillez choisir un mode de règlement.', 'error');
       return;
     }
 
@@ -95,8 +95,8 @@ const PaymentForm = () => {
 
   if (invoiceError) {
     return (
-      <div className="p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700 font-medium">
-        âš ï¸ Impossible de charger la facture pour ce rÃ¨glement : {invoiceError.message}.
+      <div className="p-6 bg-red-50 border border-red-200 rounded-xl text-red-700 font-medium">
+        âš ï¸ Impossible de charger la facture pour ce règlement : {invoiceError.message}.
       </div>
     );
   }
@@ -112,16 +112,16 @@ const PaymentForm = () => {
   return (
     <div className="max-w-xl mx-auto space-y-6 font-sans">
       <PageHeader
-        title="ðŸ’³ Enregistrer un RÃ¨glement"
+        title="ðŸ’³ Enregistrer un Règlement"
         breadcrumb={[
           { label: 'Finances', link: '/dashboard/invoices' },
           { label: invoice.invoiceNumber, link: `/dashboard/invoices/${invoiceId}` },
-          { label: 'RÃ¨glement' }
+          { label: 'Règlement' }
         ]}
       />
 
       {/* Recapitulatif Facture */}
-      <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+      <div className="bg-white border border-slate-100 rounded-xl p-6 sm:p-8 shadow-sm space-y-6">
         <div className="grid grid-cols-2 gap-4 p-5 rounded-2xl bg-slate-50 border border-slate-100 text-xs">
           <div className="space-y-1">
             <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest block">Facture</span>
@@ -141,7 +141,7 @@ const PaymentForm = () => {
             <p className="text-sm font-black text-slate-800">{formatCurrency(invoice.totalTtc)}</p>
           </div>
           <div className="space-y-1">
-            <span className="text-[10px] text-emerald-500 font-bold uppercase">DÃ©jÃ  rÃ©glÃ©</span>
+            <span className="text-[10px] text-emerald-500 font-bold uppercase">DéjÃ  réglé</span>
             <p className="text-sm font-black text-emerald-600">{formatCurrency(invoice.amountPaid)}</p>
           </div>
           <div className="space-y-1">
@@ -152,7 +152,7 @@ const PaymentForm = () => {
 
         {amountRemaining <= 0 ? (
           <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-150 text-emerald-700 text-xs font-bold text-center">
-            ðŸŽ‰ Cette facture a dÃ©jÃ  Ã©tÃ© intÃ©gralement rÃ©glÃ©e.
+            ðŸŽ‰ Cette facture a déjÃ  été intégralement réglée.
           </div>
         ) : null}
 
@@ -160,7 +160,7 @@ const PaymentForm = () => {
           {/* Montant */}
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">
-              Montant du rÃ¨glement (DH)
+              Montant du règlement (DH)
             </label>
             <div className="relative">
               <input
@@ -178,16 +178,16 @@ const PaymentForm = () => {
             </div>
             {parseFloat(amount) > amountRemaining ? (
               <p className="text-[10px] text-amber-500 font-bold">
-                âš ï¸ Attention: Le montant saisi dÃ©passe le reste Ã  payer de la facture ({formatCurrency(amountRemaining)}).
+                âš ï¸ Attention: Le montant saisi dépasse le reste Ã  payer de la facture ({formatCurrency(amountRemaining)}).
               </p>
             ) : null}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {/* Mode de rÃ¨glement */}
+            {/* Mode de règlement */}
             <div className="space-y-2">
               <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">
-                Mode de rÃ¨glement
+                Mode de règlement
               </label>
               <select
                 value={paymentMethod}
@@ -196,8 +196,8 @@ const PaymentForm = () => {
                 className="block w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#C85A2A] cursor-pointer font-bold disabled:opacity-50"
               >
                 <option value="Virement">Virement bancaire</option>
-                <option value="ChÃ¨que">ChÃ¨que</option>
-                <option value="EspÃ¨ces">EspÃ¨ces</option>
+                <option value="Chèque">Chèque</option>
+                <option value="Espèces">Espèces</option>
                 <option value="Effet">Effet de commerce</option>
                 <option value="Carte bancaire">Carte bancaire</option>
               </select>
@@ -206,7 +206,7 @@ const PaymentForm = () => {
             {/* Date de paiement */}
             <div className="space-y-2">
               <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">
-                Date de rÃ©ception
+                Date de réception
               </label>
               <input
                 type="date"
@@ -220,19 +220,19 @@ const PaymentForm = () => {
           </div>
 
           {/* Reference & Banque (conditional but simple visual groups) */}
-          {['Virement', 'ChÃ¨que', 'Effet', 'Carte bancaire'].includes(paymentMethod) && (
+          {['Virement', 'Chèque', 'Effet', 'Carte bancaire'].includes(paymentMethod) && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 animate-fadeIn">
-              {/* RÃ©fÃ©rence */}
+              {/* Référence */}
               <div className="space-y-2">
                 <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">
-                  NumÃ©ro de rÃ©fÃ©rence / ChÃ¨que
+                  Numéro de référence / Chèque
                 </label>
                 <input
                   type="text"
                   value={reference}
                   onChange={(e) => setReference(e.target.value)}
                   disabled={amountRemaining <= 0}
-                  placeholder={paymentMethod === 'ChÃ¨que' ? 'Ex: CHQ-8472910' : 'Ex: VIR-948172635'}
+                  placeholder={paymentMethod === 'Chèque' ? 'Ex: CHQ-8472910' : 'Ex: VIR-948172635'}
                   className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#C85A2A] disabled:opacity-50"
                 />
               </div>
@@ -240,7 +240,7 @@ const PaymentForm = () => {
               {/* Banque */}
               <div className="space-y-2">
                 <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">
-                  Banque Ã©mettrice
+                  Banque émettrice
                 </label>
                 <input
                   type="text"
@@ -260,7 +260,7 @@ const PaymentForm = () => {
               Notes de transaction
             </label>
             <textarea
-              placeholder="Renseigner ici toute note relative au rÃ¨glement (ex: rÃ¨glement partiel de situation, acompte, retenue de garantie...)"
+              placeholder="Renseigner ici toute note relative au règlement (ex: règlement partiel de situation, acompte, retenue de garantie...)"
               rows="3"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
@@ -280,9 +280,9 @@ const PaymentForm = () => {
             <button
               type="submit"
               disabled={paymentMutation.isLoading || amountRemaining <= 0}
-              className="flex-1 py-3 px-4 rounded-xl bg-[#C85A2A] hover:bg-blue-550 text-white font-bold tracking-wide shadow-md shadow-blue-900/10 transition-colors cursor-pointer disabled:opacity-55 disabled:cursor-not-allowed"
+              className="flex-1 py-3 px-4 rounded-xl bg-[#C85A2A] hover:bg-[#A8481F] text-white font-bold tracking-wide shadow-md shadow-blue-900/10 transition-colors cursor-pointer disabled:opacity-55 disabled:cursor-not-allowed"
             >
-              {paymentMutation.isLoading ? 'Enregistrement...' : 'Enregistrer le rÃ¨glement'}
+              {paymentMutation.isLoading ? 'Enregistrement...' : 'Enregistrer le règlement'}
             </button>
           </div>
         </form>

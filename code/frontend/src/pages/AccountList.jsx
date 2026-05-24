@@ -12,7 +12,7 @@ const AccountList = () => {
   const [search, setSearch] = useState('');
   const [cityFilter, setCityFilter] = useState('');
 
-  // RÃ©cupÃ©rer la liste des comptes clients via React Query depuis l'API Laravel paginÃ©e
+  // Récupérer la liste des comptes clients via React Query depuis l'API Laravel paginée
   const { data: responseData, isLoading, error } = useQuery({
     queryKey: ['accountsList', page],
     queryFn: async () => {
@@ -24,12 +24,12 @@ const AccountList = () => {
   });
 
   if (isLoading) {
-    return <LoadingSpinner fullPage message="Chargement du rÃ©pertoire client..." />;
+    return <LoadingSpinner fullPage message="Chargement du répertoire client..." />;
   }
 
   if (error) {
     return (
-      <div className="p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700 font-medium">
+      <div className="p-6 bg-red-50 border border-red-200 rounded-xl text-red-700 font-medium">
         âš ï¸ Erreur lors du chargement des clients : {error.message}.
       </div>
     );
@@ -38,7 +38,7 @@ const AccountList = () => {
   const rawAccounts = responseData?.data || [];
   const meta = responseData?.meta || { current_page: 1, last_page: 1, per_page: 10, total: rawAccounts.length };
 
-  // Filtrage local pour la recherche rÃ©active
+  // Filtrage local pour la recherche réactive
   const filteredAccounts = rawAccounts.filter((acc) => {
     const matchesSearch = acc.name.toLowerCase().includes(search.toLowerCase()) || 
                           (acc.email && acc.email.toLowerCase().includes(search.toLowerCase()));
@@ -56,12 +56,12 @@ const AccountList = () => {
       accessor: 'name',
       cell: (row) => (
         <div className="flex items-center space-x-3">
-          <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-extrabold text-sm shadow-inner shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-[#FDF0EA] text-[#C85A2A] flex items-center justify-center font-extrabold text-sm shadow-inner shrink-0">
             {row.name.charAt(0)}
           </div>
           <div className="min-w-0">
             <p className="font-bold text-slate-850 truncate">{row.name}</p>
-            <p className="text-[10px] text-slate-400 font-semibold">{row.email || 'Pas d\'email renseignÃ©'}</p>
+            <p className="text-[10px] text-slate-400 font-semibold">{row.email || 'Pas d\'email renseigné'}</p>
           </div>
         </div>
       )
@@ -85,20 +85,20 @@ const AccountList = () => {
       )
     },
     {
-      header: 'OpportunitÃ©s',
+      header: 'Opportunités',
       accessor: 'opportunities',
       cell: (row) => (
         <span className="text-xs font-bold text-blue-650">
-          ðŸ’¼ {row.opportunities?.length || 0} opportunitÃ©(s)
+          ðŸ’¼ {row.opportunities?.length || 0} opportunité(s)
         </span>
       )
     },
     {
-      header: 'Date de CrÃ©ation',
+      header: 'Date de Création',
       accessor: 'createdAt',
       cell: (row) => (
         <span className="text-xs text-slate-400">
-          {row.createdAt ? new Date(row.createdAt).toLocaleDateString('fr-FR') : 'Non spÃ©cifiÃ©e'}
+          {row.createdAt ? new Date(row.createdAt).toLocaleDateString('fr-FR') : 'Non spécifiée'}
         </span>
       )
     }
@@ -117,23 +117,23 @@ const AccountList = () => {
       
       {/* Page Header */}
       <PageHeader 
-        title="RÃ©pertoire Client (CRM)" 
+        title="Répertoire Client (CRM)" 
         breadcrumb={[{ label: "CRM" }, { label: "Clients" }]}
         actions={
           <button
             onClick={() => navigate('/dashboard/accounts/new')}
-            className="py-2.5 px-5 rounded-xl bg-[#C85A2A] hover:bg-blue-550 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 hover:shadow-blue-500/15 transition-all cursor-pointer flex items-center space-x-2"
+            className="py-2.5 px-5 rounded-xl bg-[#C85A2A] hover:bg-[#A8481F] text-white font-bold text-xs tracking-wide shadow-md shadow-blue-900/10 hover:shadow-blue-500/15 transition-all cursor-pointer flex items-center space-x-2"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            <span>CrÃ©er un Client</span>
+            <span>Créer un Client</span>
           </button>
         }
       />
 
       {/* Filter Bar Card */}
-      <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm flex flex-col md:flex-row md:items-center gap-4">
+      <div className="bg-white border border-slate-100 rounded-xl p-5 shadow-sm flex flex-col md:flex-row md:items-center gap-4">
         
         {/* Full-text search */}
         <div className="flex-1 relative">
@@ -144,7 +144,7 @@ const AccountList = () => {
           </div>
           <input
             type="text"
-            placeholder="Rechercher par nom de sociÃ©tÃ© ou email..."
+            placeholder="Rechercher par nom de société ou email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="block w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 placeholder-slate-450 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] focus:border-transparent transition-all"
@@ -169,9 +169,9 @@ const AccountList = () => {
         {(search || cityFilter) && (
           <button 
             onClick={() => { setSearch(''); setCityFilter(''); }}
-            className="text-xs font-bold text-slate-500 hover:text-blue-500 cursor-pointer self-start md:self-auto py-2.5 transition-colors"
+            className="text-xs font-bold text-slate-500 hover:text-[#C85A2A] cursor-pointer self-start md:self-auto py-2.5 transition-colors"
           >
-            RÃ©initialiser
+            Réinitialiser
           </button>
         )}
       </div>
@@ -181,7 +181,7 @@ const AccountList = () => {
         columns={columns}
         data={filteredAccounts}
         onRowClick={handleRowClick}
-        emptyTitle="Aucun client trouvÃ©"
+        emptyTitle="Aucun client trouvé"
         emptyDescription="Aucun compte client ne correspond Ã  votre recherche ou filtre."
         paginationMeta={
           meta && {
