@@ -113,7 +113,7 @@ const InvoiceDetail = () => {
               onClick={handleExportPdf}
               className="py-2 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs tracking-wide transition-colors cursor-pointer"
             >
-              ðŸ“ PDF
+              ðŸ' PDF
             </button>
             {invoice.status === 'Brouillon' && (
               <button
@@ -128,7 +128,7 @@ const InvoiceDetail = () => {
                 onClick={() => navigate(`/dashboard/invoices/${invoice.id}/payments/new`)}
                 className="py-2.5 px-5 rounded-xl bg-[#C85A2A] hover:bg-[#A8481F] text-white font-bold text-xs tracking-wide shadow-md transition-colors cursor-pointer"
               >
-                ðŸ’³ Enregistrer Règlement
+                ðŸ'³ Enregistrer Règlement
               </button>
             )}
           </div>
@@ -147,7 +147,7 @@ const InvoiceDetail = () => {
                   <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 bg-slate-100 py-0.5 px-2 rounded">Facturation</span>
                 </div>
                 <p className="text-[10px] text-slate-400 font-semibold leading-relaxed">
-                  Atlas Works S.A.R.L. "” Travaux Divers & Rénovation<br />
+                  Atlas Works S.A.R.L. "' Travaux Divers & Rénovation<br />
                   Casablanca, Maroc | IF: 52367489 | RC: 94827 | ICE: 001548792000145
                 </p>
               </div>
@@ -193,7 +193,7 @@ const InvoiceDetail = () => {
             <div className="space-y-4">
               <div className="flex justify-between items-end">
                 <h3 className="font-extrabold text-xs text-slate-800 tracking-tight">
-                  Prestations facturées "” {invoice.title}
+                  Prestations facturées "' {invoice.title}
                 </h3>
                 {invoice.situationPercentage > 0 && (
                   <span className="text-[10px] font-black uppercase text-[#C85A2A] bg-[#FDF0EA] px-2 py-0.5 rounded">
@@ -325,7 +325,7 @@ const InvoiceDetail = () => {
                   <div key={pay.id} className="p-3.5 rounded-2xl bg-emerald-50/20 border border-emerald-250 flex justify-between items-center text-xs">
                     <div>
                       <p className="font-black text-emerald-850">{formatCurrency(pay.amount)}</p>
-                      <p className="text-[9px] text-slate-400 font-bold uppercase mt-0.5">{pay.paymentMethod} {pay.reference && `"” ref : ${pay.reference}`}</p>
+                      <p className="text-[9px] text-slate-400 font-bold uppercase mt-0.5">{pay.paymentMethod} {pay.reference && `"' ref : ${pay.reference}`}</p>
                     </div>
                     <span className="text-[10px] text-slate-400 font-bold">{new Date(pay.paymentDate).toLocaleDateString('fr-FR')}</span>
                   </div>

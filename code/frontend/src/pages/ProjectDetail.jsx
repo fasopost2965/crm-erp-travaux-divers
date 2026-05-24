@@ -314,7 +314,7 @@ const ProjectDetail = () => {
             activeTab === 'overview' ? 'text-[#C85A2A] border-[#C85A2A]' : 'border-transparent hover:text-slate-600'
           }`}
         >
-          ðŸ” Fiche
+          ðŸ' Fiche
         </button>
         <button
           onClick={() => setActiveTab('tasks')}
@@ -322,7 +322,7 @@ const ProjectDetail = () => {
             activeTab === 'tasks' ? 'text-[#C85A2A] border-[#C85A2A]' : 'border-transparent hover:text-slate-600'
           }`}
         >
-          ðŸ“‹ Tâches (Kanban)
+          ðŸ'‹ Tâches (Kanban)
         </button>
         <button
           onClick={() => setActiveTab('hours')}
@@ -338,7 +338,7 @@ const ProjectDetail = () => {
             activeTab === 'photos' ? 'text-[#C85A2A] border-[#C85A2A]' : 'border-transparent hover:text-slate-600'
           }`}
         >
-          ðŸ“¸ Photos & Docs
+          ðŸ'¸ Photos & Docs
         </button>
         <button
           onClick={() => setActiveTab('signatures')}
@@ -366,7 +366,7 @@ const ProjectDetail = () => {
                 </div>
                 <div className="space-y-1">
                   <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Ville</span>
-                  <p className="text-slate-800">ðŸ“ {project.city || '-'}</p>
+                  <p className="text-slate-800">ðŸ' {project.city || '-'}</p>
                 </div>
               </div>
             </div>
@@ -427,7 +427,7 @@ const ProjectDetail = () => {
                           <p className="text-[10px] text-slate-400 leading-normal">{task.description}</p>
                           <div className="flex justify-between items-center pt-2 border-t border-slate-50">
                             <span className="text-[9px] text-slate-400 font-semibold">
-                              ðŸ‘¤ {task.assignee?.name || 'Non assigné'}
+                              ðŸ'¤ {task.assignee?.name || 'Non assigné'}
                             </span>
                             
                             {/* Simple state shifter */}
@@ -539,7 +539,7 @@ const ProjectDetail = () => {
 
               {/* Photo Upload Form */}
               <form onSubmit={handlePhotoUploadSubmit} className="pt-4 border-t border-slate-100 space-y-4 text-xs font-semibold">
-                <h4 className="font-bold text-slate-800 text-xs">ðŸ“· Ajouter une photo d'avancement</h4>
+                <h4 className="font-bold text-slate-800 text-xs">ðŸ'· Ajouter une photo d'avancement</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold text-slate-400 uppercase">Titre</label>
@@ -560,9 +560,9 @@ const ProjectDetail = () => {
                       className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#C85A2A] cursor-pointer"
                     >
                       <option value="Fondations">Fondations</option>
-                      <option value="Gros Å’uvre">Gros Å’uvre</option>
+                      <option value="Gros Œuvre">Gros Œuvre</option>
                       <option value="Charpente & Clos Couvert">Charpente & Clos Couvert</option>
-                      <option value="Second Å’uvre">Second Å’uvre</option>
+                      <option value="Second Å'uvre">Second Å'uvre</option>
                       <option value="Finitions / Réception">Finitions / Réception</option>
                     </select>
                   </div>
@@ -594,10 +594,10 @@ const ProjectDetail = () => {
                   documents.map(d => (
                     <div key={d.id} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 flex justify-between items-center text-xs font-semibold">
                       <div className="flex items-center space-x-2.5">
-                        <span className="text-lg">ðŸ“</span>
+                        <span className="text-lg">ðŸ'</span>
                         <div>
                           <p className="font-bold text-slate-800 leading-snug">{d.title}</p>
-                          <p className="text-[10px] text-slate-400 font-bold uppercase">{d.type} "” {d.uploader?.name}</p>
+                          <p className="text-[10px] text-slate-400 font-bold uppercase">{d.type} "' {d.uploader?.name}</p>
                         </div>
                       </div>
                       <button
@@ -616,7 +616,7 @@ const ProjectDetail = () => {
 
               {/* Doc Upload Form */}
               <form onSubmit={handleDocUploadSubmit} className="pt-4 border-t border-slate-100 space-y-4 text-xs font-semibold">
-                <h4 className="font-bold text-slate-800 text-xs">ðŸ“‚ Joindre un plan PDF ou un contrat</h4>
+                <h4 className="font-bold text-slate-800 text-xs">ðŸ'‚ Joindre un plan PDF ou un contrat</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold text-slate-400 uppercase">Titre</label>
@@ -682,7 +682,7 @@ const ProjectDetail = () => {
                       </div>
                       {s.notes && <p className="text-[11px] text-slate-550 italic">« {s.notes} »</p>}
                       <div className="border-t border-dashed border-emerald-300 pt-2 flex items-center justify-between text-[10px]">
-                        <span className="font-extrabold uppercase text-emerald-650 tracking-wider">âœ“ AUTHENTIFIÉ PAR CLÉ UNIQUE</span>
+                        <span className="font-extrabold uppercase text-emerald-650 tracking-wider">âœ' AUTHENTIFIÉ PAR CLÉ UNIQUE</span>
                         <span className="font-mono text-slate-400">HASH: 8cf6{s.id}db2...</span>
                       </div>
                     </div>
@@ -708,7 +708,7 @@ const ProjectDetail = () => {
               </button>
               {signatures.length > 0 && (
                 <p className="text-xs text-emerald-600 font-semibold text-center">
-                  âœ“ {signatures.length} signature{signatures.length > 1 ? 's' : ''} enregistrée{signatures.length > 1 ? 's' : ''}
+                  âœ' {signatures.length} signature{signatures.length > 1 ? 's' : ''} enregistrée{signatures.length > 1 ? 's' : ''}
                 </p>
               )}
             </div>
@@ -721,7 +721,7 @@ const ProjectDetail = () => {
         <div className="fixed inset-0 bg-slate-900/50 flex items-center justify-center p-4 z-50 animate-fadeIn">
           <div className="bg-white border border-slate-100 rounded-xl p-6 max-w-md w-full shadow-2xl space-y-6">
             <div className="flex justify-between items-center pb-3 border-b border-slate-100">
-              <h3 className="font-bold text-slate-800 text-sm uppercase">ðŸ“‹ Créer une tâche</h3>
+              <h3 className="font-bold text-slate-800 text-sm uppercase">ðŸ'‹ Créer une tâche</h3>
               <button onClick={() => setIsTaskModalOpen(false)} className="text-slate-400 font-bold text-base hover:text-slate-655 cursor-pointer">Ã—</button>
             </div>
 

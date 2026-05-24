@@ -118,8 +118,8 @@ const WorkLogForm = () => {
   const gpsLabel = {
     idle: null,
     loading: <span className="text-[10px] text-[#C85A2A] font-semibold animate-pulse">Localisation en cours...</span>,
-    ok: <span className="text-[10px] text-emerald-600 font-semibold">âœ“ GPS capté ({locationLat?.toFixed(4)}, {locationLng?.toFixed(4)})</span>,
-    denied: <span className="text-[10px] text-amber-500 font-semibold">Localisation refusée "” pointage sans GPS</span>,
+    ok: <span className="text-[10px] text-emerald-600 font-semibold">âœ' GPS capté ({locationLat?.toFixed(4)}, {locationLng?.toFixed(4)})</span>,
+    denied: <span className="text-[10px] text-amber-500 font-semibold">Localisation refusée "' pointage sans GPS</span>,
   }[gpsStatus];
 
   return (
@@ -138,7 +138,7 @@ const WorkLogForm = () => {
         <div className="p-4 rounded-2xl bg-[#FDF0EA] border border-blue-100 space-y-1">
           <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest block">Chantier</span>
           <span className="text-sm font-black text-slate-850 block">{project.title}</span>
-          <span className="text-[10px] text-slate-400 font-semibold block">ðŸ“ {project.address}, {project.city}</span>
+          <span className="text-[10px] text-slate-400 font-semibold block">ðŸ' {project.address}, {project.city}</span>
         </div>
 
         {/* GPS status */}
@@ -161,7 +161,7 @@ const WorkLogForm = () => {
               <option value="">Sélectionner une tâche en cours...</option>
               {tasks.map(t => (
                 <option key={t.id} value={t.id}>
-                  {t.title} ({t.status} "” Priorité : {t.priority})
+                  {t.title} ({t.status} "' Priorité : {t.priority})
                 </option>
               ))}
             </select>

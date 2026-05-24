@@ -62,7 +62,7 @@ const OpportunityList = () => {
       cell: (row) => (
         <div>
           <p className="font-bold text-slate-800 truncate">{row.title}</p>
-          <p className="text-[10px] text-slate-400 font-semibold">{row.account?.name || '"”'}</p>
+          <p className="text-[10px] text-slate-400 font-semibold">{row.account?.name || '—'}</p>
         </div>
       ),
     },
@@ -90,7 +90,7 @@ const OpportunityList = () => {
       accessor: 'closeDate',
       cell: (row) => (
         <span className="text-xs text-slate-500">
-          {row.closeDate ? new Date(row.closeDate).toLocaleDateString('fr-FR') : '"”'}
+          {row.closeDate ? new Date(row.closeDate).toLocaleDateString('fr-FR') : '—'}
         </span>
       ),
     },
@@ -113,7 +113,7 @@ const OpportunityList = () => {
             onClick={(e) => { e.stopPropagation(); setDeleteTarget(row); setIsDeleteOpen(true); }}
             className="p-1.5 rounded-lg border border-red-100 hover:bg-red-50 text-red-500 cursor-pointer transition-colors"
             title="Supprimer"
-          >ðŸ—‘ï¸</button>
+          >ðŸ—'ï¸</button>
         </div>
       ),
     },

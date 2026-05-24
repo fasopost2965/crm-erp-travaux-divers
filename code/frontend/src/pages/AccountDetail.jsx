@@ -87,7 +87,7 @@ const AccountDetail = () => {
               {acc.name}
             </h2>
             <p className="text-xs font-semibold text-slate-400 flex items-center">
-              ðŸ“ {acc.address ? `${acc.address}, ${acc.city}` : acc.city}
+              ðŸ' {acc.address ? `${acc.address}, ${acc.city}` : acc.city}
             </p>
             <div className="flex flex-wrap gap-3 pt-1 text-[11px] font-bold text-slate-500">
               {acc.email && (
@@ -97,7 +97,7 @@ const AccountDetail = () => {
               )}
               {acc.phone && (
                 <a href={`tel:${acc.phone}`} className="hover:text-[#C85A2A] flex items-center space-x-1">
-                  <span>ðŸ“ž</span> <span>{acc.phone}</span>
+                  <span>ðŸ'ž</span> <span>{acc.phone}</span>
                 </a>
               )}
             </div>
@@ -278,7 +278,7 @@ const AccountDetail = () => {
                         )}
                         {contact.phone && (
                           <p className="flex items-center space-x-1.5">
-                            <span>ðŸ“ž</span> <a href={`tel:${contact.phone}`} className="hover:text-[#C85A2A]">{contact.phone}</a>
+                            <span>ðŸ'ž</span> <a href={`tel:${contact.phone}`} className="hover:text-[#C85A2A]">{contact.phone}</a>
                           </p>
                         )}
                       </div>

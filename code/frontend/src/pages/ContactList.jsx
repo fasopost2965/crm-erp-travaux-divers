@@ -70,19 +70,19 @@ const ContactList = () => {
       accessor: 'account',
       cell: (row) => (
         <span className="text-xs font-semibold text-slate-600 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-100">
-          {row.account?.name || '"”'}
+          {row.account?.name || '—'}
         </span>
       ),
     },
     {
       header: 'Email',
       accessor: 'email',
-      cell: (row) => <span className="text-xs text-slate-500">{row.email || '"”'}</span>,
+      cell: (row) => <span className="text-xs text-slate-500">{row.email || '—'}</span>,
     },
     {
       header: 'Téléphone',
       accessor: 'phone',
-      cell: (row) => <span className="text-xs text-slate-500">{row.phone || '"”'}</span>,
+      cell: (row) => <span className="text-xs text-slate-500">{row.phone || '—'}</span>,
     },
     {
       header: 'Actions',
@@ -98,7 +98,7 @@ const ContactList = () => {
             onClick={(e) => { e.stopPropagation(); setDeleteTarget(row); setIsDeleteOpen(true); }}
             className="p-1.5 rounded-lg border border-red-100 hover:bg-red-50 text-red-500 cursor-pointer transition-colors"
             title="Supprimer"
-          >ðŸ—‘ï¸</button>
+          >ðŸ—'ï¸</button>
         </div>
       ),
     },

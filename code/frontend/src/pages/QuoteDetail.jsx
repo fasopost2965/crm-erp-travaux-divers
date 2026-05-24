@@ -118,7 +118,7 @@ const QuoteDetail = () => {
               onClick={handleExportPdf}
               className="py-2 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs tracking-wide transition-all cursor-pointer"
             >
-              ðŸ“ PDF
+              ðŸ' PDF
             </button>
             {quote.status === 'Brouillon' && (
               <button
@@ -168,7 +168,7 @@ const QuoteDetail = () => {
                   <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 bg-slate-100 py-0.5 px-2 rounded">Divers Pro</span>
                 </div>
                 <p className="text-[10px] text-slate-400 font-semibold leading-relaxed">
-                  Atlas Works S.A.R.L. "” Travaux Divers & Rénovation<br />
+                  Atlas Works S.A.R.L. "' Travaux Divers & Rénovation<br />
                   Casablanca, Maroc | IF: 52367489 | RC: 94827
                 </p>
               </div>
@@ -326,7 +326,7 @@ const QuoteDetail = () => {
             <div className="space-y-6 relative before:absolute before:inset-y-0 before:left-3 before:w-0.5 before:bg-slate-100">
               {/* Brouillon state */}
               <div className="flex items-start space-x-3 relative">
-                <div className="w-6 h-6 rounded-full bg-[#FDF0EA]0 border-4 border-white z-10 shrink-0 flex items-center justify-center text-[10px] text-white">âœ“</div>
+                <div className="w-6 h-6 rounded-full bg-[#FDF0EA]0 border-4 border-white z-10 shrink-0 flex items-center justify-center text-[10px] text-white">âœ'</div>
                 <div className="text-xs">
                   <p className="font-bold text-slate-850">Création du devis</p>
                   <p className="text-[10px] text-slate-400">Le devis a été initialisé au format Brouillon.</p>
@@ -340,7 +340,7 @@ const QuoteDetail = () => {
                     ? 'bg-[#FDF0EA]0 text-white'
                     : 'bg-slate-200 text-slate-400'
                 }`}>
-                  {['Envoyé', 'Accepté', 'Refusé'].includes(quote.status) ? 'âœ“' : '"¢'}
+                  {['Envoyé', 'Accepté', 'Refusé'].includes(quote.status) ? '✓' : '—'}
                 </div>
                 <div className="text-xs">
                   <p className={`font-bold ${['Envoyé', 'Accepté', 'Refusé'].includes(quote.status) ? 'text-slate-850' : 'text-slate-400'}`}>
@@ -359,7 +359,7 @@ const QuoteDetail = () => {
                     ? 'bg-rose-500 text-white'
                     : 'bg-slate-200 text-slate-400'
                 }`}>
-                  {quote.status === 'Accepté' ? 'âœ“' : quote.status === 'Refusé' ? 'âœ—' : '"¢'}
+                  {quote.status === 'Accepté' ? '✓' : quote.status === 'Refusé' ? 'âœ—' : '—'}
                 </div>
                 <div className="text-xs">
                   <p className={`font-bold ${['Accepté', 'Refusé'].includes(quote.status) ? 'text-slate-850' : 'text-slate-400'}`}>

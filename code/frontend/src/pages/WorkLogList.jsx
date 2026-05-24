@@ -150,34 +150,34 @@ const WorkLogList = () => {
               {logs.map((log) => (
                 <tr key={log.id} className="hover:bg-[#FDF0EA]/30 transition-colors">
                   <td className="px-5 py-4 text-sm font-semibold text-slate-800 whitespace-nowrap">
-                    {log.workDate ? new Date(log.workDate).toLocaleDateString('fr-FR') : '"”'}
+                    {log.workDate ? new Date(log.workDate).toLocaleDateString('fr-FR') : '—'}
                   </td>
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-2">
                       <div className="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600 shrink-0">
                         {log.user?.name?.charAt(0) || '?'}
                       </div>
-                      <span className="text-sm text-slate-700">{log.user?.name || '"”'}</span>
+                      <span className="text-sm text-slate-700">{log.user?.name || '—'}</span>
                     </div>
                   </td>
                   <td className="px-5 py-4 text-xs text-slate-500 whitespace-nowrap">
                     {log.startTime && log.endTime
-                      ? `${log.startTime.slice(0, 5)} â†’ ${log.endTime.slice(0, 5)}`
-                      : <span className="text-slate-300">"”</span>}
+                      ? `${log.startTime.slice(0, 5)} â†' ${log.endTime.slice(0, 5)}`
+                      : <span className="text-slate-300">"'</span>}
                   </td>
                   <td className="px-5 py-4">
                     <span className="text-sm font-bold text-slate-900">{log.hoursWorked}h</span>
                   </td>
                   <td className="px-5 py-4 text-xs text-slate-400">
                     {log.locationLat
-                      ? <span title={`${log.locationLat}, ${log.locationLng}`}>ðŸ“</span>
-                      : <span className="text-slate-200">"”</span>}
+                      ? <span title={`${log.locationLat}, ${log.locationLng}`}>ðŸ'</span>
+                      : <span className="text-slate-200">"'</span>}
                   </td>
                   <td className="px-5 py-4">
                     <StatusPill status={log.status} />
                   </td>
                   <td className="px-5 py-4 text-sm text-slate-500 max-w-xs truncate">
-                    {log.description || <span className="text-slate-300">"”</span>}
+                    {log.description || <span className="text-slate-300">"'</span>}
                   </td>
                 </tr>
               ))}
@@ -185,7 +185,7 @@ const WorkLogList = () => {
             <tfoot>
               <tr className="bg-slate-50 border-t border-slate-200">
                 <td colSpan={3} className="px-5 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">
-                  Total "” {logs.length} pointage{logs.length > 1 ? 's' : ''}
+                  Total "' {logs.length} pointage{logs.length > 1 ? 's' : ''}
                 </td>
                 <td className="px-5 py-3 text-sm font-black text-[#A8481F]">
                   {totalHours.toFixed(1)}h

@@ -90,7 +90,7 @@ const ProjectList = () => {
         <div>
           <p className="font-semibold text-slate-900 text-sm">{row.title}</p>
           <p className="text-xs text-slate-400 mt-0.5">
-            ðŸ“ {row.city || 'Non spécifié'}{row.address ? ` "” ${row.address}` : ''}
+            ðŸ' {row.city || 'Non spécifié'}{row.address ? ` "' ${row.address}` : ''}
           </p>
         </div>
       ),
@@ -100,7 +100,7 @@ const ProjectList = () => {
       accessor: 'account.name',
       cell: (row) => (
         <span className="text-sm text-slate-700 font-medium">
-          {row.account?.name || <span className="text-slate-400">"”</span>}
+          {row.account?.name || <span className="text-slate-400">"'</span>}
         </span>
       ),
     },
@@ -121,8 +121,8 @@ const ProjectList = () => {
       accessor: 'startDate',
       cell: (row) => (
         <div className="text-xs text-slate-500 space-y-0.5">
-          <p>Début : {row.startDate ? new Date(row.startDate).toLocaleDateString('fr-FR') : '"”'}</p>
-          <p className="text-rose-500">Fin : {row.endDatePlanned ? new Date(row.endDatePlanned).toLocaleDateString('fr-FR') : '"”'}</p>
+          <p>Début : {row.startDate ? new Date(row.startDate).toLocaleDateString('fr-FR') : '—'}</p>
+          <p className="text-rose-500">Fin : {row.endDatePlanned ? new Date(row.endDatePlanned).toLocaleDateString('fr-FR') : '—'}</p>
         </div>
       ),
     },
@@ -148,7 +148,7 @@ const ProjectList = () => {
             className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-500 transition-colors"
             title="Voir"
           >
-            ðŸ‘ï¸
+            ðŸ'ï¸
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); navigate(`/dashboard/projects/${row.id}/edit`); }}
@@ -162,7 +162,7 @@ const ProjectList = () => {
             className="p-1.5 rounded-lg border border-red-100 hover:bg-red-50 text-red-500 transition-colors"
             title="Supprimer"
           >
-            ðŸ—‘ï¸
+            ðŸ—'ï¸
           </button>
         </div>
       ),

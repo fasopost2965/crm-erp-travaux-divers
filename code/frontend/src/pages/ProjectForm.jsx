@@ -193,7 +193,7 @@ const ProjectForm = () => {
   // Map options for selects
   const quoteOptions = (quotesData || []).map(q => ({
     value: q.id,
-    label: `${q.quoteNumber} "” ${q.title}`
+    label: `${q.quoteNumber} "' ${q.title}`
   }));
 
   const accountOptions = (accountsData || []).map(acc => ({
@@ -204,7 +204,7 @@ const ProjectForm = () => {
   // Filter project managers (role code 'chef_chantier' or similar, or just any user)
   const managerOptions = (usersData || []).map(usr => ({
     value: usr.id,
-    label: `ðŸ‘¤ ${usr.name} (${usr.role?.name || 'Collaborateur'})`
+    label: `ðŸ'¤ ${usr.name} (${usr.role?.name || 'Collaborateur'})`
   }));
 
   const formatCurrency = (val) => {

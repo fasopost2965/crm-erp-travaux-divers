@@ -71,7 +71,7 @@ const AccountList = () => {
       accessor: 'city',
       cell: (row) => (
         <span className="inline-flex items-center text-xs font-semibold text-slate-600 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-100">
-          ðŸ“ {row.city}
+          ðŸ' {row.city}
         </span>
       )
     },
@@ -80,7 +80,7 @@ const AccountList = () => {
       accessor: 'contacts',
       cell: (row) => (
         <span className="text-xs font-bold text-slate-700">
-          ðŸ‘¥ {row.contacts?.length || 0} contact(s)
+          ðŸ'¥ {row.contacts?.length || 0} contact(s)
         </span>
       )
     },
@@ -89,7 +89,7 @@ const AccountList = () => {
       accessor: 'opportunities',
       cell: (row) => (
         <span className="text-xs font-bold text-blue-650">
-          ðŸ’¼ {row.opportunities?.length || 0} opportunité(s)
+          ðŸ'¼ {row.opportunities?.length || 0} opportunité(s)
         </span>
       )
     },

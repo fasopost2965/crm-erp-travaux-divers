@@ -26,7 +26,7 @@ const QuoteForm = () => {
   
   // Prestations State
   const [items, setItems] = useState([
-    { section: 'Gros Å’uvre', description: '', unit: 'm²', quantity: 1, unitPriceHt: 0 }
+    { section: 'Gros Œuvre', description: '', unit: 'm²', quantity: 1, unitPriceHt: 0 }
   ]);
 
   // Fetch Accounts list
@@ -105,7 +105,7 @@ const QuoteForm = () => {
   const handleAddItemRow = () => {
     setItems([
       ...items,
-      { section: items[items.length - 1]?.section || 'Gros Å’uvre', description: '', unit: 'm²', quantity: 1, unitPriceHt: 0 }
+      { section: items[items.length - 1]?.section || 'Gros Œuvre', description: '', unit: 'm²', quantity: 1, unitPriceHt: 0 }
     ]);
   };
 
@@ -188,7 +188,7 @@ const QuoteForm = () => {
 
   const opportunityOptions = (opportunitiesData || []).map(opp => ({
     value: opp.id,
-    label: `ðŸ’¼ ${opp.title} (${opp.account?.name || 'Client inconnu'})`
+    label: `ðŸ'¼ ${opp.title} (${opp.account?.name || 'Client inconnu'})`
   }));
 
   const formatCurrency = (val) => {
@@ -361,7 +361,7 @@ const QuoteForm = () => {
                       className="p-2 rounded-xl hover:bg-red-50 text-red-500 cursor-pointer shrink-0 transition-colors"
                       title="Supprimer la ligne"
                     >
-                      ðŸ—‘ï¸
+                      ðŸ—'ï¸
                     </button>
                   </div>
                 ))}

@@ -176,11 +176,11 @@ const ReceptionPV = () => {
         <h3 className="text-sm font-bold text-slate-900 mb-3">Informations du chantier</h3>
         <div className="grid grid-cols-2 gap-y-2 text-sm">
           <div><span className="text-slate-400">Projet :</span> <span className="font-semibold text-slate-800">{project?.title}</span></div>
-          <div><span className="text-slate-400">Client :</span> <span className="font-semibold text-slate-800">{project?.account?.name || '"”'}</span></div>
-          <div><span className="text-slate-400">Chef :</span> <span className="font-semibold text-slate-800">{project?.manager?.name || '"”'}</span></div>
+          <div><span className="text-slate-400">Client :</span> <span className="font-semibold text-slate-800">{project?.account?.name || '—'}</span></div>
+          <div><span className="text-slate-400">Chef :</span> <span className="font-semibold text-slate-800">{project?.manager?.name || '—'}</span></div>
           <div><span className="text-slate-400">Statut :</span> <StatusBadge status={project?.status} /></div>
-          <div><span className="text-slate-400">Ville :</span> <span className="font-semibold text-slate-800">{project?.city || '"”'}</span></div>
-          <div><span className="text-slate-400">Budget :</span> <span className="font-semibold text-slate-800">{project?.budget ? `${Number(project.budget).toLocaleString('fr-MA')} DH` : '"”'}</span></div>
+          <div><span className="text-slate-400">Ville :</span> <span className="font-semibold text-slate-800">{project?.city || '—'}</span></div>
+          <div><span className="text-slate-400">Budget :</span> <span className="font-semibold text-slate-800">{project?.budget ? `${Number(project.budget).toLocaleString('fr-MA')} DH` : '—'}</span></div>
         </div>
       </div>
 
@@ -218,7 +218,7 @@ const ReceptionPV = () => {
               {tasks.filter(t => t.status === 'Terminé').map(t => (
                 <tr key={t.id}>
                   <td className="px-5 py-3 font-medium text-slate-800">{t.title}</td>
-                  <td className="px-5 py-3 text-slate-500">{t.priority || '"”'}</td>
+                  <td className="px-5 py-3 text-slate-500">{t.priority || '—'}</td>
                   <td className="px-5 py-3"><StatusBadge status={t.status} /></td>
                 </tr>
               ))}
@@ -268,7 +268,7 @@ const ReceptionPV = () => {
             <label className="text-xs font-semibold text-slate-500">Observations / Réserves</label>
             <input
               type="text"
-              placeholder="Sans réserve "” ou mentionner les réserves éventuelles"
+              placeholder="Sans réserve - ou mentionner les réserves éventuelles"
               value={clientNotes}
               onChange={(e) => setClientNotes(e.target.value)}
               className="block w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#C85A2A]"
@@ -281,7 +281,7 @@ const ReceptionPV = () => {
           <p className="text-xs font-bold text-slate-700 uppercase tracking-wider">Chef de Chantier (BATIPLUS)</p>
           <div className="px-4 py-3 bg-[#FDF0EA] border border-[#FADDCC] rounded-xl">
             <p className="text-sm font-semibold text-blue-800">{project?.manager?.name || 'Chef de Chantier'}</p>
-            <p className="text-xs text-[#C85A2A]">Conducteur de travaux "” BATIPLUS SARL</p>
+            <p className="text-xs text-[#C85A2A]">Conducteur de travaux "' BATIPLUS SARL</p>
           </div>
           <SignaturePad ref={managerPadRef} label="Signature chef de chantier" />
           <div className="space-y-1.5">

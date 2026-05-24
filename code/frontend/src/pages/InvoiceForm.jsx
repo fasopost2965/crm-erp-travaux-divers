@@ -30,7 +30,7 @@ const InvoiceForm = () => {
 
   // Line items state
   const [items, setItems] = useState([
-    { section: 'Gros Å’uvre', description: '', unit: 'm²', quantity: 1, unitPriceHt: 0 }
+    { section: 'Gros Œuvre', description: '', unit: 'm²', quantity: 1, unitPriceHt: 0 }
   ]);
 
   // Fetch Quotes list
@@ -142,7 +142,7 @@ const InvoiceForm = () => {
   const handleAddItemRow = () => {
     setItems([
       ...items,
-      { section: items[items.length - 1]?.section || 'Gros Å’uvre', description: '', unit: 'U', quantity: 1, unitPriceHt: 0 }
+      { section: items[items.length - 1]?.section || 'Gros Œuvre', description: '', unit: 'U', quantity: 1, unitPriceHt: 0 }
     ]);
   };
 
@@ -242,7 +242,7 @@ const InvoiceForm = () => {
 
   const quoteOptions = (quotesData || []).map(q => ({
     value: q.id,
-    label: `${q.quoteNumber} "” ${q.title}`
+    label: `${q.quoteNumber} "' ${q.title}`
   }));
 
   const accountOptions = (accountsData || []).map(acc => ({
@@ -293,7 +293,7 @@ const InvoiceForm = () => {
                   <input
                     type="text"
                     required
-                    placeholder="Ex: Facture de situation n° 1 "” Plomberie Anfa"
+                    placeholder='Ex: Facture de situation n° 1 - Plomberie Anfa'
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     className="block w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-[#C85A2A] transition-all font-semibold"
@@ -408,7 +408,7 @@ const InvoiceForm = () => {
                       onClick={() => handleRemoveItemRow(idx)}
                       className="p-2 rounded-xl hover:bg-red-50 text-red-500 cursor-pointer shrink-0 transition-colors"
                     >
-                      ðŸ—‘ï¸
+                      ðŸ—'ï¸
                     </button>
                   </div>
                 ))}

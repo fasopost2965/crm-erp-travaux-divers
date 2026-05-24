@@ -65,14 +65,14 @@ const LeadList = () => {
     {
       header: 'Contact',
       accessor: 'contactName',
-      cell: (row) => <span className="text-xs text-slate-600">{row.contactName || '"”'}</span>,
+      cell: (row) => <span className="text-xs text-slate-600">{row.contactName || '—'}</span>,
     },
     {
       header: 'Source',
       accessor: 'source',
       cell: (row) => (
         <span className="text-xs font-semibold text-slate-600 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-100">
-          {row.source || '"”'}
+          {row.source || '—'}
         </span>
       ),
     },
@@ -95,7 +95,7 @@ const LeadList = () => {
             onClick={(e) => { e.stopPropagation(); setDeleteTarget(row); setIsDeleteOpen(true); }}
             className="p-1.5 rounded-lg border border-red-100 hover:bg-red-50 text-red-500 cursor-pointer transition-colors"
             title="Supprimer"
-          >ðŸ—‘ï¸</button>
+          >ðŸ—'ï¸</button>
         </div>
       ),
     },

@@ -143,7 +143,7 @@ const QuoteList = () => {
             className="p-1.5 rounded-lg border border-slate-100 hover:bg-slate-50 text-slate-500 cursor-pointer transition-colors"
             title="Voir"
           >
-            ðŸ‘ï¸
+            ðŸ'ï¸
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); navigate(`/dashboard/quotes/${row.id}/edit`); }}
@@ -157,14 +157,14 @@ const QuoteList = () => {
             className="p-1.5 rounded-lg border border-slate-100 hover:bg-slate-50 text-slate-500 cursor-pointer transition-colors"
             title="Exporter PDF"
           >
-            ðŸ“
+            ðŸ'
           </button>
           <button
             onClick={(e) => handleDeleteClick(row, e)}
             className="p-1.5 rounded-lg border border-red-100 hover:bg-red-50 text-red-500 cursor-pointer transition-colors"
             title="Supprimer"
           >
-            ðŸ—‘ï¸
+            ðŸ—'ï¸
           </button>
         </div>
       ),

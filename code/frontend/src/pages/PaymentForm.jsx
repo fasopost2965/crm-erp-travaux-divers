@@ -112,7 +112,7 @@ const PaymentForm = () => {
   return (
     <div className="max-w-xl mx-auto space-y-6 font-sans">
       <PageHeader
-        title="ðŸ’³ Enregistrer un Règlement"
+        title="ðŸ'³ Enregistrer un Règlement"
         breadcrumb={[
           { label: 'Finances', link: '/dashboard/invoices' },
           { label: invoice.invoiceNumber, link: `/dashboard/invoices/${invoiceId}` },
